@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String     @id @default(cuid()) // Mantenemos tu CUID
+  name          String? // Better Auth lo quiere, tú ya lo tenías opcional
+  email         String     @unique // Better Auth lo exige único para login
+  emailVerified Boolean    @default(false) // Requisito de BA
+  image         String?
+  username      String?    @unique // Tu campo original
+  role          Role       @default(COLABORADOR) // Tu Enum original
+  status        UserStatus @default(PENDING) // Tu Enum original
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relaciones de Better Auth
+  sessions Session[]
+  accounts Account[]
+
+  // Tus relaciones originales (NO LAS TOQUES, están bien así)
+  abonosAprobados Abono[] @relation("Aprobador")
+  logs            Log[]
+
+  @@index([role, status])
+  @@map("user") // Esto es importante para que BA encuentre la tabla
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Socio {
+  id              String        @id @default(cuid())
+  nombre          String
+  apellidos       String
+  dni             String        @unique
+  fechaNacimiento DateTime
+  fotoUrl         String?
+  telefono        String?
+  email           String?
+  direccion       String?
+  cuentaBancaria  String?
+  activo          Boolean       @default(true)
+  notas           String?
+  abonos          Abono[]
+  cargos          Cargo[]
+  inscripciones   Inscripcion[]
+}
+
+model Temporada {
+  id            String           @id @default(cuid())
+  nombre        String
+  fechaInicio   DateTime
+  fechaFin      DateTime
+  activa        Boolean          @default(false)
+  abonos        Abono[]
+  cargos        Cargo[]
+  equipos       Equipo[]
+  ingresos      IngresoExterno[]
+  inscripciones Inscripcion[]
+}
+
+model Inscripcion {
+  id          String    @id @default(cuid())
+  socioId     String
+  temporadaId String
+  equipoId    String
+  equipo      Equipo    @relation(fields: [equipoId], references: [id])
+  socio       Socio     @relation(fields: [socioId], references: [id])
+  temporada   Temporada @relation(fields: [temporadaId], references: [id])
+
+  @@unique([socioId, temporadaId])
+}
+
+model Cargo {
+  id          String    @id @default(cuid())
+  monto       Float
+  concepto    String
+  fecha       DateTime  @default(now())
+  socioId     String
+  temporadaId String
+  abonos      Abono[]
+  socio       Socio     @relation(fields: [socioId], references: [id])
+  temporada   Temporada @relation(fields: [temporadaId], references: [id])
+}
+
+model Abono {
+  id             String      @id @default(cuid())
+  monto          Float
+  metodo         MetodoPago
+  estado         EstadoAbono @default(PENDIENTE)
+  motivo         String?
+  comprobanteUrl String?
+  fecha          DateTime    @default(now())
+  socioId        String
+  temporadaId    String
+  aprobadoPorId  String?
+  cargoId        String?
+  aprobadoPor    User?       @relation("Aprobador", fields: [aprobadoPorId], references: [id])
+  cargo          Cargo?      @relation(fields: [cargoId], references: [id])
+  socio          Socio       @relation(fields: [socioId], references: [id])
+  temporada      Temporada   @relation(fields: [temporadaId], references: [id])
+}
+
+model IngresoExterno {
+  id          String    @id @default(cuid())
+  monto       Float
+  fuente      String
+  concepto    String
+  fecha       DateTime  @default(now())
+  temporadaId String
+  temporada   Temporada @relation(fields: [temporadaId], references: [id])
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  accion    String
+  detalles  String
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+}
+
+model EventoDeportivo {
+  id        String   @id @default(cuid())
+  fecha     DateTime
+  local     String
+  visitante String
+  ubicacion String
+  detalles  String?
+  equipoId  String?
+  createdAt DateTime @default(now())
+  equipo    Equipo?  @relation(fields: [equipoId], references: [id])
+}
+
+model Equipo {
+  id            String            @id @default(cuid())
+  nombre        String
+  temporadaId   String
+  categoriaId   String
+  categoria     Categoria         @relation(fields: [categoriaId], references: [id])
+  temporada     Temporada         @relation(fields: [temporadaId], references: [id])
+  partidos      EventoDeportivo[]
+  inscripciones Inscripcion[]
+
+  @@unique([nombre, temporadaId])
+}
+
+model Categoria {
+  id          String   @id @default(cuid())
+  nombre      String   @unique
+  costeFicha  Float    @default(0)
+  costeCuota  Float    @default(0)
+  incluyeRopa Boolean  @default(false)
+  equipos     Equipo[]
+}
+
+enum Role {
+  ADMIN
+  CONTABILIDAD
+  DIRECTIVA
+  COLABORADOR
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  DISABLED
+}
+
+enum MetodoPago {
+  EFECTIVO
+  TRANSFERENCIA
+  COMPENSACION
+  CONDONACION
+}
+
+enum EstadoAbono {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
