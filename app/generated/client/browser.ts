@@ -73,10 +73,10 @@ export type IngresoExterno = Prisma.IngresoExternoModel
  */
 export type Log = Prisma.LogModel
 /**
- * Model EventoDeportivo
+ * Model Evento
  * 
  */
-export type EventoDeportivo = Prisma.EventoDeportivoModel
+export type Evento = Prisma.EventoModel
 /**
  * Model Equipo
  * 

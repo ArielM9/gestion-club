@@ -176,7 +176,7 @@ export type EquipoWhereInput = {
   categoriaId?: Prisma.StringFilter<"Equipo"> | string
   categoria?: Prisma.XOR<Prisma.CategoriaScalarRelationFilter, Prisma.CategoriaWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
-  partidos?: Prisma.EventoDeportivoListRelationFilter
+  partidos?: Prisma.EventoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
 }
 
@@ -187,7 +187,7 @@ export type EquipoOrderByWithRelationInput = {
   categoriaId?: Prisma.SortOrder
   categoria?: Prisma.CategoriaOrderByWithRelationInput
   temporada?: Prisma.TemporadaOrderByWithRelationInput
-  partidos?: Prisma.EventoDeportivoOrderByRelationAggregateInput
+  partidos?: Prisma.EventoOrderByRelationAggregateInput
   inscripciones?: Prisma.InscripcionOrderByRelationAggregateInput
 }
 
@@ -202,7 +202,7 @@ export type EquipoWhereUniqueInput = Prisma.AtLeast<{
   categoriaId?: Prisma.StringFilter<"Equipo"> | string
   categoria?: Prisma.XOR<Prisma.CategoriaScalarRelationFilter, Prisma.CategoriaWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
-  partidos?: Prisma.EventoDeportivoListRelationFilter
+  partidos?: Prisma.EventoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
 }, "id" | "nombre_temporadaId">
 
@@ -231,7 +231,7 @@ export type EquipoCreateInput = {
   nombre: string
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
-  partidos?: Prisma.EventoDeportivoCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutEquipoInput
 }
 
@@ -240,7 +240,7 @@ export type EquipoUncheckedCreateInput = {
   nombre: string
   temporadaId: string
   categoriaId: string
-  partidos?: Prisma.EventoDeportivoUncheckedCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
 
@@ -249,7 +249,7 @@ export type EquipoUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
-  partidos?: Prisma.EventoDeportivoUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutEquipoNestedInput
 }
 
@@ -258,7 +258,7 @@ export type EquipoUncheckedUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
-  partidos?: Prisma.EventoDeportivoUncheckedUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
 
@@ -445,7 +445,7 @@ export type EquipoCreateWithoutTemporadaInput = {
   id?: string
   nombre: string
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
-  partidos?: Prisma.EventoDeportivoCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutEquipoInput
 }
 
@@ -453,7 +453,7 @@ export type EquipoUncheckedCreateWithoutTemporadaInput = {
   id?: string
   nombre: string
   categoriaId: string
-  partidos?: Prisma.EventoDeportivoUncheckedCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
 
@@ -498,7 +498,7 @@ export type EquipoCreateWithoutInscripcionesInput = {
   nombre: string
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
-  partidos?: Prisma.EventoDeportivoCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
 }
 
 export type EquipoUncheckedCreateWithoutInscripcionesInput = {
@@ -506,7 +506,7 @@ export type EquipoUncheckedCreateWithoutInscripcionesInput = {
   nombre: string
   temporadaId: string
   categoriaId: string
-  partidos?: Prisma.EventoDeportivoUncheckedCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
 }
 
 export type EquipoCreateOrConnectWithoutInscripcionesInput = {
@@ -530,7 +530,7 @@ export type EquipoUpdateWithoutInscripcionesInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
-  partidos?: Prisma.EventoDeportivoUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
 }
 
 export type EquipoUncheckedUpdateWithoutInscripcionesInput = {
@@ -538,7 +538,7 @@ export type EquipoUncheckedUpdateWithoutInscripcionesInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
-  partidos?: Prisma.EventoDeportivoUncheckedUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
 }
 
 export type EquipoCreateWithoutPartidosInput = {
@@ -593,7 +593,7 @@ export type EquipoCreateWithoutCategoriaInput = {
   id?: string
   nombre: string
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
-  partidos?: Prisma.EventoDeportivoCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutEquipoInput
 }
 
@@ -601,7 +601,7 @@ export type EquipoUncheckedCreateWithoutCategoriaInput = {
   id?: string
   nombre: string
   temporadaId: string
-  partidos?: Prisma.EventoDeportivoUncheckedCreateNestedManyWithoutEquipoInput
+  partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
 
@@ -641,7 +641,7 @@ export type EquipoUpdateWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
-  partidos?: Prisma.EventoDeportivoUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutEquipoNestedInput
 }
 
@@ -649,7 +649,7 @@ export type EquipoUncheckedUpdateWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
-  partidos?: Prisma.EventoDeportivoUncheckedUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
 
@@ -669,7 +669,7 @@ export type EquipoUpdateWithoutCategoriaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
-  partidos?: Prisma.EventoDeportivoUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutEquipoNestedInput
 }
 
@@ -677,7 +677,7 @@ export type EquipoUncheckedUpdateWithoutCategoriaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
-  partidos?: Prisma.EventoDeportivoUncheckedUpdateManyWithoutEquipoNestedInput
+  partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
 
@@ -716,7 +716,7 @@ export type EquipoCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  * EquipoCountOutputType without action
  */
 export type EquipoCountOutputTypeCountPartidosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EventoDeportivoWhereInput
+  where?: Prisma.EventoWhereInput
 }
 
 /**
@@ -786,7 +786,7 @@ export type $EquipoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     categoria: Prisma.$CategoriaPayload<ExtArgs>
     temporada: Prisma.$TemporadaPayload<ExtArgs>
-    partidos: Prisma.$EventoDeportivoPayload<ExtArgs>[]
+    partidos: Prisma.$EventoPayload<ExtArgs>[]
     inscripciones: Prisma.$InscripcionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1190,7 +1190,7 @@ export interface Prisma__EquipoClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   categoria<T extends Prisma.CategoriaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoriaDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoriaClient<runtime.Types.Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   temporada<T extends Prisma.TemporadaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporadaDefaultArgs<ExtArgs>>): Prisma.Prisma__TemporadaClient<runtime.Types.Result.GetResult<Prisma.$TemporadaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  partidos<T extends Prisma.Equipo$partidosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Equipo$partidosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventoDeportivoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  partidos<T extends Prisma.Equipo$partidosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Equipo$partidosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inscripciones<T extends Prisma.Equipo$inscripcionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Equipo$inscripcionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InscripcionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1625,23 +1625,23 @@ export type EquipoDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
  */
 export type Equipo$partidosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the EventoDeportivo
+   * Select specific fields to fetch from the Evento
    */
-  select?: Prisma.EventoDeportivoSelect<ExtArgs> | null
+  select?: Prisma.EventoSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the EventoDeportivo
+   * Omit specific fields from the Evento
    */
-  omit?: Prisma.EventoDeportivoOmit<ExtArgs> | null
+  omit?: Prisma.EventoOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EventoDeportivoInclude<ExtArgs> | null
-  where?: Prisma.EventoDeportivoWhereInput
-  orderBy?: Prisma.EventoDeportivoOrderByWithRelationInput | Prisma.EventoDeportivoOrderByWithRelationInput[]
-  cursor?: Prisma.EventoDeportivoWhereUniqueInput
+  include?: Prisma.EventoInclude<ExtArgs> | null
+  where?: Prisma.EventoWhereInput
+  orderBy?: Prisma.EventoOrderByWithRelationInput | Prisma.EventoOrderByWithRelationInput[]
+  cursor?: Prisma.EventoWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.EventoDeportivoScalarFieldEnum | Prisma.EventoDeportivoScalarFieldEnum[]
+  distinct?: Prisma.EventoScalarFieldEnum | Prisma.EventoScalarFieldEnum[]
 }
 
 /**

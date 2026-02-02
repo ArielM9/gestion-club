@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react"; // Añadimos un icono para que sea más intuitivo
 
 export const LogoutButton = () => {
   const router = useRouter();
@@ -10,8 +11,8 @@ export const LogoutButton = () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/login"); // Redirigimos al login tras salir
-          router.refresh();      // Forzamos a Next.js a limpiar la caché de la sesión
+          router.push("/login");
+          router.refresh();
         },
       },
     });
@@ -20,9 +21,10 @@ export const LogoutButton = () => {
   return (
     <button
       onClick={handleLogout}
-      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
+      className="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-red-400 transition-colors duration-200 hover:cursor-pointer"
     >
-      Cerrar Sesión
+      <LogOut size={14} />
+      <span>Cerrar Sesión</span>
     </button>
   );
 };

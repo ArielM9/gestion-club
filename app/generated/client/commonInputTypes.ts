@@ -243,6 +243,23 @@ export type EnumEstadoAbonoWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumEstadoAbonoFilter<$PrismaModel>
 }
 
+export type EnumTipoEventoFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoEvento | Prisma.EnumTipoEventoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoEventoFilter<$PrismaModel> | $Enums.TipoEvento
+}
+
+export type EnumTipoEventoWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoEvento | Prisma.EnumTipoEventoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoEventoWithAggregatesFilter<$PrismaModel> | $Enums.TipoEvento
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTipoEventoFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTipoEventoFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -483,6 +500,23 @@ export type NestedEnumEstadoAbonoWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumEstadoAbonoFilter<$PrismaModel>
   _max?: Prisma.NestedEnumEstadoAbonoFilter<$PrismaModel>
+}
+
+export type NestedEnumTipoEventoFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoEvento | Prisma.EnumTipoEventoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoEventoFilter<$PrismaModel> | $Enums.TipoEvento
+}
+
+export type NestedEnumTipoEventoWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoEvento | Prisma.EnumTipoEventoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoEvento[] | Prisma.ListEnumTipoEventoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoEventoWithAggregatesFilter<$PrismaModel> | $Enums.TipoEvento
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTipoEventoFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTipoEventoFilter<$PrismaModel>
 }
 
 

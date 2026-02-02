@@ -395,7 +395,7 @@ export const ModelName = {
   Abono: 'Abono',
   IngresoExterno: 'IngresoExterno',
   Log: 'Log',
-  EventoDeportivo: 'EventoDeportivo',
+  Evento: 'Evento',
   Equipo: 'Equipo',
   Categoria: 'Categoria'
 } as const
@@ -413,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "socio" | "temporada" | "inscripcion" | "cargo" | "abono" | "ingresoExterno" | "log" | "eventoDeportivo" | "equipo" | "categoria"
+    modelProps: "user" | "session" | "account" | "verification" | "socio" | "temporada" | "inscripcion" | "cargo" | "abono" | "ingresoExterno" | "log" | "evento" | "equipo" | "categoria"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1231,77 +1231,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    EventoDeportivo: {
-      payload: Prisma.$EventoDeportivoPayload<ExtArgs>
-      fields: Prisma.EventoDeportivoFieldRefs
+    Evento: {
+      payload: Prisma.$EventoPayload<ExtArgs>
+      fields: Prisma.EventoFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.EventoDeportivoFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload> | null
+          args: Prisma.EventoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.EventoDeportivoFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>
+          args: Prisma.EventoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>
         }
         findFirst: {
-          args: Prisma.EventoDeportivoFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload> | null
+          args: Prisma.EventoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.EventoDeportivoFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>
+          args: Prisma.EventoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>
         }
         findMany: {
-          args: Prisma.EventoDeportivoFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>[]
+          args: Prisma.EventoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>[]
         }
         create: {
-          args: Prisma.EventoDeportivoCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>
+          args: Prisma.EventoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>
         }
         createMany: {
-          args: Prisma.EventoDeportivoCreateManyArgs<ExtArgs>
+          args: Prisma.EventoCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.EventoDeportivoCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>[]
+          args: Prisma.EventoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>[]
         }
         delete: {
-          args: Prisma.EventoDeportivoDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>
+          args: Prisma.EventoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>
         }
         update: {
-          args: Prisma.EventoDeportivoUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>
+          args: Prisma.EventoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>
         }
         deleteMany: {
-          args: Prisma.EventoDeportivoDeleteManyArgs<ExtArgs>
+          args: Prisma.EventoDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.EventoDeportivoUpdateManyArgs<ExtArgs>
+          args: Prisma.EventoUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.EventoDeportivoUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>[]
+          args: Prisma.EventoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>[]
         }
         upsert: {
-          args: Prisma.EventoDeportivoUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoDeportivoPayload>
+          args: Prisma.EventoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventoPayload>
         }
         aggregate: {
-          args: Prisma.EventoDeportivoAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateEventoDeportivo>
+          args: Prisma.EventoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEvento>
         }
         groupBy: {
-          args: Prisma.EventoDeportivoGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EventoDeportivoGroupByOutputType>[]
+          args: Prisma.EventoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventoGroupByOutputType>[]
         }
         count: {
-          args: Prisma.EventoDeportivoCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EventoDeportivoCountAggregateOutputType> | number
+          args: Prisma.EventoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventoCountAggregateOutputType> | number
         }
       }
     }
@@ -1644,18 +1644,21 @@ export const LogScalarFieldEnum = {
 export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogScalarFieldEnum]
 
 
-export const EventoDeportivoScalarFieldEnum = {
+export const EventoScalarFieldEnum = {
   id: 'id',
+  tipo: 'tipo',
   fecha: 'fecha',
-  local: 'local',
-  visitante: 'visitante',
   ubicacion: 'ubicacion',
+  titulo: 'titulo',
   detalles: 'detalles',
+  esLocal: 'esLocal',
+  rival: 'rival',
   equipoId: 'equipoId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type EventoDeportivoScalarFieldEnum = (typeof EventoDeportivoScalarFieldEnum)[keyof typeof EventoDeportivoScalarFieldEnum]
+export type EventoScalarFieldEnum = (typeof EventoScalarFieldEnum)[keyof typeof EventoScalarFieldEnum]
 
 
 export const EquipoScalarFieldEnum = {
@@ -1815,6 +1818,20 @@ export type ListEnumEstadoAbonoFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'TipoEvento'
+ */
+export type EnumTipoEventoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoEvento'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoEvento[]'
+ */
+export type ListEnumTipoEventoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoEvento[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1933,7 +1950,7 @@ export type GlobalOmitConfig = {
   abono?: Prisma.AbonoOmit
   ingresoExterno?: Prisma.IngresoExternoOmit
   log?: Prisma.LogOmit
-  eventoDeportivo?: Prisma.EventoDeportivoOmit
+  evento?: Prisma.EventoOmit
   equipo?: Prisma.EquipoOmit
   categoria?: Prisma.CategoriaOmit
 }

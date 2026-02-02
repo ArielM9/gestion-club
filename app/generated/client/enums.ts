@@ -45,3 +45,14 @@ export const EstadoAbono = {
 } as const
 
 export type EstadoAbono = (typeof EstadoAbono)[keyof typeof EstadoAbono]
+
+
+export const TipoEvento = {
+  PARTIDO: 'PARTIDO',
+  TORNEO: 'TORNEO',
+  SOCIAL: 'SOCIAL',
+  REUNION: 'REUNION',
+  OTRO: 'OTRO'
+} as const
+
+export type TipoEvento = (typeof TipoEvento)[keyof typeof TipoEvento]

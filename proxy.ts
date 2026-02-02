@@ -4,9 +4,9 @@ import { getSessionCookie } from "better-auth/cookies";
 // 1. Definimos el "Libro de Permisos"
 // Esto es mucho más fácil de mantener que llenar el código de IFs
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-    COLABORADOR: ["/dashboard"],
-    CONTABILIDAD: ["/dashboard", "/contabilidad"],
-    ADMIN: ["/dashboard", "/contabilidad", "/admin"], // El admin llega a todo
+    COLABORADOR: ["/dashboard", "/jugadores", "/contabilidad", "/eventos"],
+    CONTABILIDAD: ["/dashboard", "/contabilidad", "/jugadores", "/eventos"],
+    ADMIN: ["/dashboard", "/contabilidad", "/jugadores", "/eventos", "/admin"], // El admin llega a todo
 };
 
 // 2. Rutas que SIEMPRE son públicas (para evitar bucles infinitos)

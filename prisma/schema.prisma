@@ -169,26 +169,37 @@ model Log {
   @@index([createdAt])
 }
 
-model EventoDeportivo {
-  id        String   @id @default(cuid())
+model Evento {
+  id        String     @id @default(cuid())
+  tipo      TipoEvento @default(PARTIDO)
   fecha     DateTime
-  local     String
-  visitante String
-  ubicacion String
-  detalles  String?
+  ubicacion String // "Campo Municipal", "Sede Social", etc.
+
+  // Para eventos NO deportivos (Cenas, Asambleas)
+  titulo   String?
+  detalles String? @db.Text
+
+  // Para PARTIDOS y eventos de EQUIPO
+  // Al obligar a tener equipoId, ya tenemos la Categoría vinculada
+
+  esLocal   Boolean  @default(true)
+  rival     String?
+  equipo    Equipo?  @relation(fields: [equipoId], references: [id])
   equipoId  String?
   createdAt DateTime @default(now())
-  equipo    Equipo?  @relation(fields: [equipoId], references: [id])
+  updatedAt DateTime @updatedAt
+
+  @@index([fecha])
 }
 
 model Equipo {
-  id            String            @id @default(cuid())
+  id            String        @id @default(cuid())
   nombre        String
   temporadaId   String
   categoriaId   String
-  categoria     Categoria         @relation(fields: [categoriaId], references: [id])
-  temporada     Temporada         @relation(fields: [temporadaId], references: [id])
-  partidos      EventoDeportivo[]
+  categoria     Categoria     @relation(fields: [categoriaId], references: [id])
+  temporada     Temporada     @relation(fields: [temporadaId], references: [id])
+  partidos      Evento[]
   inscripciones Inscripcion[]
 
   @@unique([nombre, temporadaId])
@@ -227,4 +238,12 @@ enum EstadoAbono {
   PENDIENTE
   APROBADO
   RECHAZADO
+}
+
+enum TipoEvento {
+  PARTIDO
+  TORNEO
+  SOCIAL
+  REUNION
+  OTRO
 }

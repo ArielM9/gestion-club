@@ -62,7 +62,7 @@ export const ModelName = {
   Abono: 'Abono',
   IngresoExterno: 'IngresoExterno',
   Log: 'Log',
-  EventoDeportivo: 'EventoDeportivo',
+  Evento: 'Evento',
   Equipo: 'Equipo',
   Categoria: 'Categoria'
 } as const
@@ -235,18 +235,21 @@ export const LogScalarFieldEnum = {
 export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogScalarFieldEnum]
 
 
-export const EventoDeportivoScalarFieldEnum = {
+export const EventoScalarFieldEnum = {
   id: 'id',
+  tipo: 'tipo',
   fecha: 'fecha',
-  local: 'local',
-  visitante: 'visitante',
   ubicacion: 'ubicacion',
+  titulo: 'titulo',
   detalles: 'detalles',
+  esLocal: 'esLocal',
+  rival: 'rival',
   equipoId: 'equipoId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type EventoDeportivoScalarFieldEnum = (typeof EventoDeportivoScalarFieldEnum)[keyof typeof EventoDeportivoScalarFieldEnum]
+export type EventoScalarFieldEnum = (typeof EventoScalarFieldEnum)[keyof typeof EventoScalarFieldEnum]
 
 
 export const EquipoScalarFieldEnum = {
