@@ -16,7 +16,7 @@ export const auth = betterAuth({
         additionalFields: {
             role: {
                 type: "string",
-                defaultValue: "user", // Rol por defecto para nuevos registros
+                defaultValue: "COLABORADOR", // Rol por defecto para nuevos registros
             },
         },
     },

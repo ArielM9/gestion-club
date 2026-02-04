@@ -28,6 +28,7 @@ export type SocioMinAggregateOutputType = {
   id: string | null
   nombre: string | null
   apellidos: string | null
+  mote: string | null
   dni: string | null
   fechaNacimiento: Date | null
   fotoUrl: string | null
@@ -36,13 +37,21 @@ export type SocioMinAggregateOutputType = {
   direccion: string | null
   cuentaBancaria: string | null
   activo: boolean | null
-  notas: string | null
+  nombreTutor: string | null
+  dniTutor: string | null
+  telefonoTutor: string | null
+  observaciones: string | null
+  tallaRopa: string | null
+  rgpdFirmado: boolean | null
+  urlDocumentoRgpd: string | null
+  categoriaId: string | null
 }
 
 export type SocioMaxAggregateOutputType = {
   id: string | null
   nombre: string | null
   apellidos: string | null
+  mote: string | null
   dni: string | null
   fechaNacimiento: Date | null
   fotoUrl: string | null
@@ -51,13 +60,21 @@ export type SocioMaxAggregateOutputType = {
   direccion: string | null
   cuentaBancaria: string | null
   activo: boolean | null
-  notas: string | null
+  nombreTutor: string | null
+  dniTutor: string | null
+  telefonoTutor: string | null
+  observaciones: string | null
+  tallaRopa: string | null
+  rgpdFirmado: boolean | null
+  urlDocumentoRgpd: string | null
+  categoriaId: string | null
 }
 
 export type SocioCountAggregateOutputType = {
   id: number
   nombre: number
   apellidos: number
+  mote: number
   dni: number
   fechaNacimiento: number
   fotoUrl: number
@@ -66,7 +83,14 @@ export type SocioCountAggregateOutputType = {
   direccion: number
   cuentaBancaria: number
   activo: number
-  notas: number
+  nombreTutor: number
+  dniTutor: number
+  telefonoTutor: number
+  observaciones: number
+  tallaRopa: number
+  rgpdFirmado: number
+  urlDocumentoRgpd: number
+  categoriaId: number
   _all: number
 }
 
@@ -75,6 +99,7 @@ export type SocioMinAggregateInputType = {
   id?: true
   nombre?: true
   apellidos?: true
+  mote?: true
   dni?: true
   fechaNacimiento?: true
   fotoUrl?: true
@@ -83,13 +108,21 @@ export type SocioMinAggregateInputType = {
   direccion?: true
   cuentaBancaria?: true
   activo?: true
-  notas?: true
+  nombreTutor?: true
+  dniTutor?: true
+  telefonoTutor?: true
+  observaciones?: true
+  tallaRopa?: true
+  rgpdFirmado?: true
+  urlDocumentoRgpd?: true
+  categoriaId?: true
 }
 
 export type SocioMaxAggregateInputType = {
   id?: true
   nombre?: true
   apellidos?: true
+  mote?: true
   dni?: true
   fechaNacimiento?: true
   fotoUrl?: true
@@ -98,13 +131,21 @@ export type SocioMaxAggregateInputType = {
   direccion?: true
   cuentaBancaria?: true
   activo?: true
-  notas?: true
+  nombreTutor?: true
+  dniTutor?: true
+  telefonoTutor?: true
+  observaciones?: true
+  tallaRopa?: true
+  rgpdFirmado?: true
+  urlDocumentoRgpd?: true
+  categoriaId?: true
 }
 
 export type SocioCountAggregateInputType = {
   id?: true
   nombre?: true
   apellidos?: true
+  mote?: true
   dni?: true
   fechaNacimiento?: true
   fotoUrl?: true
@@ -113,7 +154,14 @@ export type SocioCountAggregateInputType = {
   direccion?: true
   cuentaBancaria?: true
   activo?: true
-  notas?: true
+  nombreTutor?: true
+  dniTutor?: true
+  telefonoTutor?: true
+  observaciones?: true
+  tallaRopa?: true
+  rgpdFirmado?: true
+  urlDocumentoRgpd?: true
+  categoriaId?: true
   _all?: true
 }
 
@@ -193,6 +241,7 @@ export type SocioGroupByOutputType = {
   id: string
   nombre: string
   apellidos: string
+  mote: string | null
   dni: string
   fechaNacimiento: Date
   fotoUrl: string | null
@@ -201,7 +250,14 @@ export type SocioGroupByOutputType = {
   direccion: string | null
   cuentaBancaria: string | null
   activo: boolean
-  notas: string | null
+  nombreTutor: string | null
+  dniTutor: string | null
+  telefonoTutor: string | null
+  observaciones: string | null
+  tallaRopa: string | null
+  rgpdFirmado: boolean
+  urlDocumentoRgpd: string | null
+  categoriaId: string | null
   _count: SocioCountAggregateOutputType | null
   _min: SocioMinAggregateOutputType | null
   _max: SocioMaxAggregateOutputType | null
@@ -229,6 +285,7 @@ export type SocioWhereInput = {
   id?: Prisma.StringFilter<"Socio"> | string
   nombre?: Prisma.StringFilter<"Socio"> | string
   apellidos?: Prisma.StringFilter<"Socio"> | string
+  mote?: Prisma.StringNullableFilter<"Socio"> | string | null
   dni?: Prisma.StringFilter<"Socio"> | string
   fechaNacimiento?: Prisma.DateTimeFilter<"Socio"> | Date | string
   fotoUrl?: Prisma.StringNullableFilter<"Socio"> | string | null
@@ -237,16 +294,25 @@ export type SocioWhereInput = {
   direccion?: Prisma.StringNullableFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableFilter<"Socio"> | string | null
   activo?: Prisma.BoolFilter<"Socio"> | boolean
-  notas?: Prisma.StringNullableFilter<"Socio"> | string | null
+  nombreTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  dniTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  telefonoTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  observaciones?: Prisma.StringNullableFilter<"Socio"> | string | null
+  tallaRopa?: Prisma.StringNullableFilter<"Socio"> | string | null
+  rgpdFirmado?: Prisma.BoolFilter<"Socio"> | boolean
+  urlDocumentoRgpd?: Prisma.StringNullableFilter<"Socio"> | string | null
+  categoriaId?: Prisma.StringNullableFilter<"Socio"> | string | null
   abonos?: Prisma.AbonoListRelationFilter
   cargos?: Prisma.CargoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
+  categoria?: Prisma.XOR<Prisma.CategoriaNullableScalarRelationFilter, Prisma.CategoriaWhereInput> | null
 }
 
 export type SocioOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   apellidos?: Prisma.SortOrder
+  mote?: Prisma.SortOrderInput | Prisma.SortOrder
   dni?: Prisma.SortOrder
   fechaNacimiento?: Prisma.SortOrder
   fotoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -255,10 +321,18 @@ export type SocioOrderByWithRelationInput = {
   direccion?: Prisma.SortOrderInput | Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrderInput | Prisma.SortOrder
   activo?: Prisma.SortOrder
-  notas?: Prisma.SortOrderInput | Prisma.SortOrder
+  nombreTutor?: Prisma.SortOrderInput | Prisma.SortOrder
+  dniTutor?: Prisma.SortOrderInput | Prisma.SortOrder
+  telefonoTutor?: Prisma.SortOrderInput | Prisma.SortOrder
+  observaciones?: Prisma.SortOrderInput | Prisma.SortOrder
+  tallaRopa?: Prisma.SortOrderInput | Prisma.SortOrder
+  rgpdFirmado?: Prisma.SortOrder
+  urlDocumentoRgpd?: Prisma.SortOrderInput | Prisma.SortOrder
+  categoriaId?: Prisma.SortOrderInput | Prisma.SortOrder
   abonos?: Prisma.AbonoOrderByRelationAggregateInput
   cargos?: Prisma.CargoOrderByRelationAggregateInput
   inscripciones?: Prisma.InscripcionOrderByRelationAggregateInput
+  categoria?: Prisma.CategoriaOrderByWithRelationInput
 }
 
 export type SocioWhereUniqueInput = Prisma.AtLeast<{
@@ -269,6 +343,7 @@ export type SocioWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SocioWhereInput | Prisma.SocioWhereInput[]
   nombre?: Prisma.StringFilter<"Socio"> | string
   apellidos?: Prisma.StringFilter<"Socio"> | string
+  mote?: Prisma.StringNullableFilter<"Socio"> | string | null
   fechaNacimiento?: Prisma.DateTimeFilter<"Socio"> | Date | string
   fotoUrl?: Prisma.StringNullableFilter<"Socio"> | string | null
   telefono?: Prisma.StringNullableFilter<"Socio"> | string | null
@@ -276,16 +351,25 @@ export type SocioWhereUniqueInput = Prisma.AtLeast<{
   direccion?: Prisma.StringNullableFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableFilter<"Socio"> | string | null
   activo?: Prisma.BoolFilter<"Socio"> | boolean
-  notas?: Prisma.StringNullableFilter<"Socio"> | string | null
+  nombreTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  dniTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  telefonoTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  observaciones?: Prisma.StringNullableFilter<"Socio"> | string | null
+  tallaRopa?: Prisma.StringNullableFilter<"Socio"> | string | null
+  rgpdFirmado?: Prisma.BoolFilter<"Socio"> | boolean
+  urlDocumentoRgpd?: Prisma.StringNullableFilter<"Socio"> | string | null
+  categoriaId?: Prisma.StringNullableFilter<"Socio"> | string | null
   abonos?: Prisma.AbonoListRelationFilter
   cargos?: Prisma.CargoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
+  categoria?: Prisma.XOR<Prisma.CategoriaNullableScalarRelationFilter, Prisma.CategoriaWhereInput> | null
 }, "id" | "dni">
 
 export type SocioOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   apellidos?: Prisma.SortOrder
+  mote?: Prisma.SortOrderInput | Prisma.SortOrder
   dni?: Prisma.SortOrder
   fechaNacimiento?: Prisma.SortOrder
   fotoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -294,7 +378,14 @@ export type SocioOrderByWithAggregationInput = {
   direccion?: Prisma.SortOrderInput | Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrderInput | Prisma.SortOrder
   activo?: Prisma.SortOrder
-  notas?: Prisma.SortOrderInput | Prisma.SortOrder
+  nombreTutor?: Prisma.SortOrderInput | Prisma.SortOrder
+  dniTutor?: Prisma.SortOrderInput | Prisma.SortOrder
+  telefonoTutor?: Prisma.SortOrderInput | Prisma.SortOrder
+  observaciones?: Prisma.SortOrderInput | Prisma.SortOrder
+  tallaRopa?: Prisma.SortOrderInput | Prisma.SortOrder
+  rgpdFirmado?: Prisma.SortOrder
+  urlDocumentoRgpd?: Prisma.SortOrderInput | Prisma.SortOrder
+  categoriaId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.SocioCountOrderByAggregateInput
   _max?: Prisma.SocioMaxOrderByAggregateInput
   _min?: Prisma.SocioMinOrderByAggregateInput
@@ -307,6 +398,7 @@ export type SocioScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Socio"> | string
   nombre?: Prisma.StringWithAggregatesFilter<"Socio"> | string
   apellidos?: Prisma.StringWithAggregatesFilter<"Socio"> | string
+  mote?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
   dni?: Prisma.StringWithAggregatesFilter<"Socio"> | string
   fechaNacimiento?: Prisma.DateTimeWithAggregatesFilter<"Socio"> | Date | string
   fotoUrl?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
@@ -315,13 +407,21 @@ export type SocioScalarWhereWithAggregatesInput = {
   direccion?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
   activo?: Prisma.BoolWithAggregatesFilter<"Socio"> | boolean
-  notas?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  nombreTutor?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  dniTutor?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  telefonoTutor?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  observaciones?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  tallaRopa?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  rgpdFirmado?: Prisma.BoolWithAggregatesFilter<"Socio"> | boolean
+  urlDocumentoRgpd?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
+  categoriaId?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
 }
 
 export type SocioCreateInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -330,16 +430,24 @@ export type SocioCreateInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
   abonos?: Prisma.AbonoCreateNestedManyWithoutSocioInput
   cargos?: Prisma.CargoCreateNestedManyWithoutSocioInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutSocioInput
+  categoria?: Prisma.CategoriaCreateNestedOneWithoutSociosInput
 }
 
 export type SocioUncheckedCreateInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -348,7 +456,14 @@ export type SocioUncheckedCreateInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  categoriaId?: string | null
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutSocioInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutSocioInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutSocioInput
@@ -358,6 +473,7 @@ export type SocioUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -366,16 +482,24 @@ export type SocioUpdateInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   abonos?: Prisma.AbonoUpdateManyWithoutSocioNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutSocioNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutSocioNestedInput
+  categoria?: Prisma.CategoriaUpdateOneWithoutSociosNestedInput
 }
 
 export type SocioUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -384,7 +508,14 @@ export type SocioUncheckedUpdateInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoriaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutSocioNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutSocioNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutSocioNestedInput
@@ -394,6 +525,7 @@ export type SocioCreateManyInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -402,13 +534,21 @@ export type SocioCreateManyInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  categoriaId?: string | null
 }
 
 export type SocioUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -417,13 +557,20 @@ export type SocioUpdateManyMutationInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SocioUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -432,13 +579,21 @@ export type SocioUncheckedUpdateManyInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoriaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SocioCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   apellidos?: Prisma.SortOrder
+  mote?: Prisma.SortOrder
   dni?: Prisma.SortOrder
   fechaNacimiento?: Prisma.SortOrder
   fotoUrl?: Prisma.SortOrder
@@ -447,13 +602,21 @@ export type SocioCountOrderByAggregateInput = {
   direccion?: Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrder
   activo?: Prisma.SortOrder
-  notas?: Prisma.SortOrder
+  nombreTutor?: Prisma.SortOrder
+  dniTutor?: Prisma.SortOrder
+  telefonoTutor?: Prisma.SortOrder
+  observaciones?: Prisma.SortOrder
+  tallaRopa?: Prisma.SortOrder
+  rgpdFirmado?: Prisma.SortOrder
+  urlDocumentoRgpd?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
 }
 
 export type SocioMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   apellidos?: Prisma.SortOrder
+  mote?: Prisma.SortOrder
   dni?: Prisma.SortOrder
   fechaNacimiento?: Prisma.SortOrder
   fotoUrl?: Prisma.SortOrder
@@ -462,13 +625,21 @@ export type SocioMaxOrderByAggregateInput = {
   direccion?: Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrder
   activo?: Prisma.SortOrder
-  notas?: Prisma.SortOrder
+  nombreTutor?: Prisma.SortOrder
+  dniTutor?: Prisma.SortOrder
+  telefonoTutor?: Prisma.SortOrder
+  observaciones?: Prisma.SortOrder
+  tallaRopa?: Prisma.SortOrder
+  rgpdFirmado?: Prisma.SortOrder
+  urlDocumentoRgpd?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
 }
 
 export type SocioMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   apellidos?: Prisma.SortOrder
+  mote?: Prisma.SortOrder
   dni?: Prisma.SortOrder
   fechaNacimiento?: Prisma.SortOrder
   fotoUrl?: Prisma.SortOrder
@@ -477,12 +648,29 @@ export type SocioMinOrderByAggregateInput = {
   direccion?: Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrder
   activo?: Prisma.SortOrder
-  notas?: Prisma.SortOrder
+  nombreTutor?: Prisma.SortOrder
+  dniTutor?: Prisma.SortOrder
+  telefonoTutor?: Prisma.SortOrder
+  observaciones?: Prisma.SortOrder
+  tallaRopa?: Prisma.SortOrder
+  rgpdFirmado?: Prisma.SortOrder
+  urlDocumentoRgpd?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
 }
 
 export type SocioScalarRelationFilter = {
   is?: Prisma.SocioWhereInput
   isNot?: Prisma.SocioWhereInput
+}
+
+export type SocioListRelationFilter = {
+  every?: Prisma.SocioWhereInput
+  some?: Prisma.SocioWhereInput
+  none?: Prisma.SocioWhereInput
+}
+
+export type SocioOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type SocioCreateNestedOneWithoutInscripcionesInput = {
@@ -527,10 +715,53 @@ export type SocioUpdateOneRequiredWithoutAbonosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SocioUpdateToOneWithWhereWithoutAbonosInput, Prisma.SocioUpdateWithoutAbonosInput>, Prisma.SocioUncheckedUpdateWithoutAbonosInput>
 }
 
+export type SocioCreateNestedManyWithoutCategoriaInput = {
+  create?: Prisma.XOR<Prisma.SocioCreateWithoutCategoriaInput, Prisma.SocioUncheckedCreateWithoutCategoriaInput> | Prisma.SocioCreateWithoutCategoriaInput[] | Prisma.SocioUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.SocioCreateOrConnectWithoutCategoriaInput | Prisma.SocioCreateOrConnectWithoutCategoriaInput[]
+  createMany?: Prisma.SocioCreateManyCategoriaInputEnvelope
+  connect?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+}
+
+export type SocioUncheckedCreateNestedManyWithoutCategoriaInput = {
+  create?: Prisma.XOR<Prisma.SocioCreateWithoutCategoriaInput, Prisma.SocioUncheckedCreateWithoutCategoriaInput> | Prisma.SocioCreateWithoutCategoriaInput[] | Prisma.SocioUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.SocioCreateOrConnectWithoutCategoriaInput | Prisma.SocioCreateOrConnectWithoutCategoriaInput[]
+  createMany?: Prisma.SocioCreateManyCategoriaInputEnvelope
+  connect?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+}
+
+export type SocioUpdateManyWithoutCategoriaNestedInput = {
+  create?: Prisma.XOR<Prisma.SocioCreateWithoutCategoriaInput, Prisma.SocioUncheckedCreateWithoutCategoriaInput> | Prisma.SocioCreateWithoutCategoriaInput[] | Prisma.SocioUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.SocioCreateOrConnectWithoutCategoriaInput | Prisma.SocioCreateOrConnectWithoutCategoriaInput[]
+  upsert?: Prisma.SocioUpsertWithWhereUniqueWithoutCategoriaInput | Prisma.SocioUpsertWithWhereUniqueWithoutCategoriaInput[]
+  createMany?: Prisma.SocioCreateManyCategoriaInputEnvelope
+  set?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  disconnect?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  delete?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  connect?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  update?: Prisma.SocioUpdateWithWhereUniqueWithoutCategoriaInput | Prisma.SocioUpdateWithWhereUniqueWithoutCategoriaInput[]
+  updateMany?: Prisma.SocioUpdateManyWithWhereWithoutCategoriaInput | Prisma.SocioUpdateManyWithWhereWithoutCategoriaInput[]
+  deleteMany?: Prisma.SocioScalarWhereInput | Prisma.SocioScalarWhereInput[]
+}
+
+export type SocioUncheckedUpdateManyWithoutCategoriaNestedInput = {
+  create?: Prisma.XOR<Prisma.SocioCreateWithoutCategoriaInput, Prisma.SocioUncheckedCreateWithoutCategoriaInput> | Prisma.SocioCreateWithoutCategoriaInput[] | Prisma.SocioUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.SocioCreateOrConnectWithoutCategoriaInput | Prisma.SocioCreateOrConnectWithoutCategoriaInput[]
+  upsert?: Prisma.SocioUpsertWithWhereUniqueWithoutCategoriaInput | Prisma.SocioUpsertWithWhereUniqueWithoutCategoriaInput[]
+  createMany?: Prisma.SocioCreateManyCategoriaInputEnvelope
+  set?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  disconnect?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  delete?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  connect?: Prisma.SocioWhereUniqueInput | Prisma.SocioWhereUniqueInput[]
+  update?: Prisma.SocioUpdateWithWhereUniqueWithoutCategoriaInput | Prisma.SocioUpdateWithWhereUniqueWithoutCategoriaInput[]
+  updateMany?: Prisma.SocioUpdateManyWithWhereWithoutCategoriaInput | Prisma.SocioUpdateManyWithWhereWithoutCategoriaInput[]
+  deleteMany?: Prisma.SocioScalarWhereInput | Prisma.SocioScalarWhereInput[]
+}
+
 export type SocioCreateWithoutInscripcionesInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -539,15 +770,23 @@ export type SocioCreateWithoutInscripcionesInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
   abonos?: Prisma.AbonoCreateNestedManyWithoutSocioInput
   cargos?: Prisma.CargoCreateNestedManyWithoutSocioInput
+  categoria?: Prisma.CategoriaCreateNestedOneWithoutSociosInput
 }
 
 export type SocioUncheckedCreateWithoutInscripcionesInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -556,7 +795,14 @@ export type SocioUncheckedCreateWithoutInscripcionesInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  categoriaId?: string | null
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutSocioInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutSocioInput
 }
@@ -581,6 +827,7 @@ export type SocioUpdateWithoutInscripcionesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -589,15 +836,23 @@ export type SocioUpdateWithoutInscripcionesInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   abonos?: Prisma.AbonoUpdateManyWithoutSocioNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutSocioNestedInput
+  categoria?: Prisma.CategoriaUpdateOneWithoutSociosNestedInput
 }
 
 export type SocioUncheckedUpdateWithoutInscripcionesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -606,7 +861,14 @@ export type SocioUncheckedUpdateWithoutInscripcionesInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoriaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutSocioNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutSocioNestedInput
 }
@@ -615,6 +877,7 @@ export type SocioCreateWithoutCargosInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -623,15 +886,23 @@ export type SocioCreateWithoutCargosInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
   abonos?: Prisma.AbonoCreateNestedManyWithoutSocioInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutSocioInput
+  categoria?: Prisma.CategoriaCreateNestedOneWithoutSociosInput
 }
 
 export type SocioUncheckedCreateWithoutCargosInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -640,7 +911,14 @@ export type SocioUncheckedCreateWithoutCargosInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  categoriaId?: string | null
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutSocioInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutSocioInput
 }
@@ -665,6 +943,7 @@ export type SocioUpdateWithoutCargosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -673,15 +952,23 @@ export type SocioUpdateWithoutCargosInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   abonos?: Prisma.AbonoUpdateManyWithoutSocioNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutSocioNestedInput
+  categoria?: Prisma.CategoriaUpdateOneWithoutSociosNestedInput
 }
 
 export type SocioUncheckedUpdateWithoutCargosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -690,7 +977,14 @@ export type SocioUncheckedUpdateWithoutCargosInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoriaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutSocioNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutSocioNestedInput
 }
@@ -699,6 +993,7 @@ export type SocioCreateWithoutAbonosInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -707,15 +1002,23 @@ export type SocioCreateWithoutAbonosInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
   cargos?: Prisma.CargoCreateNestedManyWithoutSocioInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutSocioInput
+  categoria?: Prisma.CategoriaCreateNestedOneWithoutSociosInput
 }
 
 export type SocioUncheckedCreateWithoutAbonosInput = {
   id?: string
   nombre: string
   apellidos: string
+  mote?: string | null
   dni: string
   fechaNacimiento: Date | string
   fotoUrl?: string | null
@@ -724,7 +1027,14 @@ export type SocioUncheckedCreateWithoutAbonosInput = {
   direccion?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
-  notas?: string | null
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  categoriaId?: string | null
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutSocioInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutSocioInput
 }
@@ -749,6 +1059,7 @@ export type SocioUpdateWithoutAbonosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -757,15 +1068,23 @@ export type SocioUpdateWithoutAbonosInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cargos?: Prisma.CargoUpdateManyWithoutSocioNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutSocioNestedInput
+  categoria?: Prisma.CategoriaUpdateOneWithoutSociosNestedInput
 }
 
 export type SocioUncheckedUpdateWithoutAbonosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dni?: Prisma.StringFieldUpdateOperationsInput | string
   fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -774,9 +1093,212 @@ export type SocioUncheckedUpdateWithoutAbonosInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  notas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoriaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutSocioNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutSocioNestedInput
+}
+
+export type SocioCreateWithoutCategoriaInput = {
+  id?: string
+  nombre: string
+  apellidos: string
+  mote?: string | null
+  dni: string
+  fechaNacimiento: Date | string
+  fotoUrl?: string | null
+  telefono?: string | null
+  email?: string | null
+  direccion?: string | null
+  cuentaBancaria?: string | null
+  activo?: boolean
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  abonos?: Prisma.AbonoCreateNestedManyWithoutSocioInput
+  cargos?: Prisma.CargoCreateNestedManyWithoutSocioInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutSocioInput
+}
+
+export type SocioUncheckedCreateWithoutCategoriaInput = {
+  id?: string
+  nombre: string
+  apellidos: string
+  mote?: string | null
+  dni: string
+  fechaNacimiento: Date | string
+  fotoUrl?: string | null
+  telefono?: string | null
+  email?: string | null
+  direccion?: string | null
+  cuentaBancaria?: string | null
+  activo?: boolean
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutSocioInput
+  cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutSocioInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutSocioInput
+}
+
+export type SocioCreateOrConnectWithoutCategoriaInput = {
+  where: Prisma.SocioWhereUniqueInput
+  create: Prisma.XOR<Prisma.SocioCreateWithoutCategoriaInput, Prisma.SocioUncheckedCreateWithoutCategoriaInput>
+}
+
+export type SocioCreateManyCategoriaInputEnvelope = {
+  data: Prisma.SocioCreateManyCategoriaInput | Prisma.SocioCreateManyCategoriaInput[]
+  skipDuplicates?: boolean
+}
+
+export type SocioUpsertWithWhereUniqueWithoutCategoriaInput = {
+  where: Prisma.SocioWhereUniqueInput
+  update: Prisma.XOR<Prisma.SocioUpdateWithoutCategoriaInput, Prisma.SocioUncheckedUpdateWithoutCategoriaInput>
+  create: Prisma.XOR<Prisma.SocioCreateWithoutCategoriaInput, Prisma.SocioUncheckedCreateWithoutCategoriaInput>
+}
+
+export type SocioUpdateWithWhereUniqueWithoutCategoriaInput = {
+  where: Prisma.SocioWhereUniqueInput
+  data: Prisma.XOR<Prisma.SocioUpdateWithoutCategoriaInput, Prisma.SocioUncheckedUpdateWithoutCategoriaInput>
+}
+
+export type SocioUpdateManyWithWhereWithoutCategoriaInput = {
+  where: Prisma.SocioScalarWhereInput
+  data: Prisma.XOR<Prisma.SocioUpdateManyMutationInput, Prisma.SocioUncheckedUpdateManyWithoutCategoriaInput>
+}
+
+export type SocioScalarWhereInput = {
+  AND?: Prisma.SocioScalarWhereInput | Prisma.SocioScalarWhereInput[]
+  OR?: Prisma.SocioScalarWhereInput[]
+  NOT?: Prisma.SocioScalarWhereInput | Prisma.SocioScalarWhereInput[]
+  id?: Prisma.StringFilter<"Socio"> | string
+  nombre?: Prisma.StringFilter<"Socio"> | string
+  apellidos?: Prisma.StringFilter<"Socio"> | string
+  mote?: Prisma.StringNullableFilter<"Socio"> | string | null
+  dni?: Prisma.StringFilter<"Socio"> | string
+  fechaNacimiento?: Prisma.DateTimeFilter<"Socio"> | Date | string
+  fotoUrl?: Prisma.StringNullableFilter<"Socio"> | string | null
+  telefono?: Prisma.StringNullableFilter<"Socio"> | string | null
+  email?: Prisma.StringNullableFilter<"Socio"> | string | null
+  direccion?: Prisma.StringNullableFilter<"Socio"> | string | null
+  cuentaBancaria?: Prisma.StringNullableFilter<"Socio"> | string | null
+  activo?: Prisma.BoolFilter<"Socio"> | boolean
+  nombreTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  dniTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  telefonoTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
+  observaciones?: Prisma.StringNullableFilter<"Socio"> | string | null
+  tallaRopa?: Prisma.StringNullableFilter<"Socio"> | string | null
+  rgpdFirmado?: Prisma.BoolFilter<"Socio"> | boolean
+  urlDocumentoRgpd?: Prisma.StringNullableFilter<"Socio"> | string | null
+  categoriaId?: Prisma.StringNullableFilter<"Socio"> | string | null
+}
+
+export type SocioCreateManyCategoriaInput = {
+  id?: string
+  nombre: string
+  apellidos: string
+  mote?: string | null
+  dni: string
+  fechaNacimiento: Date | string
+  fotoUrl?: string | null
+  telefono?: string | null
+  email?: string | null
+  direccion?: string | null
+  cuentaBancaria?: string | null
+  activo?: boolean
+  nombreTutor?: string | null
+  dniTutor?: string | null
+  telefonoTutor?: string | null
+  observaciones?: string | null
+  tallaRopa?: string | null
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: string | null
+}
+
+export type SocioUpdateWithoutCategoriaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  abonos?: Prisma.AbonoUpdateManyWithoutSocioNestedInput
+  cargos?: Prisma.CargoUpdateManyWithoutSocioNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutSocioNestedInput
+}
+
+export type SocioUncheckedUpdateWithoutCategoriaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutSocioNestedInput
+  cargos?: Prisma.CargoUncheckedUpdateManyWithoutSocioNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutSocioNestedInput
+}
+
+export type SocioUncheckedUpdateManyWithoutCategoriaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellidos?: Prisma.StringFieldUpdateOperationsInput | string
+  mote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaNacimiento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fotoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefonoTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observaciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tallaRopa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgpdFirmado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  urlDocumentoRgpd?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -832,6 +1354,7 @@ export type SocioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   nombre?: boolean
   apellidos?: boolean
+  mote?: boolean
   dni?: boolean
   fechaNacimiento?: boolean
   fotoUrl?: boolean
@@ -840,10 +1363,18 @@ export type SocioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   direccion?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
-  notas?: boolean
+  nombreTutor?: boolean
+  dniTutor?: boolean
+  telefonoTutor?: boolean
+  observaciones?: boolean
+  tallaRopa?: boolean
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: boolean
+  categoriaId?: boolean
   abonos?: boolean | Prisma.Socio$abonosArgs<ExtArgs>
   cargos?: boolean | Prisma.Socio$cargosArgs<ExtArgs>
   inscripciones?: boolean | Prisma.Socio$inscripcionesArgs<ExtArgs>
+  categoria?: boolean | Prisma.Socio$categoriaArgs<ExtArgs>
   _count?: boolean | Prisma.SocioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["socio"]>
 
@@ -851,6 +1382,7 @@ export type SocioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   nombre?: boolean
   apellidos?: boolean
+  mote?: boolean
   dni?: boolean
   fechaNacimiento?: boolean
   fotoUrl?: boolean
@@ -859,13 +1391,22 @@ export type SocioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   direccion?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
-  notas?: boolean
+  nombreTutor?: boolean
+  dniTutor?: boolean
+  telefonoTutor?: boolean
+  observaciones?: boolean
+  tallaRopa?: boolean
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: boolean
+  categoriaId?: boolean
+  categoria?: boolean | Prisma.Socio$categoriaArgs<ExtArgs>
 }, ExtArgs["result"]["socio"]>
 
 export type SocioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nombre?: boolean
   apellidos?: boolean
+  mote?: boolean
   dni?: boolean
   fechaNacimiento?: boolean
   fotoUrl?: boolean
@@ -874,13 +1415,22 @@ export type SocioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   direccion?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
-  notas?: boolean
+  nombreTutor?: boolean
+  dniTutor?: boolean
+  telefonoTutor?: boolean
+  observaciones?: boolean
+  tallaRopa?: boolean
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: boolean
+  categoriaId?: boolean
+  categoria?: boolean | Prisma.Socio$categoriaArgs<ExtArgs>
 }, ExtArgs["result"]["socio"]>
 
 export type SocioSelectScalar = {
   id?: boolean
   nombre?: boolean
   apellidos?: boolean
+  mote?: boolean
   dni?: boolean
   fechaNacimiento?: boolean
   fotoUrl?: boolean
@@ -889,18 +1439,30 @@ export type SocioSelectScalar = {
   direccion?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
-  notas?: boolean
+  nombreTutor?: boolean
+  dniTutor?: boolean
+  telefonoTutor?: boolean
+  observaciones?: boolean
+  tallaRopa?: boolean
+  rgpdFirmado?: boolean
+  urlDocumentoRgpd?: boolean
+  categoriaId?: boolean
 }
 
-export type SocioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "apellidos" | "dni" | "fechaNacimiento" | "fotoUrl" | "telefono" | "email" | "direccion" | "cuentaBancaria" | "activo" | "notas", ExtArgs["result"]["socio"]>
+export type SocioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "apellidos" | "mote" | "dni" | "fechaNacimiento" | "fotoUrl" | "telefono" | "email" | "direccion" | "cuentaBancaria" | "activo" | "nombreTutor" | "dniTutor" | "telefonoTutor" | "observaciones" | "tallaRopa" | "rgpdFirmado" | "urlDocumentoRgpd" | "categoriaId", ExtArgs["result"]["socio"]>
 export type SocioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   abonos?: boolean | Prisma.Socio$abonosArgs<ExtArgs>
   cargos?: boolean | Prisma.Socio$cargosArgs<ExtArgs>
   inscripciones?: boolean | Prisma.Socio$inscripcionesArgs<ExtArgs>
+  categoria?: boolean | Prisma.Socio$categoriaArgs<ExtArgs>
   _count?: boolean | Prisma.SocioCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type SocioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type SocioIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SocioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  categoria?: boolean | Prisma.Socio$categoriaArgs<ExtArgs>
+}
+export type SocioIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  categoria?: boolean | Prisma.Socio$categoriaArgs<ExtArgs>
+}
 
 export type $SocioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Socio"
@@ -908,11 +1470,13 @@ export type $SocioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     abonos: Prisma.$AbonoPayload<ExtArgs>[]
     cargos: Prisma.$CargoPayload<ExtArgs>[]
     inscripciones: Prisma.$InscripcionPayload<ExtArgs>[]
+    categoria: Prisma.$CategoriaPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     nombre: string
     apellidos: string
+    mote: string | null
     dni: string
     fechaNacimiento: Date
     fotoUrl: string | null
@@ -921,7 +1485,14 @@ export type $SocioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     direccion: string | null
     cuentaBancaria: string | null
     activo: boolean
-    notas: string | null
+    nombreTutor: string | null
+    dniTutor: string | null
+    telefonoTutor: string | null
+    observaciones: string | null
+    tallaRopa: string | null
+    rgpdFirmado: boolean
+    urlDocumentoRgpd: string | null
+    categoriaId: string | null
   }, ExtArgs["result"]["socio"]>
   composites: {}
 }
@@ -1319,6 +1890,7 @@ export interface Prisma__SocioClient<T, Null = never, ExtArgs extends runtime.Ty
   abonos<T extends Prisma.Socio$abonosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Socio$abonosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AbonoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cargos<T extends Prisma.Socio$cargosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Socio$cargosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CargoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inscripciones<T extends Prisma.Socio$inscripcionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Socio$inscripcionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InscripcionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  categoria<T extends Prisma.Socio$categoriaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Socio$categoriaArgs<ExtArgs>>): Prisma.Prisma__CategoriaClient<runtime.Types.Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1351,6 +1923,7 @@ export interface SocioFieldRefs {
   readonly id: Prisma.FieldRef<"Socio", 'String'>
   readonly nombre: Prisma.FieldRef<"Socio", 'String'>
   readonly apellidos: Prisma.FieldRef<"Socio", 'String'>
+  readonly mote: Prisma.FieldRef<"Socio", 'String'>
   readonly dni: Prisma.FieldRef<"Socio", 'String'>
   readonly fechaNacimiento: Prisma.FieldRef<"Socio", 'DateTime'>
   readonly fotoUrl: Prisma.FieldRef<"Socio", 'String'>
@@ -1359,7 +1932,14 @@ export interface SocioFieldRefs {
   readonly direccion: Prisma.FieldRef<"Socio", 'String'>
   readonly cuentaBancaria: Prisma.FieldRef<"Socio", 'String'>
   readonly activo: Prisma.FieldRef<"Socio", 'Boolean'>
-  readonly notas: Prisma.FieldRef<"Socio", 'String'>
+  readonly nombreTutor: Prisma.FieldRef<"Socio", 'String'>
+  readonly dniTutor: Prisma.FieldRef<"Socio", 'String'>
+  readonly telefonoTutor: Prisma.FieldRef<"Socio", 'String'>
+  readonly observaciones: Prisma.FieldRef<"Socio", 'String'>
+  readonly tallaRopa: Prisma.FieldRef<"Socio", 'String'>
+  readonly rgpdFirmado: Prisma.FieldRef<"Socio", 'Boolean'>
+  readonly urlDocumentoRgpd: Prisma.FieldRef<"Socio", 'String'>
+  readonly categoriaId: Prisma.FieldRef<"Socio", 'String'>
 }
     
 
@@ -1609,6 +2189,10 @@ export type SocioCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.SocioCreateManyInput | Prisma.SocioCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SocioIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1679,6 +2263,10 @@ export type SocioUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many Socios to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SocioIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1817,6 +2405,25 @@ export type Socio$inscripcionesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.InscripcionScalarFieldEnum | Prisma.InscripcionScalarFieldEnum[]
+}
+
+/**
+ * Socio.categoria
+ */
+export type Socio$categoriaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Categoria
+   */
+  select?: Prisma.CategoriaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Categoria
+   */
+  omit?: Prisma.CategoriaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoriaInclude<ExtArgs> | null
+  where?: Prisma.CategoriaWhereInput
 }
 
 /**

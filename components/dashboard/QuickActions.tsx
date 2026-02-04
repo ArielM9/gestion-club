@@ -31,7 +31,7 @@ export default function QuickActions() {
       <h2 className="text-lg font-bold text-slate-800 mb-4 px-2">Acciones Rápidas</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {actions.map((action) => (
-          <ActionButton key={action.label} {...action} />
+          <ActionButton key={action.label} {...action} variant="primary" />
         ))}
       </div>
     </section>

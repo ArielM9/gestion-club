@@ -68,6 +68,11 @@ export type Abono = Prisma.AbonoModel
  */
 export type IngresoExterno = Prisma.IngresoExternoModel
 /**
+ * Model Gasto
+ * 
+ */
+export type Gasto = Prisma.GastoModel
+/**
  * Model Log
  * 
  */

@@ -61,6 +61,7 @@ export const ModelName = {
   Cargo: 'Cargo',
   Abono: 'Abono',
   IngresoExterno: 'IngresoExterno',
+  Gasto: 'Gasto',
   Log: 'Log',
   Evento: 'Evento',
   Equipo: 'Equipo',
@@ -148,6 +149,7 @@ export const SocioScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre',
   apellidos: 'apellidos',
+  mote: 'mote',
   dni: 'dni',
   fechaNacimiento: 'fechaNacimiento',
   fotoUrl: 'fotoUrl',
@@ -156,7 +158,14 @@ export const SocioScalarFieldEnum = {
   direccion: 'direccion',
   cuentaBancaria: 'cuentaBancaria',
   activo: 'activo',
-  notas: 'notas'
+  nombreTutor: 'nombreTutor',
+  dniTutor: 'dniTutor',
+  telefonoTutor: 'telefonoTutor',
+  observaciones: 'observaciones',
+  tallaRopa: 'tallaRopa',
+  rgpdFirmado: 'rgpdFirmado',
+  urlDocumentoRgpd: 'urlDocumentoRgpd',
+  categoriaId: 'categoriaId'
 } as const
 
 export type SocioScalarFieldEnum = (typeof SocioScalarFieldEnum)[keyof typeof SocioScalarFieldEnum]
@@ -222,6 +231,18 @@ export const IngresoExternoScalarFieldEnum = {
 } as const
 
 export type IngresoExternoScalarFieldEnum = (typeof IngresoExternoScalarFieldEnum)[keyof typeof IngresoExternoScalarFieldEnum]
+
+
+export const GastoScalarFieldEnum = {
+  id: 'id',
+  monto: 'monto',
+  concepto: 'concepto',
+  categoria: 'categoria',
+  fecha: 'fecha',
+  temporadaId: 'temporadaId'
+} as const
+
+export type GastoScalarFieldEnum = (typeof GastoScalarFieldEnum)[keyof typeof GastoScalarFieldEnum]
 
 
 export const LogScalarFieldEnum = {

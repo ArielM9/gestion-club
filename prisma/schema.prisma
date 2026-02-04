@@ -76,21 +76,31 @@ model Verification {
 }
 
 model Socio {
-  id              String        @id @default(cuid())
-  nombre          String
-  apellidos       String
-  dni             String        @unique
-  fechaNacimiento DateTime
-  fotoUrl         String?
-  telefono        String?
-  email           String?
-  direccion       String?
-  cuentaBancaria  String?
-  activo          Boolean       @default(true)
-  notas           String?
-  abonos          Abono[]
-  cargos          Cargo[]
-  inscripciones   Inscripcion[]
+  id               String        @id @default(cuid())
+  nombre           String
+  apellidos        String
+  mote             String?
+  dni              String        @unique
+  fechaNacimiento  DateTime
+  fotoUrl          String?
+  telefono         String?
+  email            String?
+  direccion        String?
+  cuentaBancaria   String?
+  activo           Boolean       @default(true)
+  // Nuevos campos
+  nombreTutor      String?
+  dniTutor         String?
+  telefonoTutor    String?
+  observaciones    String?
+  tallaRopa        String? // Ej: "L", "XL", "Talla 12"
+  rgpdFirmado      Boolean       @default(false)
+  urlDocumentoRgpd String? // Para cuando implementemos la subida del PDF escaneado
+  abonos           Abono[]
+  cargos           Cargo[]
+  inscripciones    Inscripcion[]
+  categoriaId      String? // El campo que guarda el ID
+  categoria        Categoria?    @relation(fields: [categoriaId], references: [id]) // La relación
 }
 
 model Temporada {
@@ -104,6 +114,7 @@ model Temporada {
   equipos       Equipo[]
   ingresos      IngresoExterno[]
   inscripciones Inscripcion[]
+  gastos        Gasto[]
 }
 
 model Inscripcion {
@@ -153,6 +164,16 @@ model IngresoExterno {
   monto       Float
   fuente      String
   concepto    String
+  fecha       DateTime  @default(now())
+  temporadaId String
+  temporada   Temporada @relation(fields: [temporadaId], references: [id])
+}
+
+model Gasto {
+  id          String    @id @default(cuid())
+  monto       Float
+  concepto    String
+  categoria   String // Ej: "Arbitrajes", "Material", "Instalaciones"
   fecha       DateTime  @default(now())
   temporadaId String
   temporada   Temporada @relation(fields: [temporadaId], references: [id])
@@ -212,6 +233,7 @@ model Categoria {
   costeCuota  Float    @default(0)
   incluyeRopa Boolean  @default(false)
   equipos     Equipo[]
+  socios      Socio[]
 }
 
 enum Role {

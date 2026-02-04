@@ -1,184 +1,123 @@
-import { PrismaClient, Role, UserStatus } from "@/app/generated/client/client"
+import { PrismaClient, Role, UserStatus, MetodoPago, EstadoAbono } from "../app/generated/client/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const adapter = new PrismaPg({ 
-  connectionString: process.env.DATABASE_URL 
-});
-const prisma = new PrismaClient({adapter: adapter});
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL as string });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("🌱 Seeding database with Better Auth support...");
+  console.log("🚀 Iniciando Seeding Integral (Datos Reales + Lógica de Menores)...");
 
-  // ------------------
-  // USUARIOS INTERNOS (Actualizado para Better Auth)
-  // ------------------
-  // Usamos una contraseña simple para todos: 123456
-  const password = "123456";
-
-  await prisma.user.create({
-    data: {
-      id: "admin_id",
+  // 1. ADMIN
+  const password = "12345678";
+  await prisma.user.upsert({
+    where: { email: "admin@victorianos.com" },
+    update: {},
+    create: {
+      id: "admin_root",
       username: "admin",
-      name: "Admin",
-      email: "admin@club.com", // Obligatorio para Better Auth
+      name: "Administrador General",
+      email: "admin@victorianos.com",
       role: Role.ADMIN,
       status: UserStatus.ACTIVE,
       emailVerified: true,
-      accounts: {
-        create: {
-          id: "acc_admin",
-          accountId: "admin",
-          providerId: "credential",
-          password: password,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-      }
-}
-  });
-
-  await prisma.user.create({
-    data: {
-      id: "juan_id",
-      username: "juan",
-      name: "Juan",
-      email: "juan@club.com",
-      role: Role.CONTABILIDAD,
-      status: UserStatus.ACTIVE,
-      emailVerified: true,
-      accounts: {
-        create: {
-          id: "acc_juan",
-          accountId: "juan",
-          providerId: "credential",
-          password: password,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-      }
+      accounts: { create: { id: "acc_admin_root", accountId: "admin_root", providerId: "credential", password, createdAt: new Date(), updatedAt: new Date() } }
     }
   });
 
-  await prisma.user.create({
-    data: {
-      id: "nobita_id",
-      username: "nobita",
-      name: "Nobita",
-      email: "nobita@club.com",
-      role: Role.DIRECTIVA,
-      status: UserStatus.ACTIVE,
-      emailVerified: true,
-      accounts: {
-        create: {
-          id: "acc_nobita",
-          accountId: "nobita",
-          providerId: "credential",
-          password: password,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-      }
-    }
-  });
-
-  await prisma.user.create({
-    data: {
-      id: "rocio_id",
-      username: "rocio",
-      name: "Rocio",
-      email: "rocio@club.com",
-      role: Role.COLABORADOR,
-      status: UserStatus.ACTIVE,
-      emailVerified: true,
-      accounts: {
-        create: {
-          id: "acc_rocio",
-          accountId: "rocio",
-          providerId: "credential",
-          password: password,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-      }
-    }
-  });
-
-  // ------------------
-  // TEMPORADA ACTIVA (Igual que tu original)
-  // ------------------
+  // 2. TEMPORADA
   const temporada = await prisma.temporada.create({
-    data: {
-      nombre: "2024-2025",
-      fechaInicio: new Date("2024-09-01"),
-      fechaFin: new Date("2025-06-30"),
-      activa: true,
-    },
+    data: { nombre: "2025/2026", fechaInicio: new Date("2025-09-01"), fechaFin: new Date("2026-06-30"), activa: true }
   });
 
-  // ------------------
-  // CATEGORÍAS (Igual que tu original)
-  // ------------------
-  const categoriasData = [
-    { nombre: "M10", costeFicha: 50, costeCuota: 60 },
-    { nombre: "M14", costeFicha: 120, costeCuota: 80 },
-    { nombre: "M16", costeFicha: 150, costeCuota: 100 },
-    { nombre: "M18", costeFicha: 150, costeCuota: 100 },
-    { nombre: "Sub23", costeFicha: 220, costeCuota: 100 },
-    { nombre: "Senior", costeFicha: 250, costeCuota: 100 },
-    { nombre: "Femenino", costeFicha: 100, costeCuota: 100 },
+  // 3. CATEGORÍAS
+  const catsData = [
+    { nombre: "Escuelita", costeFicha: 50, costeCuota: 100 },
+    { nombre: "M16", costeFicha: 120, costeCuota: 150 },
+    { nombre: "Senior Masculino", costeFicha: 180, costeCuota: 200 },
+    { nombre: "Femenino", costeFicha: 120, costeCuota: 150 }
   ];
 
-  const categorias = await Promise.all(
-    categoriasData.map((c) => prisma.categoria.create({ data: c }))
-  );
+  const cats: any = {};
+  for (const c of catsData) {
+    cats[c.nombre] = await prisma.categoria.create({ data: c });
+  }
 
-  const categoriaMap = Object.fromEntries(categorias.map((c: any) => [c.nombre, c.id]));
+  // 4. JUGADORES CON LÓGICA DE TUTORES
+  const jugadoresData = [
+    // ADULTOS
+    { nombre: "Hugo", apellidos: "García Ramos", mote: "Huguito", dni: "11111111A", nac: "1995-05-20", cat: "Senior Masculino", tutor: null },
+    { nombre: "Elena", apellidos: "Pérez Soler", mote: "Titán", dni: "22222222B", nac: "1998-02-15", cat: "Femenino", tutor: null },
+    { nombre: "Adrián", apellidos: "Sanz Ibáñez", mote: "Sanz", dni: "33333333C", nac: "1992-11-30", cat: "Senior Masculino", tutor: null },
+    { nombre: "Sofía", apellidos: "Marín Ocaña", mote: null, dni: "44444444D", nac: "1999-07-12", cat: "Femenino", tutor: null },
+    
+    // MENORES (Con datos de tutor obligatorios)
+    { nombre: "Mateo", apellidos: "López Vega", mote: "Torito", dni: "55555555E", nac: "2010-03-25", cat: "M16", 
+      tutor: { nombre: "Carlos López", dni: "99999991Q", tel: "677111222" } },
+    { nombre: "Lucas", apellidos: "Gómez Ferro", mote: "Lukitas", dni: "66666666F", nac: "2011-08-14", cat: "M16", 
+      tutor: { nombre: "Andrés Gómez", dni: "99999992W", tel: "677333444" } },
+    { nombre: "Valentina", apellidos: "Cruz Daza", mote: "Vale", dni: "77777777G", nac: "2017-01-10", cat: "Escuelita", 
+      tutor: { nombre: "Lucía Daza", dni: "99999993E", tel: "677555666" } },
+    { nombre: "Diego", apellidos: "Torres Gil", mote: "Didi", dni: "88888888H", nac: "2018-05-04", cat: "Escuelita", 
+      tutor: { nombre: "Marta Gil", dni: "99999994R", tel: "677777888" } },
+    { nombre: "Iker", apellidos: "Jiménez Ruiz", mote: null, dni: "99999999I", nac: "2009-12-20", cat: "M16", 
+      tutor: { nombre: "Pedro Jiménez", dni: "99999995T", tel: "677999000" } },
+    { nombre: "Emma", apellidos: "Vázquez Rey", mote: "Flecha", dni: "10101010J", nac: "2016-11-02", cat: "Escuelita", 
+      tutor: { nombre: "Sonia Rey", dni: "99999996Y", tel: "688111222" } },
+  ];
 
-  // ------------------
-  // EQUIPOS (Igual que tu original)
-  // ------------------
-  const equipos = await Promise.all([
-    prisma.equipo.create({ data: { nombre: "Senior", temporadaId: temporada.id, categoriaId: categoriaMap["Senior"] } }),
-    prisma.equipo.create({ data: { nombre: "M16", temporadaId: temporada.id, categoriaId: categoriaMap["M16"] } }),
-    prisma.equipo.create({ data: { nombre: "Femenino", temporadaId: temporada.id, categoriaId: categoriaMap["Femenino"] } }),
-    prisma.equipo.create({ data: { nombre: "M10", temporadaId: temporada.id, categoriaId: categoriaMap["M10"] } }),
-    prisma.equipo.create({ data: { nombre: "M14", temporadaId: temporada.id, categoriaId: categoriaMap["M14"] } }),
-  ]);
+  for (const j of jugadoresData) {
+    const socio = await prisma.socio.create({
+      data: {
+        nombre: j.nombre,
+        apellidos: j.apellidos,
+        mote: j.mote,
+        dni: j.dni,
+        fechaNacimiento: new Date(j.nac),
+        email: `${j.nombre.toLowerCase()}@ejemplo.com`,
+        telefono: j.tutor ? null : "600111222", // Si es menor, solemos no tener su móvil personal
+        direccion: "Calle del Rugby, 15",
+        cuentaBancaria: "ES21 1234 5678 9012 3456 7890",
+        categoriaId: cats[j.cat].id,
+        tallaRopa: j.cat === "Escuelita" ? "Talla 10" : "L",
+        rgpdFirmado: true,
+        // Datos del Tutor
+        nombreTutor: j.tutor?.nombre || null,
+        dniTutor: j.tutor?.dni || null,
+        telefonoTutor: j.tutor?.tel || null,
+        observaciones: j.cat === "Escuelita" ? "Alergia leve al polen" : "Sin observaciones",
+      }
+    });
 
-  const equipoMap = Object.fromEntries(equipos.map((e: any) => [e.nombre, e.id]));
+    // Crear Cargo inicial (Deuda)
+    const cargo = await prisma.cargo.create({
+      data: {
+        monto: cats[j.cat].costeFicha,
+        concepto: "Inscripción Anual y Ficha",
+        socioId: socio.id,
+        temporadaId: temporada.id,
+      }
+    });
 
-  // ------------------
-  // SOCIOS (Igual que tu original)
-  // ------------------
-  let dniCounter = 10000000;
-  for (const categoria of categorias) {
-    for (let i = 1; i <= 3; i++) {
-      const socio = await prisma.socio.create({
+    // Simular que los 4 primeros han pagado (Abono)
+    if (jugadoresData.indexOf(j) < 4) {
+      await prisma.abono.create({
         data: {
-          nombre: `Jugador${i}`,
-          apellidos: categoria.nombre,
-          dni: `${dniCounter++}X`,
-          fechaNacimiento: new Date("2008-01-01"),
-          telefono: "600000000",
-          email: `jugador${i}.${categoria.nombre}@example.com`,
-          direccion: "Calle Falsa 123",
-        },
-      });
-
-      await prisma.inscripcion.create({
-        data: {
+          monto: cats[j.cat].costeFicha,
+          metodo: MetodoPago.TRANSFERENCIA,
+          estado: EstadoAbono.APROBADO,
           socioId: socio.id,
           temporadaId: temporada.id,
-          equipoId: equipoMap[categoria.nombre] ?? equipoMap["Senior"],
-        },
+          cargoId: cargo.id,
+          aprobadoPorId: "admin_root"
+        }
       });
     }
   }
 
-  console.log("✅ Seed completado correctamente");
+  console.log("✅ Seed completado: 10 socios (4 adultos, 6 menores con tutores), categorías y cargos.");
 }
 
 main()

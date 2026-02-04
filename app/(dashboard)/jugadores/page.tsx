@@ -1,51 +1,79 @@
-// app/(dashboard)/jugadores/page.tsx
-import { Plus, Search, Filter } from "lucide-react";
-import Link from "next/link";
-import SocioTable from "@/components/jugadores/SocioTable";
 import prisma from "@/lib/prisma";
+import SocioTable from "@/components/jugadores/SocioTable";
+import SearchJugadores from "@/components/jugadores/SearchJugadores";
+import CategoryFilter from "@/components/jugadores/CategoryFilter"; // Tendrás que crearlo o usar un select
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
+const ITEMS_PER_PAGE = 10;
 
-export default async function JugadoresPage() {
-  // Traemos los socios de la base de datos
-  const socios = await prisma.socio.findMany({
-    orderBy: { apellidos: 'asc' },
-  });
+export default async function JugadoresPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string; page?: string; categoria?: string }>;
+}) {
+  // 1. Esperamos todos los params
+  const { search, page, categoria } = await searchParams;
+  
+  const query = search || "";
+  const currentPage = Number(page) || 1;
+  const categoriaId = categoria || undefined;
+
+  // 2. Construimos el filtro WHERE
+  const where = {
+    categoriaId: categoriaId, // Si es undefined, Prisma ignora el filtro
+    OR: query ? [
+      { nombre: { contains: query, mode: "insensitive" as const } },
+      { apellidos: { contains: query, mode: "insensitive" as const } },
+      { dni: { contains: query, mode: "insensitive" as const } },
+      { mote: { contains: query, mode: "insensitive" as const } },
+    ] : undefined,
+  };
+
+  // 3. Consultas paralelas: Socios paginados, Total para la cuenta y Categorías para el filtro
+  const [socios, totalCount, categorias] = await Promise.all([
+    prisma.socio.findMany({
+      where,
+      include: { categoria: true },
+      orderBy: { apellidos: "asc" },
+      skip: (currentPage - 1) * ITEMS_PER_PAGE,
+      take: ITEMS_PER_PAGE,
+    }),
+    prisma.socio.count({ where }),
+    prisma.categoria.findMany({ orderBy: { nombre: "asc" } })
+  ]);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      {/* Cabecera de la página */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2">
+      <div className="flex justify-between items-end px-2">
         <div>
           <h1 className="text-2xl font-black text-slate-900">Socios y Jugadores</h1>
-          <p className="text-sm text-slate-500 font-medium">Gestiona las fichas, estados y datos de contacto.</p>
+          <p className="text-sm text-slate-500 font-medium">Lista general del club</p>
         </div>
-        
         <Link 
           href="/jugadores/nuevo" 
-          className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 w-fit"
+          className="flex items-center gap-2 bg-[#1e293b] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
         >
           <Plus size={18} /> Nuevo Socio
         </Link>
       </div>
 
-      {/* Barra de Herramientas (Buscador y Filtros) */}
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Buscar por nombre, apellidos o DNI..." 
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 transition-all"
-          />
+        <div className="flex-1">
+          <SearchJugadores />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-100 transition-all w-full md:w-auto justify-center">
-          <Filter size={16} /> Filtros
-        </button>
+        {/* Pasamos las categorías al filtro */}
+        <CategoryFilter categorias={categorias} />
       </div>
 
-      {/* Tabla de Socios */}
-      <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white overflow-hidden">
-        <SocioTable socios={socios} />
+      <div className="bg-white rounded-[2rem] shadow-sm border border-white overflow-hidden">
+        <SocioTable 
+          socios={socios} 
+          totalPages={totalPages} 
+          currentPage={currentPage} 
+        />
       </div>
     </div>
   );

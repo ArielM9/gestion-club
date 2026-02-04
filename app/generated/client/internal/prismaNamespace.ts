@@ -394,6 +394,7 @@ export const ModelName = {
   Cargo: 'Cargo',
   Abono: 'Abono',
   IngresoExterno: 'IngresoExterno',
+  Gasto: 'Gasto',
   Log: 'Log',
   Evento: 'Evento',
   Equipo: 'Equipo',
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "socio" | "temporada" | "inscripcion" | "cargo" | "abono" | "ingresoExterno" | "log" | "evento" | "equipo" | "categoria"
+    modelProps: "user" | "session" | "account" | "verification" | "socio" | "temporada" | "inscripcion" | "cargo" | "abono" | "ingresoExterno" | "gasto" | "log" | "evento" | "equipo" | "categoria"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1157,6 +1158,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Gasto: {
+      payload: Prisma.$GastoPayload<ExtArgs>
+      fields: Prisma.GastoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GastoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GastoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>
+        }
+        findFirst: {
+          args: Prisma.GastoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GastoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>
+        }
+        findMany: {
+          args: Prisma.GastoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>[]
+        }
+        create: {
+          args: Prisma.GastoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>
+        }
+        createMany: {
+          args: Prisma.GastoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GastoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>[]
+        }
+        delete: {
+          args: Prisma.GastoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>
+        }
+        update: {
+          args: Prisma.GastoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>
+        }
+        deleteMany: {
+          args: Prisma.GastoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GastoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GastoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>[]
+        }
+        upsert: {
+          args: Prisma.GastoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoPayload>
+        }
+        aggregate: {
+          args: Prisma.GastoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGasto>
+        }
+        groupBy: {
+          args: Prisma.GastoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GastoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GastoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GastoCountAggregateOutputType> | number
+        }
+      }
+    }
     Log: {
       payload: Prisma.$LogPayload<ExtArgs>
       fields: Prisma.LogFieldRefs
@@ -1557,6 +1632,7 @@ export const SocioScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre',
   apellidos: 'apellidos',
+  mote: 'mote',
   dni: 'dni',
   fechaNacimiento: 'fechaNacimiento',
   fotoUrl: 'fotoUrl',
@@ -1565,7 +1641,14 @@ export const SocioScalarFieldEnum = {
   direccion: 'direccion',
   cuentaBancaria: 'cuentaBancaria',
   activo: 'activo',
-  notas: 'notas'
+  nombreTutor: 'nombreTutor',
+  dniTutor: 'dniTutor',
+  telefonoTutor: 'telefonoTutor',
+  observaciones: 'observaciones',
+  tallaRopa: 'tallaRopa',
+  rgpdFirmado: 'rgpdFirmado',
+  urlDocumentoRgpd: 'urlDocumentoRgpd',
+  categoriaId: 'categoriaId'
 } as const
 
 export type SocioScalarFieldEnum = (typeof SocioScalarFieldEnum)[keyof typeof SocioScalarFieldEnum]
@@ -1631,6 +1714,18 @@ export const IngresoExternoScalarFieldEnum = {
 } as const
 
 export type IngresoExternoScalarFieldEnum = (typeof IngresoExternoScalarFieldEnum)[keyof typeof IngresoExternoScalarFieldEnum]
+
+
+export const GastoScalarFieldEnum = {
+  id: 'id',
+  monto: 'monto',
+  concepto: 'concepto',
+  categoria: 'categoria',
+  fecha: 'fecha',
+  temporadaId: 'temporadaId'
+} as const
+
+export type GastoScalarFieldEnum = (typeof GastoScalarFieldEnum)[keyof typeof GastoScalarFieldEnum]
 
 
 export const LogScalarFieldEnum = {
@@ -1949,6 +2044,7 @@ export type GlobalOmitConfig = {
   cargo?: Prisma.CargoOmit
   abono?: Prisma.AbonoOmit
   ingresoExterno?: Prisma.IngresoExternoOmit
+  gasto?: Prisma.GastoOmit
   log?: Prisma.LogOmit
   evento?: Prisma.EventoOmit
   equipo?: Prisma.EquipoOmit

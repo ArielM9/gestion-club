@@ -187,6 +187,7 @@ export type TemporadaWhereInput = {
   equipos?: Prisma.EquipoListRelationFilter
   ingresos?: Prisma.IngresoExternoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
+  gastos?: Prisma.GastoListRelationFilter
 }
 
 export type TemporadaOrderByWithRelationInput = {
@@ -200,6 +201,7 @@ export type TemporadaOrderByWithRelationInput = {
   equipos?: Prisma.EquipoOrderByRelationAggregateInput
   ingresos?: Prisma.IngresoExternoOrderByRelationAggregateInput
   inscripciones?: Prisma.InscripcionOrderByRelationAggregateInput
+  gastos?: Prisma.GastoOrderByRelationAggregateInput
 }
 
 export type TemporadaWhereUniqueInput = Prisma.AtLeast<{
@@ -216,6 +218,7 @@ export type TemporadaWhereUniqueInput = Prisma.AtLeast<{
   equipos?: Prisma.EquipoListRelationFilter
   ingresos?: Prisma.IngresoExternoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
+  gastos?: Prisma.GastoListRelationFilter
 }, "id">
 
 export type TemporadaOrderByWithAggregationInput = {
@@ -251,6 +254,7 @@ export type TemporadaCreateInput = {
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateInput = {
@@ -264,6 +268,7 @@ export type TemporadaUncheckedCreateInput = {
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUpdateInput = {
@@ -277,6 +282,7 @@ export type TemporadaUpdateInput = {
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateInput = {
@@ -290,6 +296,7 @@ export type TemporadaUncheckedUpdateInput = {
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateManyInput = {
@@ -401,6 +408,20 @@ export type TemporadaUpdateOneRequiredWithoutIngresosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutIngresosInput, Prisma.TemporadaUpdateWithoutIngresosInput>, Prisma.TemporadaUncheckedUpdateWithoutIngresosInput>
 }
 
+export type TemporadaCreateNestedOneWithoutGastosInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutGastosInput, Prisma.TemporadaUncheckedCreateWithoutGastosInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutGastosInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+}
+
+export type TemporadaUpdateOneRequiredWithoutGastosNestedInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutGastosInput, Prisma.TemporadaUncheckedCreateWithoutGastosInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutGastosInput
+  upsert?: Prisma.TemporadaUpsertWithoutGastosInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutGastosInput, Prisma.TemporadaUpdateWithoutGastosInput>, Prisma.TemporadaUncheckedUpdateWithoutGastosInput>
+}
+
 export type TemporadaCreateNestedOneWithoutEquiposInput = {
   create?: Prisma.XOR<Prisma.TemporadaCreateWithoutEquiposInput, Prisma.TemporadaUncheckedCreateWithoutEquiposInput>
   connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutEquiposInput
@@ -425,6 +446,7 @@ export type TemporadaCreateWithoutInscripcionesInput = {
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutInscripcionesInput = {
@@ -437,6 +459,7 @@ export type TemporadaUncheckedCreateWithoutInscripcionesInput = {
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutInscripcionesInput = {
@@ -465,6 +488,7 @@ export type TemporadaUpdateWithoutInscripcionesInput = {
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutInscripcionesInput = {
@@ -477,6 +501,7 @@ export type TemporadaUncheckedUpdateWithoutInscripcionesInput = {
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutCargosInput = {
@@ -489,6 +514,7 @@ export type TemporadaCreateWithoutCargosInput = {
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutCargosInput = {
@@ -501,6 +527,7 @@ export type TemporadaUncheckedCreateWithoutCargosInput = {
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutCargosInput = {
@@ -529,6 +556,7 @@ export type TemporadaUpdateWithoutCargosInput = {
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutCargosInput = {
@@ -541,6 +569,7 @@ export type TemporadaUncheckedUpdateWithoutCargosInput = {
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutAbonosInput = {
@@ -553,6 +582,7 @@ export type TemporadaCreateWithoutAbonosInput = {
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutAbonosInput = {
@@ -565,6 +595,7 @@ export type TemporadaUncheckedCreateWithoutAbonosInput = {
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutAbonosInput = {
@@ -593,6 +624,7 @@ export type TemporadaUpdateWithoutAbonosInput = {
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutAbonosInput = {
@@ -605,6 +637,7 @@ export type TemporadaUncheckedUpdateWithoutAbonosInput = {
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutIngresosInput = {
@@ -617,6 +650,7 @@ export type TemporadaCreateWithoutIngresosInput = {
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutIngresosInput = {
@@ -629,6 +663,7 @@ export type TemporadaUncheckedCreateWithoutIngresosInput = {
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutIngresosInput = {
@@ -657,6 +692,7 @@ export type TemporadaUpdateWithoutIngresosInput = {
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutIngresosInput = {
@@ -668,6 +704,75 @@ export type TemporadaUncheckedUpdateWithoutIngresosInput = {
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaCreateWithoutGastosInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaUncheckedCreateWithoutGastosInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaCreateOrConnectWithoutGastosInput = {
+  where: Prisma.TemporadaWhereUniqueInput
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutGastosInput, Prisma.TemporadaUncheckedCreateWithoutGastosInput>
+}
+
+export type TemporadaUpsertWithoutGastosInput = {
+  update: Prisma.XOR<Prisma.TemporadaUpdateWithoutGastosInput, Prisma.TemporadaUncheckedUpdateWithoutGastosInput>
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutGastosInput, Prisma.TemporadaUncheckedCreateWithoutGastosInput>
+  where?: Prisma.TemporadaWhereInput
+}
+
+export type TemporadaUpdateToOneWithWhereWithoutGastosInput = {
+  where?: Prisma.TemporadaWhereInput
+  data: Prisma.XOR<Prisma.TemporadaUpdateWithoutGastosInput, Prisma.TemporadaUncheckedUpdateWithoutGastosInput>
+}
+
+export type TemporadaUpdateWithoutGastosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaUncheckedUpdateWithoutGastosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
@@ -681,6 +786,7 @@ export type TemporadaCreateWithoutEquiposInput = {
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutEquiposInput = {
@@ -693,6 +799,7 @@ export type TemporadaUncheckedCreateWithoutEquiposInput = {
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutEquiposInput = {
@@ -721,6 +828,7 @@ export type TemporadaUpdateWithoutEquiposInput = {
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutEquiposInput = {
@@ -733,6 +841,7 @@ export type TemporadaUncheckedUpdateWithoutEquiposInput = {
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 
@@ -746,6 +855,7 @@ export type TemporadaCountOutputType = {
   equipos: number
   ingresos: number
   inscripciones: number
+  gastos: number
 }
 
 export type TemporadaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -754,6 +864,7 @@ export type TemporadaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   equipos?: boolean | TemporadaCountOutputTypeCountEquiposArgs
   ingresos?: boolean | TemporadaCountOutputTypeCountIngresosArgs
   inscripciones?: boolean | TemporadaCountOutputTypeCountInscripcionesArgs
+  gastos?: boolean | TemporadaCountOutputTypeCountGastosArgs
 }
 
 /**
@@ -801,6 +912,13 @@ export type TemporadaCountOutputTypeCountInscripcionesArgs<ExtArgs extends runti
   where?: Prisma.InscripcionWhereInput
 }
 
+/**
+ * TemporadaCountOutputType without action
+ */
+export type TemporadaCountOutputTypeCountGastosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GastoWhereInput
+}
+
 
 export type TemporadaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -813,6 +931,7 @@ export type TemporadaSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   equipos?: boolean | Prisma.Temporada$equiposArgs<ExtArgs>
   ingresos?: boolean | Prisma.Temporada$ingresosArgs<ExtArgs>
   inscripciones?: boolean | Prisma.Temporada$inscripcionesArgs<ExtArgs>
+  gastos?: boolean | Prisma.Temporada$gastosArgs<ExtArgs>
   _count?: boolean | Prisma.TemporadaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["temporada"]>
 
@@ -847,6 +966,7 @@ export type TemporadaInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   equipos?: boolean | Prisma.Temporada$equiposArgs<ExtArgs>
   ingresos?: boolean | Prisma.Temporada$ingresosArgs<ExtArgs>
   inscripciones?: boolean | Prisma.Temporada$inscripcionesArgs<ExtArgs>
+  gastos?: boolean | Prisma.Temporada$gastosArgs<ExtArgs>
   _count?: boolean | Prisma.TemporadaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TemporadaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -860,6 +980,7 @@ export type $TemporadaPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     equipos: Prisma.$EquipoPayload<ExtArgs>[]
     ingresos: Prisma.$IngresoExternoPayload<ExtArgs>[]
     inscripciones: Prisma.$InscripcionPayload<ExtArgs>[]
+    gastos: Prisma.$GastoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1266,6 +1387,7 @@ export interface Prisma__TemporadaClient<T, Null = never, ExtArgs extends runtim
   equipos<T extends Prisma.Temporada$equiposArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$equiposArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EquipoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ingresos<T extends Prisma.Temporada$ingresosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$ingresosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IngresoExternoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inscripciones<T extends Prisma.Temporada$inscripcionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$inscripcionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InscripcionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gastos<T extends Prisma.Temporada$gastosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$gastosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GastoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1805,6 +1927,30 @@ export type Temporada$inscripcionesArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.InscripcionScalarFieldEnum | Prisma.InscripcionScalarFieldEnum[]
+}
+
+/**
+ * Temporada.gastos
+ */
+export type Temporada$gastosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Gasto
+   */
+  select?: Prisma.GastoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Gasto
+   */
+  omit?: Prisma.GastoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GastoInclude<ExtArgs> | null
+  where?: Prisma.GastoWhereInput
+  orderBy?: Prisma.GastoOrderByWithRelationInput | Prisma.GastoOrderByWithRelationInput[]
+  cursor?: Prisma.GastoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GastoScalarFieldEnum | Prisma.GastoScalarFieldEnum[]
 }
 
 /**
