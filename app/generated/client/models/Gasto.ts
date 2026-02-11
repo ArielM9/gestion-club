@@ -39,6 +39,7 @@ export type GastoMinAggregateOutputType = {
   monto: number | null
   concepto: string | null
   categoria: string | null
+  metodo: $Enums.MetodoPago | null
   fecha: Date | null
   temporadaId: string | null
 }
@@ -48,6 +49,7 @@ export type GastoMaxAggregateOutputType = {
   monto: number | null
   concepto: string | null
   categoria: string | null
+  metodo: $Enums.MetodoPago | null
   fecha: Date | null
   temporadaId: string | null
 }
@@ -57,6 +59,7 @@ export type GastoCountAggregateOutputType = {
   monto: number
   concepto: number
   categoria: number
+  metodo: number
   fecha: number
   temporadaId: number
   _all: number
@@ -76,6 +79,7 @@ export type GastoMinAggregateInputType = {
   monto?: true
   concepto?: true
   categoria?: true
+  metodo?: true
   fecha?: true
   temporadaId?: true
 }
@@ -85,6 +89,7 @@ export type GastoMaxAggregateInputType = {
   monto?: true
   concepto?: true
   categoria?: true
+  metodo?: true
   fecha?: true
   temporadaId?: true
 }
@@ -94,6 +99,7 @@ export type GastoCountAggregateInputType = {
   monto?: true
   concepto?: true
   categoria?: true
+  metodo?: true
   fecha?: true
   temporadaId?: true
   _all?: true
@@ -190,6 +196,7 @@ export type GastoGroupByOutputType = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha: Date
   temporadaId: string
   _count: GastoCountAggregateOutputType | null
@@ -222,6 +229,7 @@ export type GastoWhereInput = {
   monto?: Prisma.FloatFilter<"Gasto"> | number
   concepto?: Prisma.StringFilter<"Gasto"> | string
   categoria?: Prisma.StringFilter<"Gasto"> | string
+  metodo?: Prisma.EnumMetodoPagoFilter<"Gasto"> | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFilter<"Gasto"> | Date | string
   temporadaId?: Prisma.StringFilter<"Gasto"> | string
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
@@ -232,6 +240,7 @@ export type GastoOrderByWithRelationInput = {
   monto?: Prisma.SortOrder
   concepto?: Prisma.SortOrder
   categoria?: Prisma.SortOrder
+  metodo?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   temporada?: Prisma.TemporadaOrderByWithRelationInput
@@ -245,6 +254,7 @@ export type GastoWhereUniqueInput = Prisma.AtLeast<{
   monto?: Prisma.FloatFilter<"Gasto"> | number
   concepto?: Prisma.StringFilter<"Gasto"> | string
   categoria?: Prisma.StringFilter<"Gasto"> | string
+  metodo?: Prisma.EnumMetodoPagoFilter<"Gasto"> | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFilter<"Gasto"> | Date | string
   temporadaId?: Prisma.StringFilter<"Gasto"> | string
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
@@ -255,6 +265,7 @@ export type GastoOrderByWithAggregationInput = {
   monto?: Prisma.SortOrder
   concepto?: Prisma.SortOrder
   categoria?: Prisma.SortOrder
+  metodo?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   _count?: Prisma.GastoCountOrderByAggregateInput
@@ -272,6 +283,7 @@ export type GastoScalarWhereWithAggregatesInput = {
   monto?: Prisma.FloatWithAggregatesFilter<"Gasto"> | number
   concepto?: Prisma.StringWithAggregatesFilter<"Gasto"> | string
   categoria?: Prisma.StringWithAggregatesFilter<"Gasto"> | string
+  metodo?: Prisma.EnumMetodoPagoWithAggregatesFilter<"Gasto"> | $Enums.MetodoPago
   fecha?: Prisma.DateTimeWithAggregatesFilter<"Gasto"> | Date | string
   temporadaId?: Prisma.StringWithAggregatesFilter<"Gasto"> | string
 }
@@ -281,6 +293,7 @@ export type GastoCreateInput = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha?: Date | string
   temporada: Prisma.TemporadaCreateNestedOneWithoutGastosInput
 }
@@ -290,6 +303,7 @@ export type GastoUncheckedCreateInput = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha?: Date | string
   temporadaId: string
 }
@@ -299,6 +313,7 @@ export type GastoUpdateInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutGastosNestedInput
 }
@@ -308,6 +323,7 @@ export type GastoUncheckedUpdateInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -317,6 +333,7 @@ export type GastoCreateManyInput = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha?: Date | string
   temporadaId: string
 }
@@ -326,6 +343,7 @@ export type GastoUpdateManyMutationInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -334,6 +352,7 @@ export type GastoUncheckedUpdateManyInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -353,6 +372,7 @@ export type GastoCountOrderByAggregateInput = {
   monto?: Prisma.SortOrder
   concepto?: Prisma.SortOrder
   categoria?: Prisma.SortOrder
+  metodo?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
 }
@@ -366,6 +386,7 @@ export type GastoMaxOrderByAggregateInput = {
   monto?: Prisma.SortOrder
   concepto?: Prisma.SortOrder
   categoria?: Prisma.SortOrder
+  metodo?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
 }
@@ -375,6 +396,7 @@ export type GastoMinOrderByAggregateInput = {
   monto?: Prisma.SortOrder
   concepto?: Prisma.SortOrder
   categoria?: Prisma.SortOrder
+  metodo?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
 }
@@ -430,6 +452,7 @@ export type GastoCreateWithoutTemporadaInput = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha?: Date | string
 }
 
@@ -438,6 +461,7 @@ export type GastoUncheckedCreateWithoutTemporadaInput = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha?: Date | string
 }
 
@@ -475,6 +499,7 @@ export type GastoScalarWhereInput = {
   monto?: Prisma.FloatFilter<"Gasto"> | number
   concepto?: Prisma.StringFilter<"Gasto"> | string
   categoria?: Prisma.StringFilter<"Gasto"> | string
+  metodo?: Prisma.EnumMetodoPagoFilter<"Gasto"> | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFilter<"Gasto"> | Date | string
   temporadaId?: Prisma.StringFilter<"Gasto"> | string
 }
@@ -484,6 +509,7 @@ export type GastoCreateManyTemporadaInput = {
   monto: number
   concepto: string
   categoria: string
+  metodo: $Enums.MetodoPago
   fecha?: Date | string
 }
 
@@ -492,6 +518,7 @@ export type GastoUpdateWithoutTemporadaInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -500,6 +527,7 @@ export type GastoUncheckedUpdateWithoutTemporadaInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -508,6 +536,7 @@ export type GastoUncheckedUpdateManyWithoutTemporadaInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
+  metodo?: Prisma.EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -518,6 +547,7 @@ export type GastoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   monto?: boolean
   concepto?: boolean
   categoria?: boolean
+  metodo?: boolean
   fecha?: boolean
   temporadaId?: boolean
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
@@ -528,6 +558,7 @@ export type GastoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   monto?: boolean
   concepto?: boolean
   categoria?: boolean
+  metodo?: boolean
   fecha?: boolean
   temporadaId?: boolean
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
@@ -538,6 +569,7 @@ export type GastoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   monto?: boolean
   concepto?: boolean
   categoria?: boolean
+  metodo?: boolean
   fecha?: boolean
   temporadaId?: boolean
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
@@ -548,11 +580,12 @@ export type GastoSelectScalar = {
   monto?: boolean
   concepto?: boolean
   categoria?: boolean
+  metodo?: boolean
   fecha?: boolean
   temporadaId?: boolean
 }
 
-export type GastoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "monto" | "concepto" | "categoria" | "fecha" | "temporadaId", ExtArgs["result"]["gasto"]>
+export type GastoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "monto" | "concepto" | "categoria" | "metodo" | "fecha" | "temporadaId", ExtArgs["result"]["gasto"]>
 export type GastoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
 }
@@ -573,6 +606,7 @@ export type $GastoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     monto: number
     concepto: string
     categoria: string
+    metodo: $Enums.MetodoPago
     fecha: Date
     temporadaId: string
   }, ExtArgs["result"]["gasto"]>
@@ -1003,6 +1037,7 @@ export interface GastoFieldRefs {
   readonly monto: Prisma.FieldRef<"Gasto", 'Float'>
   readonly concepto: Prisma.FieldRef<"Gasto", 'String'>
   readonly categoria: Prisma.FieldRef<"Gasto", 'String'>
+  readonly metodo: Prisma.FieldRef<"Gasto", 'MetodoPago'>
   readonly fecha: Prisma.FieldRef<"Gasto", 'DateTime'>
   readonly temporadaId: Prisma.FieldRef<"Gasto", 'String'>
 }

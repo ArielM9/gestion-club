@@ -1,25 +1,47 @@
-import { getMovimientosGlobales } from "@/lib/actions/contabilidad";
-import CardKpi from "@/components/contabilidad/CardKpi";
-import LibroDiario from "@/components/contabilidad/LibroDiario";
+import { Suspense } from "react";
+import { getMovimientosGlobales, getSociosDeudores, getDatosGraficaMensual, getDatosGastosPorCategoria } from "@/lib/actions/contabilidad";
+import ContabilidadTabs from "@/components/contabilidad/ContabilidadTabs";
+import BotonesAccion from "@/components/contabilidad/BotonesAccion";
 
-export default async function ContabilidadPage() {
-  const { movimientos, resumen } = await getMovimientosGlobales();
+export default async function ContabilidadPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string; page?: string; tab?: string }>;
+}) {
+  const { search, page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const query = search || "";
+
+  // Pedimos todos los datos en paralelo para ir rápido
+  const [dataGlobal, deudoresData, datosGrafica, datosCategorias] = await Promise.all([
+    getMovimientosGlobales(),
+    getSociosDeudores(query, currentPage, 10),
+    getDatosGraficaMensual(),
+    getDatosGastosPorCategoria()
+  ]);
 
   return (
     <div className="max-w-7xl mx-auto p-8 space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <CardKpi title="Saldo Total en Cuenta" value={resumen?.saldoTotal || 0} type="balance" />
-        <CardKpi title="Ingresos Totales" value={resumen?.ingresosTotales || 0} trend="+12%" type="income" />
-        <CardKpi title="Gastos Totales" value={resumen?.gastosTotales || 0} trend="-3%" type="expense" />
-      </div>
+      <header className="flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Gestión Financiera</h1>
+          <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">Temporada 2025/2026</p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-80">
-        {/* Aquí irán los Recharts en el siguiente paso */}
-        <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic">Gráfica Mensual</div>
-        <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic">Desglose Categorías</div>
-      </div>
+        <BotonesAccion />
+      </header>
 
-      <LibroDiario movimientos={movimientos} />
+      <Suspense fallback={<div className="min-h-[600px] flex items-center justify-center text-slate-400 font-bold animate-pulse">Cargando gestión...</div>}>
+        <ContabilidadTabs
+          resumen={dataGlobal.resumen}
+          movimientos={dataGlobal.movimientos}
+          deudores={deudoresData.deudores}
+          totalPages={deudoresData.totalPages}
+          currentPage={currentPage}
+          datosGrafica={datosGrafica}
+          datosCategorias={datosCategorias}
+        />
+      </Suspense>
     </div>
   );
 }

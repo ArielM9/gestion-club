@@ -238,6 +238,7 @@ export const GastoScalarFieldEnum = {
   monto: 'monto',
   concepto: 'concepto',
   categoria: 'categoria',
+  metodo: 'metodo',
   fecha: 'fecha',
   temporadaId: 'temporadaId'
 } as const

@@ -7,6 +7,8 @@ import Link from "next/link";
 
 const ITEMS_PER_PAGE = 10;
 
+import { normalizeString } from "@/lib/utils/stringUtils";
+
 export default async function JugadoresPage({
   searchParams,
 }: {
@@ -14,36 +16,47 @@ export default async function JugadoresPage({
 }) {
   // 1. Esperamos todos los params
   const { search, page, categoria } = await searchParams;
-  
+
   const query = search || "";
   const currentPage = Number(page) || 1;
   const categoriaId = categoria || undefined;
 
-  // 2. Construimos el filtro WHERE
-  const where = {
-    categoriaId: categoriaId, // Si es undefined, Prisma ignora el filtro
-    OR: query ? [
-      { nombre: { contains: query, mode: "insensitive" as const } },
-      { apellidos: { contains: query, mode: "insensitive" as const } },
-      { dni: { contains: query, mode: "insensitive" as const } },
-      { mote: { contains: query, mode: "insensitive" as const } },
-    ] : undefined,
-  };
-
-  // 3. Consultas paralelas: Socios paginados, Total para la cuenta y Categorías para el filtro
-  const [socios, totalCount, categorias] = await Promise.all([
+  // 2. Traemos datos base (podemos optimizar trayendo solo lo necesario si la tabla crece mucho)
+  const [todosLosSocios, categorias] = await Promise.all([
     prisma.socio.findMany({
-      where,
       include: { categoria: true },
       orderBy: { apellidos: "asc" },
-      skip: (currentPage - 1) * ITEMS_PER_PAGE,
-      take: ITEMS_PER_PAGE,
     }),
-    prisma.socio.count({ where }),
     prisma.categoria.findMany({ orderBy: { nombre: "asc" } })
   ]);
 
+  // 3. Filtrado en JS para soportar tildes de forma sencilla
+  const queryNormalizada = normalizeString(query);
+
+  const sociosFiltrados = todosLosSocios.filter(socio => {
+    // Filtro por categoría
+    if (categoriaId && socio.categoriaId !== categoriaId) return false;
+
+    // Filtro por búsqueda
+    if (!query) return true;
+
+    const camposABuscar = [
+      socio.nombre,
+      socio.apellidos,
+      socio.dni,
+      socio.mote || ""
+    ];
+
+    return camposABuscar.some(campo =>
+      normalizeString(campo).includes(queryNormalizada)
+    );
+  });
+
+  // 4. Paginación manual
+  const totalCount = sociosFiltrados.length;
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+  const sociosPaginados = sociosFiltrados.slice(skip, skip + ITEMS_PER_PAGE);
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -52,8 +65,8 @@ export default async function JugadoresPage({
           <h1 className="text-2xl font-black text-slate-900">Socios y Jugadores</h1>
           <p className="text-sm text-slate-500 font-medium">Lista general del club</p>
         </div>
-        <Link 
-          href="/jugadores/nuevo" 
+        <Link
+          href="/jugadores/nuevo"
           className="flex items-center gap-2 bg-[#1e293b] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
         >
           <Plus size={18} /> Nuevo Socio
@@ -69,10 +82,10 @@ export default async function JugadoresPage({
       </div>
 
       <div className="bg-white rounded-[2rem] shadow-sm border border-white overflow-hidden">
-        <SocioTable 
-          socios={socios} 
-          totalPages={totalPages} 
-          currentPage={currentPage} 
+        <SocioTable
+          socios={sociosPaginados}
+          totalPages={totalPages}
+          currentPage={currentPage}
         />
       </div>
     </div>

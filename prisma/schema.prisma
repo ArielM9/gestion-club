@@ -170,13 +170,14 @@ model IngresoExterno {
 }
 
 model Gasto {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   monto       Float
   concepto    String
   categoria   String // Ej: "Arbitrajes", "Material", "Instalaciones"
-  fecha       DateTime  @default(now())
+  metodo      MetodoPago
+  fecha       DateTime   @default(now())
   temporadaId String
-  temporada   Temporada @relation(fields: [temporadaId], references: [id])
+  temporada   Temporada  @relation(fields: [temporadaId], references: [id])
 }
 
 model Log {
@@ -254,6 +255,7 @@ enum MetodoPago {
   TRANSFERENCIA
   COMPENSACION
   CONDONACION
+  TARJETA
 }
 
 enum EstadoAbono {
