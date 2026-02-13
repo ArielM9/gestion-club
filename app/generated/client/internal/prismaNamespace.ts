@@ -1635,10 +1635,14 @@ export const SocioScalarFieldEnum = {
   mote: 'mote',
   dni: 'dni',
   fechaNacimiento: 'fechaNacimiento',
+  nacionalidad: 'nacionalidad',
   fotoUrl: 'fotoUrl',
+  urlDniFrontal: 'urlDniFrontal',
   telefono: 'telefono',
   email: 'email',
   direccion: 'direccion',
+  codigoPostal: 'codigoPostal',
+  localidad: 'localidad',
   cuentaBancaria: 'cuentaBancaria',
   activo: 'activo',
   nombreTutor: 'nombreTutor',
@@ -1648,6 +1652,9 @@ export const SocioScalarFieldEnum = {
   tallaRopa: 'tallaRopa',
   rgpdFirmado: 'rgpdFirmado',
   urlDocumentoRgpd: 'urlDocumentoRgpd',
+  declaracionResponsable: 'declaracionResponsable',
+  exoneracionResponsabilidad: 'exoneracionResponsabilidad',
+  declaracionExtranjera: 'declaracionExtranjera',
   categoriaId: 'categoriaId'
 } as const
 
