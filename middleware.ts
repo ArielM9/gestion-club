@@ -19,7 +19,13 @@ const AUTHENTICATED_ROUTES = ["/api/documentos", "/api/socios", "/api/storage", 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // A. Si es una ruta pública, no hacemos nada, que pase.
+    // A0. Bloquear registro si está habilitado
+    const blockRegister = process.env.BLOCK_REGISTER === 'true';
+    if (blockRegister && pathname === '/register') {
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // A. Si es una ruta pública (y no bloqueada arriba), no hacemos nada, que pase.
     if (PUBLIC_ROUTES.some(route => pathname.startsWith(route))) {
         return NextResponse.next();
     }
