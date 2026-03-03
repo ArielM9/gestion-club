@@ -14,6 +14,20 @@ export default async function JugadorPage({ params }: { params: { id: string } }
             },
             abonos: {
                 orderBy: { fecha: 'desc' }
+            },
+            documentos: {
+                include: {
+                    temporada: {
+                        select: { nombre: true }
+                    }
+                }
+            },
+            inscripciones: {
+                include: {
+                    temporada: {
+                        select: { nombre: true, activa: true }
+                    }
+                }
             }
         },
     });
@@ -22,11 +36,28 @@ export default async function JugadorPage({ params }: { params: { id: string } }
         orderBy: { nombre: "asc" }
     });
 
+    const temporadas = await prisma.temporada.findMany({
+        where: { activa: true },
+        take: 1
+    });
+
     if (!socio) notFound();
+
+    const socioFormateado = {
+        ...socio,
+        documentos: socio.documentos.map(doc => ({
+            ...doc,
+            createdAt: doc.createdAt.toISOString()
+        }))
+    };
 
     return (
         <div className="max-w-5xl mx-auto p-6">
-            <FichaCliente socio={socio} categorias={categorias} />
+            <FichaCliente 
+                socio={socioFormateado} 
+                categorias={categorias}
+                temporadaActiva={temporadas[0]?.nombre}
+            />
         </div>
     );
 }

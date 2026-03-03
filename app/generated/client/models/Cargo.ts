@@ -225,6 +225,7 @@ export type CargoWhereInput = {
   socioId?: Prisma.StringFilter<"Cargo"> | string
   temporadaId?: Prisma.StringFilter<"Cargo"> | string
   abonos?: Prisma.AbonoListRelationFilter
+  documentos?: Prisma.DocumentoListRelationFilter
   socio?: Prisma.XOR<Prisma.SocioScalarRelationFilter, Prisma.SocioWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
 }
@@ -237,6 +238,7 @@ export type CargoOrderByWithRelationInput = {
   socioId?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   abonos?: Prisma.AbonoOrderByRelationAggregateInput
+  documentos?: Prisma.DocumentoOrderByRelationAggregateInput
   socio?: Prisma.SocioOrderByWithRelationInput
   temporada?: Prisma.TemporadaOrderByWithRelationInput
 }
@@ -252,6 +254,7 @@ export type CargoWhereUniqueInput = Prisma.AtLeast<{
   socioId?: Prisma.StringFilter<"Cargo"> | string
   temporadaId?: Prisma.StringFilter<"Cargo"> | string
   abonos?: Prisma.AbonoListRelationFilter
+  documentos?: Prisma.DocumentoListRelationFilter
   socio?: Prisma.XOR<Prisma.SocioScalarRelationFilter, Prisma.SocioWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
 }, "id">
@@ -288,6 +291,7 @@ export type CargoCreateInput = {
   concepto: string
   fecha?: Date | string
   abonos?: Prisma.AbonoCreateNestedManyWithoutCargoInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutCargoInput
   socio: Prisma.SocioCreateNestedOneWithoutCargosInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutCargosInput
 }
@@ -300,6 +304,7 @@ export type CargoUncheckedCreateInput = {
   socioId: string
   temporadaId: string
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutCargoInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutCargoInput
 }
 
 export type CargoUpdateInput = {
@@ -308,6 +313,7 @@ export type CargoUpdateInput = {
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   abonos?: Prisma.AbonoUpdateManyWithoutCargoNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutCargoNestedInput
   socio?: Prisma.SocioUpdateOneRequiredWithoutCargosNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutCargosNestedInput
 }
@@ -320,6 +326,7 @@ export type CargoUncheckedUpdateInput = {
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutCargoNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutCargoNestedInput
 }
 
 export type CargoCreateManyInput = {
@@ -481,14 +488,6 @@ export type CargoUncheckedUpdateManyWithoutTemporadaNestedInput = {
   deleteMany?: Prisma.CargoScalarWhereInput | Prisma.CargoScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CargoCreateNestedOneWithoutAbonosInput = {
   create?: Prisma.XOR<Prisma.CargoCreateWithoutAbonosInput, Prisma.CargoUncheckedCreateWithoutAbonosInput>
   connectOrCreate?: Prisma.CargoCreateOrConnectWithoutAbonosInput
@@ -505,12 +504,29 @@ export type CargoUpdateOneWithoutAbonosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CargoUpdateToOneWithWhereWithoutAbonosInput, Prisma.CargoUpdateWithoutAbonosInput>, Prisma.CargoUncheckedUpdateWithoutAbonosInput>
 }
 
+export type CargoCreateNestedOneWithoutDocumentosInput = {
+  create?: Prisma.XOR<Prisma.CargoCreateWithoutDocumentosInput, Prisma.CargoUncheckedCreateWithoutDocumentosInput>
+  connectOrCreate?: Prisma.CargoCreateOrConnectWithoutDocumentosInput
+  connect?: Prisma.CargoWhereUniqueInput
+}
+
+export type CargoUpdateOneWithoutDocumentosNestedInput = {
+  create?: Prisma.XOR<Prisma.CargoCreateWithoutDocumentosInput, Prisma.CargoUncheckedCreateWithoutDocumentosInput>
+  connectOrCreate?: Prisma.CargoCreateOrConnectWithoutDocumentosInput
+  upsert?: Prisma.CargoUpsertWithoutDocumentosInput
+  disconnect?: Prisma.CargoWhereInput | boolean
+  delete?: Prisma.CargoWhereInput | boolean
+  connect?: Prisma.CargoWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CargoUpdateToOneWithWhereWithoutDocumentosInput, Prisma.CargoUpdateWithoutDocumentosInput>, Prisma.CargoUncheckedUpdateWithoutDocumentosInput>
+}
+
 export type CargoCreateWithoutSocioInput = {
   id?: string
   monto: number
   concepto: string
   fecha?: Date | string
   abonos?: Prisma.AbonoCreateNestedManyWithoutCargoInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutCargoInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutCargosInput
 }
 
@@ -521,6 +537,7 @@ export type CargoUncheckedCreateWithoutSocioInput = {
   fecha?: Date | string
   temporadaId: string
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutCargoInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutCargoInput
 }
 
 export type CargoCreateOrConnectWithoutSocioInput = {
@@ -567,6 +584,7 @@ export type CargoCreateWithoutTemporadaInput = {
   concepto: string
   fecha?: Date | string
   abonos?: Prisma.AbonoCreateNestedManyWithoutCargoInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutCargoInput
   socio: Prisma.SocioCreateNestedOneWithoutCargosInput
 }
 
@@ -577,6 +595,7 @@ export type CargoUncheckedCreateWithoutTemporadaInput = {
   fecha?: Date | string
   socioId: string
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutCargoInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutCargoInput
 }
 
 export type CargoCreateOrConnectWithoutTemporadaInput = {
@@ -610,6 +629,7 @@ export type CargoCreateWithoutAbonosInput = {
   monto: number
   concepto: string
   fecha?: Date | string
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutCargoInput
   socio: Prisma.SocioCreateNestedOneWithoutCargosInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutCargosInput
 }
@@ -621,6 +641,7 @@ export type CargoUncheckedCreateWithoutAbonosInput = {
   fecha?: Date | string
   socioId: string
   temporadaId: string
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutCargoInput
 }
 
 export type CargoCreateOrConnectWithoutAbonosInput = {
@@ -644,6 +665,7 @@ export type CargoUpdateWithoutAbonosInput = {
   monto?: Prisma.FloatFieldUpdateOperationsInput | number
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentos?: Prisma.DocumentoUpdateManyWithoutCargoNestedInput
   socio?: Prisma.SocioUpdateOneRequiredWithoutCargosNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutCargosNestedInput
 }
@@ -655,6 +677,63 @@ export type CargoUncheckedUpdateWithoutAbonosInput = {
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutCargoNestedInput
+}
+
+export type CargoCreateWithoutDocumentosInput = {
+  id?: string
+  monto: number
+  concepto: string
+  fecha?: Date | string
+  abonos?: Prisma.AbonoCreateNestedManyWithoutCargoInput
+  socio: Prisma.SocioCreateNestedOneWithoutCargosInput
+  temporada: Prisma.TemporadaCreateNestedOneWithoutCargosInput
+}
+
+export type CargoUncheckedCreateWithoutDocumentosInput = {
+  id?: string
+  monto: number
+  concepto: string
+  fecha?: Date | string
+  socioId: string
+  temporadaId: string
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutCargoInput
+}
+
+export type CargoCreateOrConnectWithoutDocumentosInput = {
+  where: Prisma.CargoWhereUniqueInput
+  create: Prisma.XOR<Prisma.CargoCreateWithoutDocumentosInput, Prisma.CargoUncheckedCreateWithoutDocumentosInput>
+}
+
+export type CargoUpsertWithoutDocumentosInput = {
+  update: Prisma.XOR<Prisma.CargoUpdateWithoutDocumentosInput, Prisma.CargoUncheckedUpdateWithoutDocumentosInput>
+  create: Prisma.XOR<Prisma.CargoCreateWithoutDocumentosInput, Prisma.CargoUncheckedCreateWithoutDocumentosInput>
+  where?: Prisma.CargoWhereInput
+}
+
+export type CargoUpdateToOneWithWhereWithoutDocumentosInput = {
+  where?: Prisma.CargoWhereInput
+  data: Prisma.XOR<Prisma.CargoUpdateWithoutDocumentosInput, Prisma.CargoUncheckedUpdateWithoutDocumentosInput>
+}
+
+export type CargoUpdateWithoutDocumentosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  monto?: Prisma.FloatFieldUpdateOperationsInput | number
+  concepto?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  abonos?: Prisma.AbonoUpdateManyWithoutCargoNestedInput
+  socio?: Prisma.SocioUpdateOneRequiredWithoutCargosNestedInput
+  temporada?: Prisma.TemporadaUpdateOneRequiredWithoutCargosNestedInput
+}
+
+export type CargoUncheckedUpdateWithoutDocumentosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  monto?: Prisma.FloatFieldUpdateOperationsInput | number
+  concepto?: Prisma.StringFieldUpdateOperationsInput | string
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  socioId?: Prisma.StringFieldUpdateOperationsInput | string
+  temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutCargoNestedInput
 }
 
 export type CargoCreateManySocioInput = {
@@ -671,6 +750,7 @@ export type CargoUpdateWithoutSocioInput = {
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   abonos?: Prisma.AbonoUpdateManyWithoutCargoNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutCargoNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutCargosNestedInput
 }
 
@@ -681,6 +761,7 @@ export type CargoUncheckedUpdateWithoutSocioInput = {
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutCargoNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutCargoNestedInput
 }
 
 export type CargoUncheckedUpdateManyWithoutSocioInput = {
@@ -705,6 +786,7 @@ export type CargoUpdateWithoutTemporadaInput = {
   concepto?: Prisma.StringFieldUpdateOperationsInput | string
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   abonos?: Prisma.AbonoUpdateManyWithoutCargoNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutCargoNestedInput
   socio?: Prisma.SocioUpdateOneRequiredWithoutCargosNestedInput
 }
 
@@ -715,6 +797,7 @@ export type CargoUncheckedUpdateWithoutTemporadaInput = {
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutCargoNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutCargoNestedInput
 }
 
 export type CargoUncheckedUpdateManyWithoutTemporadaInput = {
@@ -732,10 +815,12 @@ export type CargoUncheckedUpdateManyWithoutTemporadaInput = {
 
 export type CargoCountOutputType = {
   abonos: number
+  documentos: number
 }
 
 export type CargoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   abonos?: boolean | CargoCountOutputTypeCountAbonosArgs
+  documentos?: boolean | CargoCountOutputTypeCountDocumentosArgs
 }
 
 /**
@@ -755,6 +840,13 @@ export type CargoCountOutputTypeCountAbonosArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.AbonoWhereInput
 }
 
+/**
+ * CargoCountOutputType without action
+ */
+export type CargoCountOutputTypeCountDocumentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentoWhereInput
+}
+
 
 export type CargoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -764,6 +856,7 @@ export type CargoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   socioId?: boolean
   temporadaId?: boolean
   abonos?: boolean | Prisma.Cargo$abonosArgs<ExtArgs>
+  documentos?: boolean | Prisma.Cargo$documentosArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.CargoCountOutputTypeDefaultArgs<ExtArgs>
@@ -803,6 +896,7 @@ export type CargoSelectScalar = {
 export type CargoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "monto" | "concepto" | "fecha" | "socioId" | "temporadaId", ExtArgs["result"]["cargo"]>
 export type CargoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   abonos?: boolean | Prisma.Cargo$abonosArgs<ExtArgs>
+  documentos?: boolean | Prisma.Cargo$documentosArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.CargoCountOutputTypeDefaultArgs<ExtArgs>
@@ -820,6 +914,7 @@ export type $CargoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Cargo"
   objects: {
     abonos: Prisma.$AbonoPayload<ExtArgs>[]
+    documentos: Prisma.$DocumentoPayload<ExtArgs>[]
     socio: Prisma.$SocioPayload<ExtArgs>
     temporada: Prisma.$TemporadaPayload<ExtArgs>
   }
@@ -1225,6 +1320,7 @@ readonly fields: CargoFieldRefs;
 export interface Prisma__CargoClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   abonos<T extends Prisma.Cargo$abonosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cargo$abonosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AbonoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documentos<T extends Prisma.Cargo$documentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cargo$documentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   socio<T extends Prisma.SocioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SocioDefaultArgs<ExtArgs>>): Prisma.Prisma__SocioClient<runtime.Types.Result.GetResult<Prisma.$SocioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   temporada<T extends Prisma.TemporadaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporadaDefaultArgs<ExtArgs>>): Prisma.Prisma__TemporadaClient<runtime.Types.Result.GetResult<Prisma.$TemporadaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1679,6 +1775,30 @@ export type Cargo$abonosArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.AbonoScalarFieldEnum | Prisma.AbonoScalarFieldEnum[]
+}
+
+/**
+ * Cargo.documentos
+ */
+export type Cargo$documentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Documento
+   */
+  select?: Prisma.DocumentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Documento
+   */
+  omit?: Prisma.DocumentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentoInclude<ExtArgs> | null
+  where?: Prisma.DocumentoWhereInput
+  orderBy?: Prisma.DocumentoOrderByWithRelationInput | Prisma.DocumentoOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentoScalarFieldEnum | Prisma.DocumentoScalarFieldEnum[]
 }
 
 /**

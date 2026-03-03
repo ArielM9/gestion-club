@@ -13,18 +13,21 @@ export default async function StatCards() {
         valor={stats.totalSocios} 
         icon={Users} 
         color="text-blue-600 bg-blue-50" 
+        href="/jugadores"
       />
       <StatCard 
         titulo="Pagos Pendientes" 
         valor={stats.pagosPendientes} 
         icon={CreditCard} 
         color="text-red-600 bg-red-50" 
+        href="/contabilidad?tab=deudores"
       />
       <StatCard 
         titulo="Próximo Evento" 
         valor={stats.proximoEvento} 
         icon={Calendar} 
         color="text-amber-600 bg-amber-50" 
+        href="/eventos"
       />
       <StatCard 
         titulo="Stock Tienda" 

@@ -13,7 +13,7 @@ export default function ModalGasto({ isOpen, onClose }: { isOpen: boolean; onClo
         monto: "",
         categoria: "Material Deportivo",
         concepto: "",
-        metodo: "EFECTIVO" as any
+        metodo: "EFECTIVO" as "EFECTIVO" | "TRANSFERENCIA" | "TARJETA"
     });
 
     if (!isOpen) return null;
@@ -39,8 +39,8 @@ export default function ModalGasto({ isOpen, onClose }: { isOpen: boolean; onClo
     };
 
     return (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-            <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
+            <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
 
                 <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-red-50/30">
                     <div>
@@ -75,7 +75,7 @@ export default function ModalGasto({ isOpen, onClose }: { isOpen: boolean; onClo
                             <select
                                 className="w-full pl-12 pr-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-red-400 font-bold appearance-none"
                                 value={formData.metodo}
-                                onChange={(e) => setFormData({ ...formData, metodo: e.target.value })}
+                                onChange={(e) => setFormData({ ...formData, metodo: e.target.value as "EFECTIVO" | "TRANSFERENCIA" | "TARJETA" })}
                             >
                                 <option value="EFECTIVO">Efectivo (Caja Física)</option>
                                 <option value="TRANSFERENCIA">Transferencia (Banco)</option>

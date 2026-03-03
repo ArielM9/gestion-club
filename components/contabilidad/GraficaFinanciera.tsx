@@ -1,8 +1,14 @@
 "use client";
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function GraficaFinanciera({ data }: { data: any[] }) {
+interface GraficaData {
+    name: string;
+    ingresos: number;
+    gastos: number;
+}
+
+export default function GraficaFinanciera({ data }: { data?: GraficaData[] }) {
     return (
         <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm h-full w-full">
             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Evolución Mensual (€)</h3>

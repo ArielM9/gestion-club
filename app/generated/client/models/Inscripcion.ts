@@ -28,21 +28,27 @@ export type InscripcionMinAggregateOutputType = {
   id: string | null
   socioId: string | null
   temporadaId: string | null
+  categoriaId: string | null
   equipoId: string | null
+  federado: boolean | null
 }
 
 export type InscripcionMaxAggregateOutputType = {
   id: string | null
   socioId: string | null
   temporadaId: string | null
+  categoriaId: string | null
   equipoId: string | null
+  federado: boolean | null
 }
 
 export type InscripcionCountAggregateOutputType = {
   id: number
   socioId: number
   temporadaId: number
+  categoriaId: number
   equipoId: number
+  federado: number
   _all: number
 }
 
@@ -51,21 +57,27 @@ export type InscripcionMinAggregateInputType = {
   id?: true
   socioId?: true
   temporadaId?: true
+  categoriaId?: true
   equipoId?: true
+  federado?: true
 }
 
 export type InscripcionMaxAggregateInputType = {
   id?: true
   socioId?: true
   temporadaId?: true
+  categoriaId?: true
   equipoId?: true
+  federado?: true
 }
 
 export type InscripcionCountAggregateInputType = {
   id?: true
   socioId?: true
   temporadaId?: true
+  categoriaId?: true
   equipoId?: true
+  federado?: true
   _all?: true
 }
 
@@ -145,7 +157,9 @@ export type InscripcionGroupByOutputType = {
   id: string
   socioId: string
   temporadaId: string
-  equipoId: string
+  categoriaId: string
+  equipoId: string | null
+  federado: boolean
   _count: InscripcionCountAggregateOutputType | null
   _min: InscripcionMinAggregateOutputType | null
   _max: InscripcionMaxAggregateOutputType | null
@@ -173,20 +187,26 @@ export type InscripcionWhereInput = {
   id?: Prisma.StringFilter<"Inscripcion"> | string
   socioId?: Prisma.StringFilter<"Inscripcion"> | string
   temporadaId?: Prisma.StringFilter<"Inscripcion"> | string
-  equipoId?: Prisma.StringFilter<"Inscripcion"> | string
-  equipo?: Prisma.XOR<Prisma.EquipoScalarRelationFilter, Prisma.EquipoWhereInput>
+  categoriaId?: Prisma.StringFilter<"Inscripcion"> | string
+  equipoId?: Prisma.StringNullableFilter<"Inscripcion"> | string | null
+  federado?: Prisma.BoolFilter<"Inscripcion"> | boolean
+  equipo?: Prisma.XOR<Prisma.EquipoNullableScalarRelationFilter, Prisma.EquipoWhereInput> | null
   socio?: Prisma.XOR<Prisma.SocioScalarRelationFilter, Prisma.SocioWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
+  categoria?: Prisma.XOR<Prisma.CategoriaScalarRelationFilter, Prisma.CategoriaWhereInput>
 }
 
 export type InscripcionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   socioId?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
-  equipoId?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
+  equipoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  federado?: Prisma.SortOrder
   equipo?: Prisma.EquipoOrderByWithRelationInput
   socio?: Prisma.SocioOrderByWithRelationInput
   temporada?: Prisma.TemporadaOrderByWithRelationInput
+  categoria?: Prisma.CategoriaOrderByWithRelationInput
 }
 
 export type InscripcionWhereUniqueInput = Prisma.AtLeast<{
@@ -197,17 +217,22 @@ export type InscripcionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.InscripcionWhereInput | Prisma.InscripcionWhereInput[]
   socioId?: Prisma.StringFilter<"Inscripcion"> | string
   temporadaId?: Prisma.StringFilter<"Inscripcion"> | string
-  equipoId?: Prisma.StringFilter<"Inscripcion"> | string
-  equipo?: Prisma.XOR<Prisma.EquipoScalarRelationFilter, Prisma.EquipoWhereInput>
+  categoriaId?: Prisma.StringFilter<"Inscripcion"> | string
+  equipoId?: Prisma.StringNullableFilter<"Inscripcion"> | string | null
+  federado?: Prisma.BoolFilter<"Inscripcion"> | boolean
+  equipo?: Prisma.XOR<Prisma.EquipoNullableScalarRelationFilter, Prisma.EquipoWhereInput> | null
   socio?: Prisma.XOR<Prisma.SocioScalarRelationFilter, Prisma.SocioWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
+  categoria?: Prisma.XOR<Prisma.CategoriaScalarRelationFilter, Prisma.CategoriaWhereInput>
 }, "id" | "socioId_temporadaId">
 
 export type InscripcionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   socioId?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
-  equipoId?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
+  equipoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  federado?: Prisma.SortOrder
   _count?: Prisma.InscripcionCountOrderByAggregateInput
   _max?: Prisma.InscripcionMaxOrderByAggregateInput
   _min?: Prisma.InscripcionMinOrderByAggregateInput
@@ -220,53 +245,68 @@ export type InscripcionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Inscripcion"> | string
   socioId?: Prisma.StringWithAggregatesFilter<"Inscripcion"> | string
   temporadaId?: Prisma.StringWithAggregatesFilter<"Inscripcion"> | string
-  equipoId?: Prisma.StringWithAggregatesFilter<"Inscripcion"> | string
+  categoriaId?: Prisma.StringWithAggregatesFilter<"Inscripcion"> | string
+  equipoId?: Prisma.StringNullableWithAggregatesFilter<"Inscripcion"> | string | null
+  federado?: Prisma.BoolWithAggregatesFilter<"Inscripcion"> | boolean
 }
 
 export type InscripcionCreateInput = {
   id?: string
-  equipo: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
+  federado?: boolean
+  equipo?: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
   socio: Prisma.SocioCreateNestedOneWithoutInscripcionesInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutInscripcionesInput
+  categoria: Prisma.CategoriaCreateNestedOneWithoutInscripcionesInput
 }
 
 export type InscripcionUncheckedCreateInput = {
   id?: string
   socioId: string
   temporadaId: string
-  equipoId: string
+  categoriaId: string
+  equipoId?: string | null
+  federado?: boolean
 }
 
 export type InscripcionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  equipo?: Prisma.EquipoUpdateOneRequiredWithoutInscripcionesNestedInput
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  equipo?: Prisma.EquipoUpdateOneWithoutInscripcionesNestedInput
   socio?: Prisma.SocioUpdateOneRequiredWithoutInscripcionesNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutInscripcionesNestedInput
+  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutInscripcionesNestedInput
 }
 
 export type InscripcionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
-  equipoId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionCreateManyInput = {
   id?: string
   socioId: string
   temporadaId: string
-  equipoId: string
+  categoriaId: string
+  equipoId?: string | null
+  federado?: boolean
 }
 
 export type InscripcionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
-  equipoId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionListRelationFilter = {
@@ -288,21 +328,27 @@ export type InscripcionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   socioId?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
   equipoId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
 }
 
 export type InscripcionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   socioId?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
   equipoId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
 }
 
 export type InscripcionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   socioId?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
+  categoriaId?: Prisma.SortOrder
   equipoId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
 }
 
 export type InscripcionCreateNestedManyWithoutSocioInput = {
@@ -431,16 +477,62 @@ export type InscripcionUncheckedUpdateManyWithoutEquipoNestedInput = {
   deleteMany?: Prisma.InscripcionScalarWhereInput | Prisma.InscripcionScalarWhereInput[]
 }
 
+export type InscripcionCreateNestedManyWithoutCategoriaInput = {
+  create?: Prisma.XOR<Prisma.InscripcionCreateWithoutCategoriaInput, Prisma.InscripcionUncheckedCreateWithoutCategoriaInput> | Prisma.InscripcionCreateWithoutCategoriaInput[] | Prisma.InscripcionUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.InscripcionCreateOrConnectWithoutCategoriaInput | Prisma.InscripcionCreateOrConnectWithoutCategoriaInput[]
+  createMany?: Prisma.InscripcionCreateManyCategoriaInputEnvelope
+  connect?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+}
+
+export type InscripcionUncheckedCreateNestedManyWithoutCategoriaInput = {
+  create?: Prisma.XOR<Prisma.InscripcionCreateWithoutCategoriaInput, Prisma.InscripcionUncheckedCreateWithoutCategoriaInput> | Prisma.InscripcionCreateWithoutCategoriaInput[] | Prisma.InscripcionUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.InscripcionCreateOrConnectWithoutCategoriaInput | Prisma.InscripcionCreateOrConnectWithoutCategoriaInput[]
+  createMany?: Prisma.InscripcionCreateManyCategoriaInputEnvelope
+  connect?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+}
+
+export type InscripcionUpdateManyWithoutCategoriaNestedInput = {
+  create?: Prisma.XOR<Prisma.InscripcionCreateWithoutCategoriaInput, Prisma.InscripcionUncheckedCreateWithoutCategoriaInput> | Prisma.InscripcionCreateWithoutCategoriaInput[] | Prisma.InscripcionUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.InscripcionCreateOrConnectWithoutCategoriaInput | Prisma.InscripcionCreateOrConnectWithoutCategoriaInput[]
+  upsert?: Prisma.InscripcionUpsertWithWhereUniqueWithoutCategoriaInput | Prisma.InscripcionUpsertWithWhereUniqueWithoutCategoriaInput[]
+  createMany?: Prisma.InscripcionCreateManyCategoriaInputEnvelope
+  set?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  disconnect?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  delete?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  connect?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  update?: Prisma.InscripcionUpdateWithWhereUniqueWithoutCategoriaInput | Prisma.InscripcionUpdateWithWhereUniqueWithoutCategoriaInput[]
+  updateMany?: Prisma.InscripcionUpdateManyWithWhereWithoutCategoriaInput | Prisma.InscripcionUpdateManyWithWhereWithoutCategoriaInput[]
+  deleteMany?: Prisma.InscripcionScalarWhereInput | Prisma.InscripcionScalarWhereInput[]
+}
+
+export type InscripcionUncheckedUpdateManyWithoutCategoriaNestedInput = {
+  create?: Prisma.XOR<Prisma.InscripcionCreateWithoutCategoriaInput, Prisma.InscripcionUncheckedCreateWithoutCategoriaInput> | Prisma.InscripcionCreateWithoutCategoriaInput[] | Prisma.InscripcionUncheckedCreateWithoutCategoriaInput[]
+  connectOrCreate?: Prisma.InscripcionCreateOrConnectWithoutCategoriaInput | Prisma.InscripcionCreateOrConnectWithoutCategoriaInput[]
+  upsert?: Prisma.InscripcionUpsertWithWhereUniqueWithoutCategoriaInput | Prisma.InscripcionUpsertWithWhereUniqueWithoutCategoriaInput[]
+  createMany?: Prisma.InscripcionCreateManyCategoriaInputEnvelope
+  set?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  disconnect?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  delete?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  connect?: Prisma.InscripcionWhereUniqueInput | Prisma.InscripcionWhereUniqueInput[]
+  update?: Prisma.InscripcionUpdateWithWhereUniqueWithoutCategoriaInput | Prisma.InscripcionUpdateWithWhereUniqueWithoutCategoriaInput[]
+  updateMany?: Prisma.InscripcionUpdateManyWithWhereWithoutCategoriaInput | Prisma.InscripcionUpdateManyWithWhereWithoutCategoriaInput[]
+  deleteMany?: Prisma.InscripcionScalarWhereInput | Prisma.InscripcionScalarWhereInput[]
+}
+
 export type InscripcionCreateWithoutSocioInput = {
   id?: string
-  equipo: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
+  federado?: boolean
+  equipo?: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutInscripcionesInput
+  categoria: Prisma.CategoriaCreateNestedOneWithoutInscripcionesInput
 }
 
 export type InscripcionUncheckedCreateWithoutSocioInput = {
   id?: string
   temporadaId: string
-  equipoId: string
+  categoriaId: string
+  equipoId?: string | null
+  federado?: boolean
 }
 
 export type InscripcionCreateOrConnectWithoutSocioInput = {
@@ -476,19 +568,25 @@ export type InscripcionScalarWhereInput = {
   id?: Prisma.StringFilter<"Inscripcion"> | string
   socioId?: Prisma.StringFilter<"Inscripcion"> | string
   temporadaId?: Prisma.StringFilter<"Inscripcion"> | string
-  equipoId?: Prisma.StringFilter<"Inscripcion"> | string
+  categoriaId?: Prisma.StringFilter<"Inscripcion"> | string
+  equipoId?: Prisma.StringNullableFilter<"Inscripcion"> | string | null
+  federado?: Prisma.BoolFilter<"Inscripcion"> | boolean
 }
 
 export type InscripcionCreateWithoutTemporadaInput = {
   id?: string
-  equipo: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
+  federado?: boolean
+  equipo?: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
   socio: Prisma.SocioCreateNestedOneWithoutInscripcionesInput
+  categoria: Prisma.CategoriaCreateNestedOneWithoutInscripcionesInput
 }
 
 export type InscripcionUncheckedCreateWithoutTemporadaInput = {
   id?: string
   socioId: string
-  equipoId: string
+  categoriaId: string
+  equipoId?: string | null
+  federado?: boolean
 }
 
 export type InscripcionCreateOrConnectWithoutTemporadaInput = {
@@ -519,14 +617,18 @@ export type InscripcionUpdateManyWithWhereWithoutTemporadaInput = {
 
 export type InscripcionCreateWithoutEquipoInput = {
   id?: string
+  federado?: boolean
   socio: Prisma.SocioCreateNestedOneWithoutInscripcionesInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutInscripcionesInput
+  categoria: Prisma.CategoriaCreateNestedOneWithoutInscripcionesInput
 }
 
 export type InscripcionUncheckedCreateWithoutEquipoInput = {
   id?: string
   socioId: string
   temporadaId: string
+  categoriaId: string
+  federado?: boolean
 }
 
 export type InscripcionCreateOrConnectWithoutEquipoInput = {
@@ -555,76 +657,174 @@ export type InscripcionUpdateManyWithWhereWithoutEquipoInput = {
   data: Prisma.XOR<Prisma.InscripcionUpdateManyMutationInput, Prisma.InscripcionUncheckedUpdateManyWithoutEquipoInput>
 }
 
+export type InscripcionCreateWithoutCategoriaInput = {
+  id?: string
+  federado?: boolean
+  equipo?: Prisma.EquipoCreateNestedOneWithoutInscripcionesInput
+  socio: Prisma.SocioCreateNestedOneWithoutInscripcionesInput
+  temporada: Prisma.TemporadaCreateNestedOneWithoutInscripcionesInput
+}
+
+export type InscripcionUncheckedCreateWithoutCategoriaInput = {
+  id?: string
+  socioId: string
+  temporadaId: string
+  equipoId?: string | null
+  federado?: boolean
+}
+
+export type InscripcionCreateOrConnectWithoutCategoriaInput = {
+  where: Prisma.InscripcionWhereUniqueInput
+  create: Prisma.XOR<Prisma.InscripcionCreateWithoutCategoriaInput, Prisma.InscripcionUncheckedCreateWithoutCategoriaInput>
+}
+
+export type InscripcionCreateManyCategoriaInputEnvelope = {
+  data: Prisma.InscripcionCreateManyCategoriaInput | Prisma.InscripcionCreateManyCategoriaInput[]
+  skipDuplicates?: boolean
+}
+
+export type InscripcionUpsertWithWhereUniqueWithoutCategoriaInput = {
+  where: Prisma.InscripcionWhereUniqueInput
+  update: Prisma.XOR<Prisma.InscripcionUpdateWithoutCategoriaInput, Prisma.InscripcionUncheckedUpdateWithoutCategoriaInput>
+  create: Prisma.XOR<Prisma.InscripcionCreateWithoutCategoriaInput, Prisma.InscripcionUncheckedCreateWithoutCategoriaInput>
+}
+
+export type InscripcionUpdateWithWhereUniqueWithoutCategoriaInput = {
+  where: Prisma.InscripcionWhereUniqueInput
+  data: Prisma.XOR<Prisma.InscripcionUpdateWithoutCategoriaInput, Prisma.InscripcionUncheckedUpdateWithoutCategoriaInput>
+}
+
+export type InscripcionUpdateManyWithWhereWithoutCategoriaInput = {
+  where: Prisma.InscripcionScalarWhereInput
+  data: Prisma.XOR<Prisma.InscripcionUpdateManyMutationInput, Prisma.InscripcionUncheckedUpdateManyWithoutCategoriaInput>
+}
+
 export type InscripcionCreateManySocioInput = {
   id?: string
   temporadaId: string
-  equipoId: string
+  categoriaId: string
+  equipoId?: string | null
+  federado?: boolean
 }
 
 export type InscripcionUpdateWithoutSocioInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  equipo?: Prisma.EquipoUpdateOneRequiredWithoutInscripcionesNestedInput
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  equipo?: Prisma.EquipoUpdateOneWithoutInscripcionesNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutInscripcionesNestedInput
+  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutInscripcionesNestedInput
 }
 
 export type InscripcionUncheckedUpdateWithoutSocioInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
-  equipoId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionUncheckedUpdateManyWithoutSocioInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
-  equipoId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionCreateManyTemporadaInput = {
   id?: string
   socioId: string
-  equipoId: string
+  categoriaId: string
+  equipoId?: string | null
+  federado?: boolean
 }
 
 export type InscripcionUpdateWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  equipo?: Prisma.EquipoUpdateOneRequiredWithoutInscripcionesNestedInput
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  equipo?: Prisma.EquipoUpdateOneWithoutInscripcionesNestedInput
   socio?: Prisma.SocioUpdateOneRequiredWithoutInscripcionesNestedInput
+  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutInscripcionesNestedInput
 }
 
 export type InscripcionUncheckedUpdateWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
-  equipoId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionUncheckedUpdateManyWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
-  equipoId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionCreateManyEquipoInput = {
   id?: string
   socioId: string
   temporadaId: string
+  categoriaId: string
+  federado?: boolean
 }
 
 export type InscripcionUpdateWithoutEquipoInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   socio?: Prisma.SocioUpdateOneRequiredWithoutInscripcionesNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutInscripcionesNestedInput
+  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutInscripcionesNestedInput
 }
 
 export type InscripcionUncheckedUpdateWithoutEquipoInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InscripcionUncheckedUpdateManyWithoutEquipoInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   socioId?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type InscripcionCreateManyCategoriaInput = {
+  id?: string
+  socioId: string
+  temporadaId: string
+  equipoId?: string | null
+  federado?: boolean
+}
+
+export type InscripcionUpdateWithoutCategoriaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  equipo?: Prisma.EquipoUpdateOneWithoutInscripcionesNestedInput
+  socio?: Prisma.SocioUpdateOneRequiredWithoutInscripcionesNestedInput
+  temporada?: Prisma.TemporadaUpdateOneRequiredWithoutInscripcionesNestedInput
+}
+
+export type InscripcionUncheckedUpdateWithoutCategoriaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  socioId?: Prisma.StringFieldUpdateOperationsInput | string
+  temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type InscripcionUncheckedUpdateManyWithoutCategoriaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  socioId?: Prisma.StringFieldUpdateOperationsInput | string
+  temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  equipoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -633,68 +833,85 @@ export type InscripcionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   socioId?: boolean
   temporadaId?: boolean
+  categoriaId?: boolean
   equipoId?: boolean
-  equipo?: boolean | Prisma.EquipoDefaultArgs<ExtArgs>
+  federado?: boolean
+  equipo?: boolean | Prisma.Inscripcion$equipoArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
+  categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inscripcion"]>
 
 export type InscripcionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   socioId?: boolean
   temporadaId?: boolean
+  categoriaId?: boolean
   equipoId?: boolean
-  equipo?: boolean | Prisma.EquipoDefaultArgs<ExtArgs>
+  federado?: boolean
+  equipo?: boolean | Prisma.Inscripcion$equipoArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
+  categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inscripcion"]>
 
 export type InscripcionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   socioId?: boolean
   temporadaId?: boolean
+  categoriaId?: boolean
   equipoId?: boolean
-  equipo?: boolean | Prisma.EquipoDefaultArgs<ExtArgs>
+  federado?: boolean
+  equipo?: boolean | Prisma.Inscripcion$equipoArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
+  categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inscripcion"]>
 
 export type InscripcionSelectScalar = {
   id?: boolean
   socioId?: boolean
   temporadaId?: boolean
+  categoriaId?: boolean
   equipoId?: boolean
+  federado?: boolean
 }
 
-export type InscripcionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "socioId" | "temporadaId" | "equipoId", ExtArgs["result"]["inscripcion"]>
+export type InscripcionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "socioId" | "temporadaId" | "categoriaId" | "equipoId" | "federado", ExtArgs["result"]["inscripcion"]>
 export type InscripcionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  equipo?: boolean | Prisma.EquipoDefaultArgs<ExtArgs>
+  equipo?: boolean | Prisma.Inscripcion$equipoArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
+  categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
 }
 export type InscripcionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  equipo?: boolean | Prisma.EquipoDefaultArgs<ExtArgs>
+  equipo?: boolean | Prisma.Inscripcion$equipoArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
+  categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
 }
 export type InscripcionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  equipo?: boolean | Prisma.EquipoDefaultArgs<ExtArgs>
+  equipo?: boolean | Prisma.Inscripcion$equipoArgs<ExtArgs>
   socio?: boolean | Prisma.SocioDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
+  categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
 }
 
 export type $InscripcionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Inscripcion"
   objects: {
-    equipo: Prisma.$EquipoPayload<ExtArgs>
+    equipo: Prisma.$EquipoPayload<ExtArgs> | null
     socio: Prisma.$SocioPayload<ExtArgs>
     temporada: Prisma.$TemporadaPayload<ExtArgs>
+    categoria: Prisma.$CategoriaPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     socioId: string
     temporadaId: string
-    equipoId: string
+    categoriaId: string
+    equipoId: string | null
+    federado: boolean
   }, ExtArgs["result"]["inscripcion"]>
   composites: {}
 }
@@ -1089,9 +1306,10 @@ readonly fields: InscripcionFieldRefs;
  */
 export interface Prisma__InscripcionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  equipo<T extends Prisma.EquipoDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EquipoDefaultArgs<ExtArgs>>): Prisma.Prisma__EquipoClient<runtime.Types.Result.GetResult<Prisma.$EquipoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  equipo<T extends Prisma.Inscripcion$equipoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Inscripcion$equipoArgs<ExtArgs>>): Prisma.Prisma__EquipoClient<runtime.Types.Result.GetResult<Prisma.$EquipoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   socio<T extends Prisma.SocioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SocioDefaultArgs<ExtArgs>>): Prisma.Prisma__SocioClient<runtime.Types.Result.GetResult<Prisma.$SocioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   temporada<T extends Prisma.TemporadaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporadaDefaultArgs<ExtArgs>>): Prisma.Prisma__TemporadaClient<runtime.Types.Result.GetResult<Prisma.$TemporadaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  categoria<T extends Prisma.CategoriaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoriaDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoriaClient<runtime.Types.Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1124,7 +1342,9 @@ export interface InscripcionFieldRefs {
   readonly id: Prisma.FieldRef<"Inscripcion", 'String'>
   readonly socioId: Prisma.FieldRef<"Inscripcion", 'String'>
   readonly temporadaId: Prisma.FieldRef<"Inscripcion", 'String'>
+  readonly categoriaId: Prisma.FieldRef<"Inscripcion", 'String'>
   readonly equipoId: Prisma.FieldRef<"Inscripcion", 'String'>
+  readonly federado: Prisma.FieldRef<"Inscripcion", 'Boolean'>
 }
     
 
@@ -1518,6 +1738,25 @@ export type InscripcionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Inscripcions to delete.
    */
   limit?: number
+}
+
+/**
+ * Inscripcion.equipo
+ */
+export type Inscripcion$equipoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Equipo
+   */
+  select?: Prisma.EquipoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Equipo
+   */
+  omit?: Prisma.EquipoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EquipoInclude<ExtArgs> | null
+  where?: Prisma.EquipoWhereInput
 }
 
 /**

@@ -3,16 +3,30 @@
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { AlertTriangle, UserCircle, ChevronDown, ChevronUp, Receipt, CreditCard, Search } from "lucide-react";
+import { AlertTriangle, UserCircle, ChevronUp, Receipt, CreditCard, Search } from "lucide-react";
 import Link from "next/link";
 import Pagination from "../jugadores/Pagination";
+
+interface Deudor {
+    id: string;
+    nombre: string;
+    dni: string;
+    categoria: string;
+    totalCargos: number;
+    totalAbonos: number;
+    deuda: number;
+    detalles?: {
+        cargos: { id: string; monto: number; concepto: string; fecha: Date }[];
+        abonos: { id: string; monto: number; fecha: Date; motivo?: string | null; metodo?: string }[];
+    };
+}
 
 export default function ListaDeudores({
     deudores,
     totalPages,
     currentPage
 }: {
-    deudores: any[],
+    deudores?: Deudor[],
     totalPages: number,
     currentPage: number
 }) {
@@ -71,7 +85,7 @@ export default function ListaDeudores({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                            {deudores.map((d) => (
+                            {(deudores || []).map((d) => (
                                 <>
                                     <tr
                                         key={d.id}
@@ -115,7 +129,7 @@ export default function ListaDeudores({
                                                             Cargos Pendientes y Realizados
                                                         </h4>
                                                         <div className="space-y-2">
-                                                            {d.detalles.cargos.map((c: any) => (
+                                                            {d.detalles?.cargos.map((c) => (
                                                                 <div key={c.id} className="flex justify-between items-center p-3 bg-white rounded-xl border border-slate-100 text-xs shadow-sm">
                                                                     <div>
                                                                         <p className="font-bold text-slate-700">{c.concepto}</p>
@@ -124,7 +138,7 @@ export default function ListaDeudores({
                                                                     <span className="font-black text-slate-600">{c.monto.toFixed(2)}€</span>
                                                                 </div>
                                                             ))}
-                                                            {d.detalles.cargos.length === 0 && (
+                                                            {d.detalles?.cargos.length === 0 && (
                                                                 <p className="text-xs text-slate-400 italic">No hay cargos registrados.</p>
                                                             )}
                                                         </div>
@@ -137,7 +151,7 @@ export default function ListaDeudores({
                                                             Abonos Recibidos
                                                         </h4>
                                                         <div className="space-y-2">
-                                                            {d.detalles.abonos.map((a: any) => (
+                                                            {d.detalles?.abonos.map((a) => (
                                                                 <div key={a.id} className="flex justify-between items-center p-3 bg-white rounded-xl border border-slate-100 text-xs shadow-sm">
                                                                     <div>
                                                                         <p className="font-bold text-slate-700">{a.motivo || "Cuota / Abono"}</p>
@@ -149,7 +163,7 @@ export default function ListaDeudores({
                                                                     <span className="font-black text-green-600">-{a.monto.toFixed(2)}€</span>
                                                                 </div>
                                                             ))}
-                                                            {d.detalles.abonos.length === 0 && (
+                                                            {d.detalles?.abonos.length === 0 && (
                                                                 <p className="text-xs text-slate-400 italic">No se han registrado abonos aún.</p>
                                                             )}
                                                         </div>
@@ -162,7 +176,7 @@ export default function ListaDeudores({
                             ))}
                         </tbody>
                     </table>
-                    {deudores.length === 0 && (
+                    {(deudores || []).length === 0 && (
                         <div className="p-12 text-center text-slate-400 font-medium italic">
                             ¡Increíble! No hay deudas pendientes en el club.
                         </div>

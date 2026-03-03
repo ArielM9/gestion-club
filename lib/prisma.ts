@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/app/generated//client/client";
+import { PrismaClient } from "@/app/generated/client/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 // Evitamos el error de tipos de 'global' en TS

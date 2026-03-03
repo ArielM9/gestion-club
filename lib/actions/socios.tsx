@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { SocioSchema } from "@/lib/validations/socio";
 import { revalidatePath } from "next/cache";
+import { getCategoriaPorAnoNacimiento, getYearTemporada } from "@/lib/utils/categorias";
 
 const validarDNI = (dni: string) => {
   // Expresión regular para DNI (8 números + letra) o NIE (Letra + 7 números + letra)
@@ -19,7 +20,13 @@ export async function crearSocioAction(data: any) {
   }
 
   try {
-    await prisma.socio.create({
+    // Obtener temporada activa
+    const temporadaActiva = await prisma.temporada.findFirst({
+      where: { activa: true }
+    });
+
+    // Crear el socio
+    const socio = await prisma.socio.create({
       data: {
         nombre: result.data.nombre,
         apellidos: result.data.apellidos,
@@ -39,15 +46,37 @@ export async function crearSocioAction(data: any) {
         observaciones: result.data.observaciones || null,
         tallaRopa: result.data.tallaRopa || null,
         categoriaId: result.data.categoriaId || null,
-        rgpdFirmado: result.data.rgpdFirmado || false,
-        declaracionResponsable: result.data.declaracionResponsable || false,
-        exoneracionResponsabilidad: result.data.exoneracionResponsabilidad || false,
-        declaracionExtranjera: result.data.declaracionExtranjera || false,
+        sexo: result.data.sexo || "M",
         activo: true,
       },
     });
 
+    // Si hay temporada activa, inscribir automáticamente
+    if (temporadaActiva && socio.fechaNacimiento) {
+      const anoTemporada = getYearTemporada(temporadaActiva.nombre);
+      const anoNacimiento = socio.fechaNacimiento.getFullYear();
+      const nombreCategoria = getCategoriaPorAnoNacimiento(anoNacimiento, anoTemporada, socio.sexo);
+
+      if (nombreCategoria) {
+        const categoria = await prisma.categoria.findFirst({
+          where: { nombre: nombreCategoria }
+        });
+
+        if (categoria) {
+          await prisma.inscripcion.create({
+            data: {
+              socioId: socio.id,
+              temporadaId: temporadaActiva.id,
+              categoriaId: categoria.id,
+              federado: false,
+            }
+          });
+        }
+      }
+    }
+
     revalidatePath("/jugadores");
+    revalidatePath("/categorias");
     return { success: true };
   } catch (error: any) {
     console.error("ERROR_CREAR_SOCIO:", error);
@@ -107,5 +136,27 @@ export async function actualizarSocioAction(id: string, data: any) {
       if (error.code === 'P2002') return { error: "Ese DNI ya existe" };
       return { error: "Error al actualizar" };
     }
+  }
+}
+
+export async function getTodosLosSocios() {
+  try {
+    const socios = await prisma.socio.findMany({
+      where: { activo: true },
+      select: {
+        id: true,
+        nombre: true,
+        apellidos: true,
+        dni: true,
+      },
+      orderBy: { nombre: 'asc' }
+    });
+    return socios.map(s => ({
+      ...s,
+      nombreCompleto: `${s.nombre} ${s.apellidos}`
+    }));
+  } catch (error) {
+    console.error("ERROR_GET_SOCIOS:", error);
+    return [];
   }
 }

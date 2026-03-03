@@ -2,9 +2,12 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function getMovimientosGlobales() {
+export async function getMovimientosGlobales(search: string = "", page: number = 1, tipoFiltro: string = "todos") {
   const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
-  if (!temporada) return { movimientos: [], resumen: null };
+  if (!temporada) return { movimientos: [], resumen: null, totalPages: 0 };
+
+  const pageSize = 20;
+  const skip = (page - 1) * pageSize;
 
   const [abonos, externos, gastos] = await Promise.all([
     prisma.abono.findMany({ 
@@ -23,23 +26,59 @@ export async function getMovimientosGlobales() {
   ]);
 
   // Unificamos para la tabla
-  const movimientos = [
+  let movimientos = [
     ...abonos.map(a => ({ 
-      id: a.id, fecha: a.fecha, entidad: `${a.socio.nombre} ${a.socio.apellidos}`, 
-      concepto: a.motivo || "Cuota Socio", monto: a.monto, tipo: 'INGRESO', metodo: a.metodo, estado: a.estado 
+      id: a.id, 
+      fecha: a.fecha, 
+      entidad: `${a.socio.nombre} ${a.socio.apellidos}`, 
+      socioId: a.socio.id,
+      concepto: a.motivo || "Cuota Socio", 
+      monto: a.monto, 
+      tipo: 'INGRESO', 
+      metodo: a.metodo, 
+      estado: a.estado,
+      esSocio: true
     })),
     ...externos.map(e => ({ 
       id: e.id, fecha: e.fecha, entidad: e.fuente, 
-      concepto: e.concepto, monto: e.monto, tipo: 'INGRESO', metodo: 'TRANSFERENCIA', estado: 'APROBADO' 
+      socioId: null,
+      concepto: e.concepto, monto: e.monto, tipo: 'INGRESO', metodo: 'TRANSFERENCIA', estado: 'APROBADO',
+      esSocio: false
     })),
     ...gastos.map(g => ({ 
       id: g.id, fecha: g.fecha, entidad: "Club", 
-      concepto: g.concepto, monto: g.monto, tipo: 'GASTO', metodo: 'EFECTIVO', estado: 'APROBADO' 
+      socioId: null,
+      concepto: g.concepto, monto: g.monto, tipo: 'GASTO', metodo: g.metodo, estado: 'APROBADO',
+      esSocio: false
     }))
   ].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
-  // Totales
-  const totalIngresos = movimientos.filter(m => m.tipo === 'INGRESO' && m.estado === 'APROBADO').reduce((acc, m) => acc + m.monto, 0);
+  // Aplicar filtros
+  if (tipoFiltro === "ingresos") {
+    movimientos = movimientos.filter(m => m.tipo === 'INGRESO');
+  } else if (tipoFiltro === "gastos") {
+    movimientos = movimientos.filter(m => m.tipo === 'GASTO');
+  }
+
+  // Aplicar búsqueda
+  if (search) {
+    const searchLower = search.toLowerCase();
+    movimientos = movimientos.filter(m => 
+      m.entidad.toLowerCase().includes(searchLower) ||
+      m.concepto?.toLowerCase().includes(searchLower)
+    );
+  }
+
+  const totalItems = movimientos.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  
+  // Aplicar paginación
+  movimientos = movimientos.slice(skip, skip + pageSize);
+
+  // Totales (sin paginación)
+  const totalIngresos = abonos
+    .filter(a => a.estado === 'APROBADO')
+    .reduce((acc, a) => acc + a.monto, 0) + externos.reduce((acc, e) => acc + e.monto, 0);
   const totalGastos = gastos.reduce((acc, g) => acc + g.monto, 0);
 
   return {
@@ -48,7 +87,9 @@ export async function getMovimientosGlobales() {
       saldoTotal: totalIngresos - totalGastos,
       ingresosTotales: totalIngresos,
       gastosTotales: totalGastos
-    }
+    },
+    totalPages,
+    totalItems
   };
 }
 
@@ -207,4 +248,18 @@ export async function getDatosGastosPorCategoria() {
     value: g._sum.monto || 0,
     fill: COLORS[index % COLORS.length]
   }));
+}
+
+export async function eliminarGastoAction(gastoId: string, motivo: string) {
+  try {
+    await prisma.gasto.delete({
+      where: { id: gastoId }
+    });
+    
+    revalidatePath("/contabilidad");
+    return { success: true, message: `Gasto eliminado: ${motivo}` };
+  } catch (error) {
+    console.error("ERROR_ELIMINAR_GASTO:", error);
+    return { error: "Error al eliminar el gasto" };
+  }
 }

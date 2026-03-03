@@ -93,6 +93,16 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
             <input {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.fechaNacimiento && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.fechaNacimiento.message}</p>}
           </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Sexo</label>
+            <select {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+              <option value="">Seleccionar...</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+            <p className="text-[10px] text-slate-400 ml-2">Necesario para asignar equipo</p>
+          </div>
         </div>
 
         {mostrarSeccionTutor && (
@@ -161,46 +171,6 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
               <p className="text-[10px] text-slate-400 font-medium">Opcional. Requerido para ficha.</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* SECCIÓN DOCUMENTACIÓN */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
-        <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
-          <div className="p-2 bg-rose-50 text-rose-600 rounded-lg"><IdCard size={20} /></div>
-          <h2 className="font-bold text-slate-800">Documentación y Firmas</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <label className="flex items-center gap-3 cursor-pointer w-full">
-              <input type="checkbox" {...register("rgpdFirmado")} className="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-              <span className="text-xs font-bold text-slate-700">Cesión derechos imagen</span>
-            </label>
-          </div>
-
-          <div className="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <label className="flex items-center gap-3 cursor-pointer w-full">
-              <input type="checkbox" {...register("declaracionResponsable")} className="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-              <span className="text-xs font-bold text-slate-700">Declaración responsable</span>
-            </label>
-          </div>
-
-          <div className="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <label className="flex items-center gap-3 cursor-pointer w-full">
-              <input type="checkbox" {...register("exoneracionResponsabilidad")} className="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-              <span className="text-xs font-bold text-slate-700">Exoneración responsabilidad</span>
-            </label>
-          </div>
-
-          {!esEspañol && (
-            <div className="flex items-center p-4 bg-amber-50 rounded-2xl border border-amber-100 animate-in fade-in zoom-in-95 duration-200">
-              <label className="flex items-center gap-3 cursor-pointer w-full">
-                <input type="checkbox" {...register("declaracionExtranjera")} className="h-5 w-5 rounded border-amber-300 text-amber-600 focus:ring-amber-500" />
-                <span className="text-xs font-bold text-amber-800">Declaración jurada licencias extranjeras</span>
-              </label>
-            </div>
-          )}
         </div>
       </section>
 

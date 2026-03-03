@@ -29,6 +29,8 @@ export type EquipoMinAggregateOutputType = {
   nombre: string | null
   temporadaId: string | null
   categoriaId: string | null
+  federado: boolean | null
+  cerrado: boolean | null
 }
 
 export type EquipoMaxAggregateOutputType = {
@@ -36,6 +38,8 @@ export type EquipoMaxAggregateOutputType = {
   nombre: string | null
   temporadaId: string | null
   categoriaId: string | null
+  federado: boolean | null
+  cerrado: boolean | null
 }
 
 export type EquipoCountAggregateOutputType = {
@@ -43,6 +47,8 @@ export type EquipoCountAggregateOutputType = {
   nombre: number
   temporadaId: number
   categoriaId: number
+  federado: number
+  cerrado: number
   _all: number
 }
 
@@ -52,6 +58,8 @@ export type EquipoMinAggregateInputType = {
   nombre?: true
   temporadaId?: true
   categoriaId?: true
+  federado?: true
+  cerrado?: true
 }
 
 export type EquipoMaxAggregateInputType = {
@@ -59,6 +67,8 @@ export type EquipoMaxAggregateInputType = {
   nombre?: true
   temporadaId?: true
   categoriaId?: true
+  federado?: true
+  cerrado?: true
 }
 
 export type EquipoCountAggregateInputType = {
@@ -66,6 +76,8 @@ export type EquipoCountAggregateInputType = {
   nombre?: true
   temporadaId?: true
   categoriaId?: true
+  federado?: true
+  cerrado?: true
   _all?: true
 }
 
@@ -146,6 +158,8 @@ export type EquipoGroupByOutputType = {
   nombre: string
   temporadaId: string
   categoriaId: string
+  federado: boolean
+  cerrado: boolean
   _count: EquipoCountAggregateOutputType | null
   _min: EquipoMinAggregateOutputType | null
   _max: EquipoMaxAggregateOutputType | null
@@ -174,6 +188,8 @@ export type EquipoWhereInput = {
   nombre?: Prisma.StringFilter<"Equipo"> | string
   temporadaId?: Prisma.StringFilter<"Equipo"> | string
   categoriaId?: Prisma.StringFilter<"Equipo"> | string
+  federado?: Prisma.BoolFilter<"Equipo"> | boolean
+  cerrado?: Prisma.BoolFilter<"Equipo"> | boolean
   categoria?: Prisma.XOR<Prisma.CategoriaScalarRelationFilter, Prisma.CategoriaWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
   partidos?: Prisma.EventoListRelationFilter
@@ -185,6 +201,8 @@ export type EquipoOrderByWithRelationInput = {
   nombre?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   categoriaId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
+  cerrado?: Prisma.SortOrder
   categoria?: Prisma.CategoriaOrderByWithRelationInput
   temporada?: Prisma.TemporadaOrderByWithRelationInput
   partidos?: Prisma.EventoOrderByRelationAggregateInput
@@ -200,6 +218,8 @@ export type EquipoWhereUniqueInput = Prisma.AtLeast<{
   nombre?: Prisma.StringFilter<"Equipo"> | string
   temporadaId?: Prisma.StringFilter<"Equipo"> | string
   categoriaId?: Prisma.StringFilter<"Equipo"> | string
+  federado?: Prisma.BoolFilter<"Equipo"> | boolean
+  cerrado?: Prisma.BoolFilter<"Equipo"> | boolean
   categoria?: Prisma.XOR<Prisma.CategoriaScalarRelationFilter, Prisma.CategoriaWhereInput>
   temporada?: Prisma.XOR<Prisma.TemporadaScalarRelationFilter, Prisma.TemporadaWhereInput>
   partidos?: Prisma.EventoListRelationFilter
@@ -211,6 +231,8 @@ export type EquipoOrderByWithAggregationInput = {
   nombre?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   categoriaId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
+  cerrado?: Prisma.SortOrder
   _count?: Prisma.EquipoCountOrderByAggregateInput
   _max?: Prisma.EquipoMaxOrderByAggregateInput
   _min?: Prisma.EquipoMinOrderByAggregateInput
@@ -224,11 +246,15 @@ export type EquipoScalarWhereWithAggregatesInput = {
   nombre?: Prisma.StringWithAggregatesFilter<"Equipo"> | string
   temporadaId?: Prisma.StringWithAggregatesFilter<"Equipo"> | string
   categoriaId?: Prisma.StringWithAggregatesFilter<"Equipo"> | string
+  federado?: Prisma.BoolWithAggregatesFilter<"Equipo"> | boolean
+  cerrado?: Prisma.BoolWithAggregatesFilter<"Equipo"> | boolean
 }
 
 export type EquipoCreateInput = {
   id?: string
   nombre: string
+  federado?: boolean
+  cerrado?: boolean
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
   partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
@@ -240,6 +266,8 @@ export type EquipoUncheckedCreateInput = {
   nombre: string
   temporadaId: string
   categoriaId: string
+  federado?: boolean
+  cerrado?: boolean
   partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
@@ -247,6 +275,8 @@ export type EquipoUncheckedCreateInput = {
 export type EquipoUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
   partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
@@ -258,6 +288,8 @@ export type EquipoUncheckedUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
@@ -267,11 +299,15 @@ export type EquipoCreateManyInput = {
   nombre: string
   temporadaId: string
   categoriaId: string
+  federado?: boolean
+  cerrado?: boolean
 }
 
 export type EquipoUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type EquipoUncheckedUpdateManyInput = {
@@ -279,6 +315,8 @@ export type EquipoUncheckedUpdateManyInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type EquipoListRelationFilter = {
@@ -289,11 +327,6 @@ export type EquipoListRelationFilter = {
 
 export type EquipoOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type EquipoScalarRelationFilter = {
-  is?: Prisma.EquipoWhereInput
-  isNot?: Prisma.EquipoWhereInput
 }
 
 export type EquipoNullableScalarRelationFilter = {
@@ -311,6 +344,8 @@ export type EquipoCountOrderByAggregateInput = {
   nombre?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   categoriaId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
+  cerrado?: Prisma.SortOrder
 }
 
 export type EquipoMaxOrderByAggregateInput = {
@@ -318,6 +353,8 @@ export type EquipoMaxOrderByAggregateInput = {
   nombre?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   categoriaId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
+  cerrado?: Prisma.SortOrder
 }
 
 export type EquipoMinOrderByAggregateInput = {
@@ -325,6 +362,8 @@ export type EquipoMinOrderByAggregateInput = {
   nombre?: Prisma.SortOrder
   temporadaId?: Prisma.SortOrder
   categoriaId?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
+  cerrado?: Prisma.SortOrder
 }
 
 export type EquipoCreateNestedManyWithoutTemporadaInput = {
@@ -375,10 +414,12 @@ export type EquipoCreateNestedOneWithoutInscripcionesInput = {
   connect?: Prisma.EquipoWhereUniqueInput
 }
 
-export type EquipoUpdateOneRequiredWithoutInscripcionesNestedInput = {
+export type EquipoUpdateOneWithoutInscripcionesNestedInput = {
   create?: Prisma.XOR<Prisma.EquipoCreateWithoutInscripcionesInput, Prisma.EquipoUncheckedCreateWithoutInscripcionesInput>
   connectOrCreate?: Prisma.EquipoCreateOrConnectWithoutInscripcionesInput
   upsert?: Prisma.EquipoUpsertWithoutInscripcionesInput
+  disconnect?: Prisma.EquipoWhereInput | boolean
+  delete?: Prisma.EquipoWhereInput | boolean
   connect?: Prisma.EquipoWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EquipoUpdateToOneWithWhereWithoutInscripcionesInput, Prisma.EquipoUpdateWithoutInscripcionesInput>, Prisma.EquipoUncheckedUpdateWithoutInscripcionesInput>
 }
@@ -444,6 +485,8 @@ export type EquipoUncheckedUpdateManyWithoutCategoriaNestedInput = {
 export type EquipoCreateWithoutTemporadaInput = {
   id?: string
   nombre: string
+  federado?: boolean
+  cerrado?: boolean
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
   partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutEquipoInput
@@ -453,6 +496,8 @@ export type EquipoUncheckedCreateWithoutTemporadaInput = {
   id?: string
   nombre: string
   categoriaId: string
+  federado?: boolean
+  cerrado?: boolean
   partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
@@ -491,11 +536,15 @@ export type EquipoScalarWhereInput = {
   nombre?: Prisma.StringFilter<"Equipo"> | string
   temporadaId?: Prisma.StringFilter<"Equipo"> | string
   categoriaId?: Prisma.StringFilter<"Equipo"> | string
+  federado?: Prisma.BoolFilter<"Equipo"> | boolean
+  cerrado?: Prisma.BoolFilter<"Equipo"> | boolean
 }
 
 export type EquipoCreateWithoutInscripcionesInput = {
   id?: string
   nombre: string
+  federado?: boolean
+  cerrado?: boolean
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
   partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
@@ -506,6 +555,8 @@ export type EquipoUncheckedCreateWithoutInscripcionesInput = {
   nombre: string
   temporadaId: string
   categoriaId: string
+  federado?: boolean
+  cerrado?: boolean
   partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
 }
 
@@ -528,6 +579,8 @@ export type EquipoUpdateToOneWithWhereWithoutInscripcionesInput = {
 export type EquipoUpdateWithoutInscripcionesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
   partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
@@ -538,12 +591,16 @@ export type EquipoUncheckedUpdateWithoutInscripcionesInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
 }
 
 export type EquipoCreateWithoutPartidosInput = {
   id?: string
   nombre: string
+  federado?: boolean
+  cerrado?: boolean
   categoria: Prisma.CategoriaCreateNestedOneWithoutEquiposInput
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutEquipoInput
@@ -554,6 +611,8 @@ export type EquipoUncheckedCreateWithoutPartidosInput = {
   nombre: string
   temporadaId: string
   categoriaId: string
+  federado?: boolean
+  cerrado?: boolean
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
 
@@ -576,6 +635,8 @@ export type EquipoUpdateToOneWithWhereWithoutPartidosInput = {
 export type EquipoUpdateWithoutPartidosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutEquipoNestedInput
@@ -586,12 +647,16 @@ export type EquipoUncheckedUpdateWithoutPartidosInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
 
 export type EquipoCreateWithoutCategoriaInput = {
   id?: string
   nombre: string
+  federado?: boolean
+  cerrado?: boolean
   temporada: Prisma.TemporadaCreateNestedOneWithoutEquiposInput
   partidos?: Prisma.EventoCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutEquipoInput
@@ -601,6 +666,8 @@ export type EquipoUncheckedCreateWithoutCategoriaInput = {
   id?: string
   nombre: string
   temporadaId: string
+  federado?: boolean
+  cerrado?: boolean
   partidos?: Prisma.EventoUncheckedCreateNestedManyWithoutEquipoInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutEquipoInput
 }
@@ -635,11 +702,15 @@ export type EquipoCreateManyTemporadaInput = {
   id?: string
   nombre: string
   categoriaId: string
+  federado?: boolean
+  cerrado?: boolean
 }
 
 export type EquipoUpdateWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutEquiposNestedInput
   partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutEquipoNestedInput
@@ -649,6 +720,8 @@ export type EquipoUncheckedUpdateWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
@@ -657,17 +730,23 @@ export type EquipoUncheckedUpdateManyWithoutTemporadaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   categoriaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type EquipoCreateManyCategoriaInput = {
   id?: string
   nombre: string
   temporadaId: string
+  federado?: boolean
+  cerrado?: boolean
 }
 
 export type EquipoUpdateWithoutCategoriaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   temporada?: Prisma.TemporadaUpdateOneRequiredWithoutEquiposNestedInput
   partidos?: Prisma.EventoUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutEquipoNestedInput
@@ -677,6 +756,8 @@ export type EquipoUncheckedUpdateWithoutCategoriaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   partidos?: Prisma.EventoUncheckedUpdateManyWithoutEquipoNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutEquipoNestedInput
 }
@@ -685,6 +766,8 @@ export type EquipoUncheckedUpdateManyWithoutCategoriaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   temporadaId?: Prisma.StringFieldUpdateOperationsInput | string
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cerrado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -732,6 +815,8 @@ export type EquipoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   nombre?: boolean
   temporadaId?: boolean
   categoriaId?: boolean
+  federado?: boolean
+  cerrado?: boolean
   categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
   partidos?: boolean | Prisma.Equipo$partidosArgs<ExtArgs>
@@ -744,6 +829,8 @@ export type EquipoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   nombre?: boolean
   temporadaId?: boolean
   categoriaId?: boolean
+  federado?: boolean
+  cerrado?: boolean
   categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["equipo"]>
@@ -753,6 +840,8 @@ export type EquipoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   nombre?: boolean
   temporadaId?: boolean
   categoriaId?: boolean
+  federado?: boolean
+  cerrado?: boolean
   categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["equipo"]>
@@ -762,9 +851,11 @@ export type EquipoSelectScalar = {
   nombre?: boolean
   temporadaId?: boolean
   categoriaId?: boolean
+  federado?: boolean
+  cerrado?: boolean
 }
 
-export type EquipoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "temporadaId" | "categoriaId", ExtArgs["result"]["equipo"]>
+export type EquipoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "temporadaId" | "categoriaId" | "federado" | "cerrado", ExtArgs["result"]["equipo"]>
 export type EquipoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>
   temporada?: boolean | Prisma.TemporadaDefaultArgs<ExtArgs>
@@ -794,6 +885,8 @@ export type $EquipoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     nombre: string
     temporadaId: string
     categoriaId: string
+    federado: boolean
+    cerrado: boolean
   }, ExtArgs["result"]["equipo"]>
   composites: {}
 }
@@ -1225,6 +1318,8 @@ export interface EquipoFieldRefs {
   readonly nombre: Prisma.FieldRef<"Equipo", 'String'>
   readonly temporadaId: Prisma.FieldRef<"Equipo", 'String'>
   readonly categoriaId: Prisma.FieldRef<"Equipo", 'String'>
+  readonly federado: Prisma.FieldRef<"Equipo", 'Boolean'>
+  readonly cerrado: Prisma.FieldRef<"Equipo", 'Boolean'>
 }
     
 

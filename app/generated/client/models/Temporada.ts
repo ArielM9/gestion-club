@@ -30,6 +30,9 @@ export type TemporadaMinAggregateOutputType = {
   fechaInicio: Date | null
   fechaFin: Date | null
   activa: boolean | null
+  balancePdf: string | null
+  fechaCierre: Date | null
+  balanceGenerado: boolean | null
 }
 
 export type TemporadaMaxAggregateOutputType = {
@@ -38,6 +41,9 @@ export type TemporadaMaxAggregateOutputType = {
   fechaInicio: Date | null
   fechaFin: Date | null
   activa: boolean | null
+  balancePdf: string | null
+  fechaCierre: Date | null
+  balanceGenerado: boolean | null
 }
 
 export type TemporadaCountAggregateOutputType = {
@@ -46,6 +52,9 @@ export type TemporadaCountAggregateOutputType = {
   fechaInicio: number
   fechaFin: number
   activa: number
+  balancePdf: number
+  fechaCierre: number
+  balanceGenerado: number
   _all: number
 }
 
@@ -56,6 +65,9 @@ export type TemporadaMinAggregateInputType = {
   fechaInicio?: true
   fechaFin?: true
   activa?: true
+  balancePdf?: true
+  fechaCierre?: true
+  balanceGenerado?: true
 }
 
 export type TemporadaMaxAggregateInputType = {
@@ -64,6 +76,9 @@ export type TemporadaMaxAggregateInputType = {
   fechaInicio?: true
   fechaFin?: true
   activa?: true
+  balancePdf?: true
+  fechaCierre?: true
+  balanceGenerado?: true
 }
 
 export type TemporadaCountAggregateInputType = {
@@ -72,6 +87,9 @@ export type TemporadaCountAggregateInputType = {
   fechaInicio?: true
   fechaFin?: true
   activa?: true
+  balancePdf?: true
+  fechaCierre?: true
+  balanceGenerado?: true
   _all?: true
 }
 
@@ -153,6 +171,9 @@ export type TemporadaGroupByOutputType = {
   fechaInicio: Date
   fechaFin: Date
   activa: boolean
+  balancePdf: string | null
+  fechaCierre: Date | null
+  balanceGenerado: boolean
   _count: TemporadaCountAggregateOutputType | null
   _min: TemporadaMinAggregateOutputType | null
   _max: TemporadaMaxAggregateOutputType | null
@@ -182,12 +203,19 @@ export type TemporadaWhereInput = {
   fechaInicio?: Prisma.DateTimeFilter<"Temporada"> | Date | string
   fechaFin?: Prisma.DateTimeFilter<"Temporada"> | Date | string
   activa?: Prisma.BoolFilter<"Temporada"> | boolean
+  balancePdf?: Prisma.StringNullableFilter<"Temporada"> | string | null
+  fechaCierre?: Prisma.DateTimeNullableFilter<"Temporada"> | Date | string | null
+  balanceGenerado?: Prisma.BoolFilter<"Temporada"> | boolean
   abonos?: Prisma.AbonoListRelationFilter
   cargos?: Prisma.CargoListRelationFilter
   equipos?: Prisma.EquipoListRelationFilter
   ingresos?: Prisma.IngresoExternoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
   gastos?: Prisma.GastoListRelationFilter
+  documentos?: Prisma.DocumentoListRelationFilter
+  precios?: Prisma.TemporadaCategoriaListRelationFilter
+  movimientoStocks?: Prisma.MovimientoStockListRelationFilter
+  ventas?: Prisma.VentaListRelationFilter
 }
 
 export type TemporadaOrderByWithRelationInput = {
@@ -196,12 +224,19 @@ export type TemporadaOrderByWithRelationInput = {
   fechaInicio?: Prisma.SortOrder
   fechaFin?: Prisma.SortOrder
   activa?: Prisma.SortOrder
+  balancePdf?: Prisma.SortOrderInput | Prisma.SortOrder
+  fechaCierre?: Prisma.SortOrderInput | Prisma.SortOrder
+  balanceGenerado?: Prisma.SortOrder
   abonos?: Prisma.AbonoOrderByRelationAggregateInput
   cargos?: Prisma.CargoOrderByRelationAggregateInput
   equipos?: Prisma.EquipoOrderByRelationAggregateInput
   ingresos?: Prisma.IngresoExternoOrderByRelationAggregateInput
   inscripciones?: Prisma.InscripcionOrderByRelationAggregateInput
   gastos?: Prisma.GastoOrderByRelationAggregateInput
+  documentos?: Prisma.DocumentoOrderByRelationAggregateInput
+  precios?: Prisma.TemporadaCategoriaOrderByRelationAggregateInput
+  movimientoStocks?: Prisma.MovimientoStockOrderByRelationAggregateInput
+  ventas?: Prisma.VentaOrderByRelationAggregateInput
 }
 
 export type TemporadaWhereUniqueInput = Prisma.AtLeast<{
@@ -213,12 +248,19 @@ export type TemporadaWhereUniqueInput = Prisma.AtLeast<{
   fechaInicio?: Prisma.DateTimeFilter<"Temporada"> | Date | string
   fechaFin?: Prisma.DateTimeFilter<"Temporada"> | Date | string
   activa?: Prisma.BoolFilter<"Temporada"> | boolean
+  balancePdf?: Prisma.StringNullableFilter<"Temporada"> | string | null
+  fechaCierre?: Prisma.DateTimeNullableFilter<"Temporada"> | Date | string | null
+  balanceGenerado?: Prisma.BoolFilter<"Temporada"> | boolean
   abonos?: Prisma.AbonoListRelationFilter
   cargos?: Prisma.CargoListRelationFilter
   equipos?: Prisma.EquipoListRelationFilter
   ingresos?: Prisma.IngresoExternoListRelationFilter
   inscripciones?: Prisma.InscripcionListRelationFilter
   gastos?: Prisma.GastoListRelationFilter
+  documentos?: Prisma.DocumentoListRelationFilter
+  precios?: Prisma.TemporadaCategoriaListRelationFilter
+  movimientoStocks?: Prisma.MovimientoStockListRelationFilter
+  ventas?: Prisma.VentaListRelationFilter
 }, "id">
 
 export type TemporadaOrderByWithAggregationInput = {
@@ -227,6 +269,9 @@ export type TemporadaOrderByWithAggregationInput = {
   fechaInicio?: Prisma.SortOrder
   fechaFin?: Prisma.SortOrder
   activa?: Prisma.SortOrder
+  balancePdf?: Prisma.SortOrderInput | Prisma.SortOrder
+  fechaCierre?: Prisma.SortOrderInput | Prisma.SortOrder
+  balanceGenerado?: Prisma.SortOrder
   _count?: Prisma.TemporadaCountOrderByAggregateInput
   _max?: Prisma.TemporadaMaxOrderByAggregateInput
   _min?: Prisma.TemporadaMinOrderByAggregateInput
@@ -241,6 +286,9 @@ export type TemporadaScalarWhereWithAggregatesInput = {
   fechaInicio?: Prisma.DateTimeWithAggregatesFilter<"Temporada"> | Date | string
   fechaFin?: Prisma.DateTimeWithAggregatesFilter<"Temporada"> | Date | string
   activa?: Prisma.BoolWithAggregatesFilter<"Temporada"> | boolean
+  balancePdf?: Prisma.StringNullableWithAggregatesFilter<"Temporada"> | string | null
+  fechaCierre?: Prisma.DateTimeNullableWithAggregatesFilter<"Temporada"> | Date | string | null
+  balanceGenerado?: Prisma.BoolWithAggregatesFilter<"Temporada"> | boolean
 }
 
 export type TemporadaCreateInput = {
@@ -249,12 +297,19 @@ export type TemporadaCreateInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateInput = {
@@ -263,12 +318,19 @@ export type TemporadaUncheckedCreateInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUpdateInput = {
@@ -277,12 +339,19 @@ export type TemporadaUpdateInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateInput = {
@@ -291,12 +360,19 @@ export type TemporadaUncheckedUpdateInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateManyInput = {
@@ -305,6 +381,9 @@ export type TemporadaCreateManyInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
 }
 
 export type TemporadaUpdateManyMutationInput = {
@@ -313,6 +392,9 @@ export type TemporadaUpdateManyMutationInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TemporadaUncheckedUpdateManyInput = {
@@ -321,6 +403,9 @@ export type TemporadaUncheckedUpdateManyInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TemporadaCountOrderByAggregateInput = {
@@ -329,6 +414,9 @@ export type TemporadaCountOrderByAggregateInput = {
   fechaInicio?: Prisma.SortOrder
   fechaFin?: Prisma.SortOrder
   activa?: Prisma.SortOrder
+  balancePdf?: Prisma.SortOrder
+  fechaCierre?: Prisma.SortOrder
+  balanceGenerado?: Prisma.SortOrder
 }
 
 export type TemporadaMaxOrderByAggregateInput = {
@@ -337,6 +425,9 @@ export type TemporadaMaxOrderByAggregateInput = {
   fechaInicio?: Prisma.SortOrder
   fechaFin?: Prisma.SortOrder
   activa?: Prisma.SortOrder
+  balancePdf?: Prisma.SortOrder
+  fechaCierre?: Prisma.SortOrder
+  balanceGenerado?: Prisma.SortOrder
 }
 
 export type TemporadaMinOrderByAggregateInput = {
@@ -345,11 +436,28 @@ export type TemporadaMinOrderByAggregateInput = {
   fechaInicio?: Prisma.SortOrder
   fechaFin?: Prisma.SortOrder
   activa?: Prisma.SortOrder
+  balancePdf?: Prisma.SortOrder
+  fechaCierre?: Prisma.SortOrder
+  balanceGenerado?: Prisma.SortOrder
 }
 
 export type TemporadaScalarRelationFilter = {
   is?: Prisma.TemporadaWhereInput
   isNot?: Prisma.TemporadaWhereInput
+}
+
+export type TemporadaCreateNestedOneWithoutPreciosInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutPreciosInput, Prisma.TemporadaUncheckedCreateWithoutPreciosInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutPreciosInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+}
+
+export type TemporadaUpdateOneRequiredWithoutPreciosNestedInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutPreciosInput, Prisma.TemporadaUncheckedCreateWithoutPreciosInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutPreciosInput
+  upsert?: Prisma.TemporadaUpsertWithoutPreciosInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutPreciosInput, Prisma.TemporadaUpdateWithoutPreciosInput>, Prisma.TemporadaUncheckedUpdateWithoutPreciosInput>
 }
 
 export type TemporadaCreateNestedOneWithoutInscripcionesInput = {
@@ -436,17 +544,162 @@ export type TemporadaUpdateOneRequiredWithoutEquiposNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutEquiposInput, Prisma.TemporadaUpdateWithoutEquiposInput>, Prisma.TemporadaUncheckedUpdateWithoutEquiposInput>
 }
 
+export type TemporadaCreateNestedOneWithoutDocumentosInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutDocumentosInput, Prisma.TemporadaUncheckedCreateWithoutDocumentosInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutDocumentosInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+}
+
+export type TemporadaUpdateOneRequiredWithoutDocumentosNestedInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutDocumentosInput, Prisma.TemporadaUncheckedCreateWithoutDocumentosInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutDocumentosInput
+  upsert?: Prisma.TemporadaUpsertWithoutDocumentosInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutDocumentosInput, Prisma.TemporadaUpdateWithoutDocumentosInput>, Prisma.TemporadaUncheckedUpdateWithoutDocumentosInput>
+}
+
+export type TemporadaCreateNestedOneWithoutMovimientoStocksInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutMovimientoStocksInput, Prisma.TemporadaUncheckedCreateWithoutMovimientoStocksInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutMovimientoStocksInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+}
+
+export type TemporadaUpdateOneRequiredWithoutMovimientoStocksNestedInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutMovimientoStocksInput, Prisma.TemporadaUncheckedCreateWithoutMovimientoStocksInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutMovimientoStocksInput
+  upsert?: Prisma.TemporadaUpsertWithoutMovimientoStocksInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutMovimientoStocksInput, Prisma.TemporadaUpdateWithoutMovimientoStocksInput>, Prisma.TemporadaUncheckedUpdateWithoutMovimientoStocksInput>
+}
+
+export type TemporadaCreateNestedOneWithoutVentasInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutVentasInput, Prisma.TemporadaUncheckedCreateWithoutVentasInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutVentasInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+}
+
+export type TemporadaUpdateOneRequiredWithoutVentasNestedInput = {
+  create?: Prisma.XOR<Prisma.TemporadaCreateWithoutVentasInput, Prisma.TemporadaUncheckedCreateWithoutVentasInput>
+  connectOrCreate?: Prisma.TemporadaCreateOrConnectWithoutVentasInput
+  upsert?: Prisma.TemporadaUpsertWithoutVentasInput
+  connect?: Prisma.TemporadaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TemporadaUpdateToOneWithWhereWithoutVentasInput, Prisma.TemporadaUpdateWithoutVentasInput>, Prisma.TemporadaUncheckedUpdateWithoutVentasInput>
+}
+
+export type TemporadaCreateWithoutPreciosInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaUncheckedCreateWithoutPreciosInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaCreateOrConnectWithoutPreciosInput = {
+  where: Prisma.TemporadaWhereUniqueInput
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutPreciosInput, Prisma.TemporadaUncheckedCreateWithoutPreciosInput>
+}
+
+export type TemporadaUpsertWithoutPreciosInput = {
+  update: Prisma.XOR<Prisma.TemporadaUpdateWithoutPreciosInput, Prisma.TemporadaUncheckedUpdateWithoutPreciosInput>
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutPreciosInput, Prisma.TemporadaUncheckedCreateWithoutPreciosInput>
+  where?: Prisma.TemporadaWhereInput
+}
+
+export type TemporadaUpdateToOneWithWhereWithoutPreciosInput = {
+  where?: Prisma.TemporadaWhereInput
+  data: Prisma.XOR<Prisma.TemporadaUpdateWithoutPreciosInput, Prisma.TemporadaUncheckedUpdateWithoutPreciosInput>
+}
+
+export type TemporadaUpdateWithoutPreciosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaUncheckedUpdateWithoutPreciosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
+}
+
 export type TemporadaCreateWithoutInscripcionesInput = {
   id?: string
   nombre: string
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutInscripcionesInput = {
@@ -455,11 +708,18 @@ export type TemporadaUncheckedCreateWithoutInscripcionesInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutInscripcionesInput = {
@@ -484,11 +744,18 @@ export type TemporadaUpdateWithoutInscripcionesInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutInscripcionesInput = {
@@ -497,11 +764,18 @@ export type TemporadaUncheckedUpdateWithoutInscripcionesInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutCargosInput = {
@@ -510,11 +784,18 @@ export type TemporadaCreateWithoutCargosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutCargosInput = {
@@ -523,11 +804,18 @@ export type TemporadaUncheckedCreateWithoutCargosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutCargosInput = {
@@ -552,11 +840,18 @@ export type TemporadaUpdateWithoutCargosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutCargosInput = {
@@ -565,11 +860,18 @@ export type TemporadaUncheckedUpdateWithoutCargosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutAbonosInput = {
@@ -578,11 +880,18 @@ export type TemporadaCreateWithoutAbonosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutAbonosInput = {
@@ -591,11 +900,18 @@ export type TemporadaUncheckedCreateWithoutAbonosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutAbonosInput = {
@@ -620,11 +936,18 @@ export type TemporadaUpdateWithoutAbonosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutAbonosInput = {
@@ -633,11 +956,18 @@ export type TemporadaUncheckedUpdateWithoutAbonosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutIngresosInput = {
@@ -646,11 +976,18 @@ export type TemporadaCreateWithoutIngresosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutIngresosInput = {
@@ -659,11 +996,18 @@ export type TemporadaUncheckedCreateWithoutIngresosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutIngresosInput = {
@@ -688,11 +1032,18 @@ export type TemporadaUpdateWithoutIngresosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutIngresosInput = {
@@ -701,11 +1052,18 @@ export type TemporadaUncheckedUpdateWithoutIngresosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutGastosInput = {
@@ -714,11 +1072,18 @@ export type TemporadaCreateWithoutGastosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutGastosInput = {
@@ -727,11 +1092,18 @@ export type TemporadaUncheckedCreateWithoutGastosInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutGastosInput = {
@@ -756,11 +1128,18 @@ export type TemporadaUpdateWithoutGastosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutGastosInput = {
@@ -769,11 +1148,18 @@ export type TemporadaUncheckedUpdateWithoutGastosInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaCreateWithoutEquiposInput = {
@@ -782,11 +1168,18 @@ export type TemporadaCreateWithoutEquiposInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaUncheckedCreateWithoutEquiposInput = {
@@ -795,11 +1188,18 @@ export type TemporadaUncheckedCreateWithoutEquiposInput = {
   fechaInicio: Date | string
   fechaFin: Date | string
   activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
   abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
   cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
   ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
   inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
   gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
 }
 
 export type TemporadaCreateOrConnectWithoutEquiposInput = {
@@ -824,11 +1224,18 @@ export type TemporadaUpdateWithoutEquiposInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
 }
 
 export type TemporadaUncheckedUpdateWithoutEquiposInput = {
@@ -837,11 +1244,306 @@ export type TemporadaUncheckedUpdateWithoutEquiposInput = {
   fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
   cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
   ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
   inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
   gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaCreateWithoutDocumentosInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaUncheckedCreateWithoutDocumentosInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaCreateOrConnectWithoutDocumentosInput = {
+  where: Prisma.TemporadaWhereUniqueInput
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutDocumentosInput, Prisma.TemporadaUncheckedCreateWithoutDocumentosInput>
+}
+
+export type TemporadaUpsertWithoutDocumentosInput = {
+  update: Prisma.XOR<Prisma.TemporadaUpdateWithoutDocumentosInput, Prisma.TemporadaUncheckedUpdateWithoutDocumentosInput>
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutDocumentosInput, Prisma.TemporadaUncheckedCreateWithoutDocumentosInput>
+  where?: Prisma.TemporadaWhereInput
+}
+
+export type TemporadaUpdateToOneWithWhereWithoutDocumentosInput = {
+  where?: Prisma.TemporadaWhereInput
+  data: Prisma.XOR<Prisma.TemporadaUpdateWithoutDocumentosInput, Prisma.TemporadaUncheckedUpdateWithoutDocumentosInput>
+}
+
+export type TemporadaUpdateWithoutDocumentosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaUncheckedUpdateWithoutDocumentosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaCreateWithoutMovimientoStocksInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaUncheckedCreateWithoutMovimientoStocksInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  ventas?: Prisma.VentaUncheckedCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaCreateOrConnectWithoutMovimientoStocksInput = {
+  where: Prisma.TemporadaWhereUniqueInput
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutMovimientoStocksInput, Prisma.TemporadaUncheckedCreateWithoutMovimientoStocksInput>
+}
+
+export type TemporadaUpsertWithoutMovimientoStocksInput = {
+  update: Prisma.XOR<Prisma.TemporadaUpdateWithoutMovimientoStocksInput, Prisma.TemporadaUncheckedUpdateWithoutMovimientoStocksInput>
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutMovimientoStocksInput, Prisma.TemporadaUncheckedCreateWithoutMovimientoStocksInput>
+  where?: Prisma.TemporadaWhereInput
+}
+
+export type TemporadaUpdateToOneWithWhereWithoutMovimientoStocksInput = {
+  where?: Prisma.TemporadaWhereInput
+  data: Prisma.XOR<Prisma.TemporadaUpdateWithoutMovimientoStocksInput, Prisma.TemporadaUncheckedUpdateWithoutMovimientoStocksInput>
+}
+
+export type TemporadaUpdateWithoutMovimientoStocksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaUncheckedUpdateWithoutMovimientoStocksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  ventas?: Prisma.VentaUncheckedUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaCreateWithoutVentasInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaUncheckedCreateWithoutVentasInput = {
+  id?: string
+  nombre: string
+  fechaInicio: Date | string
+  fechaFin: Date | string
+  activa?: boolean
+  balancePdf?: string | null
+  fechaCierre?: Date | string | null
+  balanceGenerado?: boolean
+  abonos?: Prisma.AbonoUncheckedCreateNestedManyWithoutTemporadaInput
+  cargos?: Prisma.CargoUncheckedCreateNestedManyWithoutTemporadaInput
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutTemporadaInput
+  ingresos?: Prisma.IngresoExternoUncheckedCreateNestedManyWithoutTemporadaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutTemporadaInput
+  gastos?: Prisma.GastoUncheckedCreateNestedManyWithoutTemporadaInput
+  documentos?: Prisma.DocumentoUncheckedCreateNestedManyWithoutTemporadaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutTemporadaInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedCreateNestedManyWithoutTemporadaInput
+}
+
+export type TemporadaCreateOrConnectWithoutVentasInput = {
+  where: Prisma.TemporadaWhereUniqueInput
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutVentasInput, Prisma.TemporadaUncheckedCreateWithoutVentasInput>
+}
+
+export type TemporadaUpsertWithoutVentasInput = {
+  update: Prisma.XOR<Prisma.TemporadaUpdateWithoutVentasInput, Prisma.TemporadaUncheckedUpdateWithoutVentasInput>
+  create: Prisma.XOR<Prisma.TemporadaCreateWithoutVentasInput, Prisma.TemporadaUncheckedCreateWithoutVentasInput>
+  where?: Prisma.TemporadaWhereInput
+}
+
+export type TemporadaUpdateToOneWithWhereWithoutVentasInput = {
+  where?: Prisma.TemporadaWhereInput
+  data: Prisma.XOR<Prisma.TemporadaUpdateWithoutVentasInput, Prisma.TemporadaUncheckedUpdateWithoutVentasInput>
+}
+
+export type TemporadaUpdateWithoutVentasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUpdateManyWithoutTemporadaNestedInput
+}
+
+export type TemporadaUncheckedUpdateWithoutVentasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  fechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fechaFin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activa?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  balancePdf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balanceGenerado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  abonos?: Prisma.AbonoUncheckedUpdateManyWithoutTemporadaNestedInput
+  cargos?: Prisma.CargoUncheckedUpdateManyWithoutTemporadaNestedInput
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutTemporadaNestedInput
+  ingresos?: Prisma.IngresoExternoUncheckedUpdateManyWithoutTemporadaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutTemporadaNestedInput
+  gastos?: Prisma.GastoUncheckedUpdateManyWithoutTemporadaNestedInput
+  documentos?: Prisma.DocumentoUncheckedUpdateManyWithoutTemporadaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutTemporadaNestedInput
+  movimientoStocks?: Prisma.MovimientoStockUncheckedUpdateManyWithoutTemporadaNestedInput
 }
 
 
@@ -856,6 +1558,10 @@ export type TemporadaCountOutputType = {
   ingresos: number
   inscripciones: number
   gastos: number
+  documentos: number
+  precios: number
+  movimientoStocks: number
+  ventas: number
 }
 
 export type TemporadaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -865,6 +1571,10 @@ export type TemporadaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   ingresos?: boolean | TemporadaCountOutputTypeCountIngresosArgs
   inscripciones?: boolean | TemporadaCountOutputTypeCountInscripcionesArgs
   gastos?: boolean | TemporadaCountOutputTypeCountGastosArgs
+  documentos?: boolean | TemporadaCountOutputTypeCountDocumentosArgs
+  precios?: boolean | TemporadaCountOutputTypeCountPreciosArgs
+  movimientoStocks?: boolean | TemporadaCountOutputTypeCountMovimientoStocksArgs
+  ventas?: boolean | TemporadaCountOutputTypeCountVentasArgs
 }
 
 /**
@@ -919,6 +1629,34 @@ export type TemporadaCountOutputTypeCountGastosArgs<ExtArgs extends runtime.Type
   where?: Prisma.GastoWhereInput
 }
 
+/**
+ * TemporadaCountOutputType without action
+ */
+export type TemporadaCountOutputTypeCountDocumentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentoWhereInput
+}
+
+/**
+ * TemporadaCountOutputType without action
+ */
+export type TemporadaCountOutputTypeCountPreciosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TemporadaCategoriaWhereInput
+}
+
+/**
+ * TemporadaCountOutputType without action
+ */
+export type TemporadaCountOutputTypeCountMovimientoStocksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MovimientoStockWhereInput
+}
+
+/**
+ * TemporadaCountOutputType without action
+ */
+export type TemporadaCountOutputTypeCountVentasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VentaWhereInput
+}
+
 
 export type TemporadaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -926,12 +1664,19 @@ export type TemporadaSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   fechaInicio?: boolean
   fechaFin?: boolean
   activa?: boolean
+  balancePdf?: boolean
+  fechaCierre?: boolean
+  balanceGenerado?: boolean
   abonos?: boolean | Prisma.Temporada$abonosArgs<ExtArgs>
   cargos?: boolean | Prisma.Temporada$cargosArgs<ExtArgs>
   equipos?: boolean | Prisma.Temporada$equiposArgs<ExtArgs>
   ingresos?: boolean | Prisma.Temporada$ingresosArgs<ExtArgs>
   inscripciones?: boolean | Prisma.Temporada$inscripcionesArgs<ExtArgs>
   gastos?: boolean | Prisma.Temporada$gastosArgs<ExtArgs>
+  documentos?: boolean | Prisma.Temporada$documentosArgs<ExtArgs>
+  precios?: boolean | Prisma.Temporada$preciosArgs<ExtArgs>
+  movimientoStocks?: boolean | Prisma.Temporada$movimientoStocksArgs<ExtArgs>
+  ventas?: boolean | Prisma.Temporada$ventasArgs<ExtArgs>
   _count?: boolean | Prisma.TemporadaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["temporada"]>
 
@@ -941,6 +1686,9 @@ export type TemporadaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   fechaInicio?: boolean
   fechaFin?: boolean
   activa?: boolean
+  balancePdf?: boolean
+  fechaCierre?: boolean
+  balanceGenerado?: boolean
 }, ExtArgs["result"]["temporada"]>
 
 export type TemporadaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -949,6 +1697,9 @@ export type TemporadaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   fechaInicio?: boolean
   fechaFin?: boolean
   activa?: boolean
+  balancePdf?: boolean
+  fechaCierre?: boolean
+  balanceGenerado?: boolean
 }, ExtArgs["result"]["temporada"]>
 
 export type TemporadaSelectScalar = {
@@ -957,9 +1708,12 @@ export type TemporadaSelectScalar = {
   fechaInicio?: boolean
   fechaFin?: boolean
   activa?: boolean
+  balancePdf?: boolean
+  fechaCierre?: boolean
+  balanceGenerado?: boolean
 }
 
-export type TemporadaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "fechaInicio" | "fechaFin" | "activa", ExtArgs["result"]["temporada"]>
+export type TemporadaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "fechaInicio" | "fechaFin" | "activa" | "balancePdf" | "fechaCierre" | "balanceGenerado", ExtArgs["result"]["temporada"]>
 export type TemporadaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   abonos?: boolean | Prisma.Temporada$abonosArgs<ExtArgs>
   cargos?: boolean | Prisma.Temporada$cargosArgs<ExtArgs>
@@ -967,6 +1721,10 @@ export type TemporadaInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   ingresos?: boolean | Prisma.Temporada$ingresosArgs<ExtArgs>
   inscripciones?: boolean | Prisma.Temporada$inscripcionesArgs<ExtArgs>
   gastos?: boolean | Prisma.Temporada$gastosArgs<ExtArgs>
+  documentos?: boolean | Prisma.Temporada$documentosArgs<ExtArgs>
+  precios?: boolean | Prisma.Temporada$preciosArgs<ExtArgs>
+  movimientoStocks?: boolean | Prisma.Temporada$movimientoStocksArgs<ExtArgs>
+  ventas?: boolean | Prisma.Temporada$ventasArgs<ExtArgs>
   _count?: boolean | Prisma.TemporadaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TemporadaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -981,6 +1739,10 @@ export type $TemporadaPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     ingresos: Prisma.$IngresoExternoPayload<ExtArgs>[]
     inscripciones: Prisma.$InscripcionPayload<ExtArgs>[]
     gastos: Prisma.$GastoPayload<ExtArgs>[]
+    documentos: Prisma.$DocumentoPayload<ExtArgs>[]
+    precios: Prisma.$TemporadaCategoriaPayload<ExtArgs>[]
+    movimientoStocks: Prisma.$MovimientoStockPayload<ExtArgs>[]
+    ventas: Prisma.$VentaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -988,6 +1750,9 @@ export type $TemporadaPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     fechaInicio: Date
     fechaFin: Date
     activa: boolean
+    balancePdf: string | null
+    fechaCierre: Date | null
+    balanceGenerado: boolean
   }, ExtArgs["result"]["temporada"]>
   composites: {}
 }
@@ -1388,6 +2153,10 @@ export interface Prisma__TemporadaClient<T, Null = never, ExtArgs extends runtim
   ingresos<T extends Prisma.Temporada$ingresosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$ingresosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IngresoExternoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inscripciones<T extends Prisma.Temporada$inscripcionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$inscripcionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InscripcionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gastos<T extends Prisma.Temporada$gastosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$gastosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GastoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documentos<T extends Prisma.Temporada$documentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$documentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  precios<T extends Prisma.Temporada$preciosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$preciosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TemporadaCategoriaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  movimientoStocks<T extends Prisma.Temporada$movimientoStocksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$movimientoStocksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ventas<T extends Prisma.Temporada$ventasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Temporada$ventasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1422,6 +2191,9 @@ export interface TemporadaFieldRefs {
   readonly fechaInicio: Prisma.FieldRef<"Temporada", 'DateTime'>
   readonly fechaFin: Prisma.FieldRef<"Temporada", 'DateTime'>
   readonly activa: Prisma.FieldRef<"Temporada", 'Boolean'>
+  readonly balancePdf: Prisma.FieldRef<"Temporada", 'String'>
+  readonly fechaCierre: Prisma.FieldRef<"Temporada", 'DateTime'>
+  readonly balanceGenerado: Prisma.FieldRef<"Temporada", 'Boolean'>
 }
     
 
@@ -1951,6 +2723,102 @@ export type Temporada$gastosArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.GastoScalarFieldEnum | Prisma.GastoScalarFieldEnum[]
+}
+
+/**
+ * Temporada.documentos
+ */
+export type Temporada$documentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Documento
+   */
+  select?: Prisma.DocumentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Documento
+   */
+  omit?: Prisma.DocumentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentoInclude<ExtArgs> | null
+  where?: Prisma.DocumentoWhereInput
+  orderBy?: Prisma.DocumentoOrderByWithRelationInput | Prisma.DocumentoOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentoScalarFieldEnum | Prisma.DocumentoScalarFieldEnum[]
+}
+
+/**
+ * Temporada.precios
+ */
+export type Temporada$preciosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TemporadaCategoria
+   */
+  select?: Prisma.TemporadaCategoriaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TemporadaCategoria
+   */
+  omit?: Prisma.TemporadaCategoriaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TemporadaCategoriaInclude<ExtArgs> | null
+  where?: Prisma.TemporadaCategoriaWhereInput
+  orderBy?: Prisma.TemporadaCategoriaOrderByWithRelationInput | Prisma.TemporadaCategoriaOrderByWithRelationInput[]
+  cursor?: Prisma.TemporadaCategoriaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TemporadaCategoriaScalarFieldEnum | Prisma.TemporadaCategoriaScalarFieldEnum[]
+}
+
+/**
+ * Temporada.movimientoStocks
+ */
+export type Temporada$movimientoStocksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MovimientoStock
+   */
+  select?: Prisma.MovimientoStockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MovimientoStock
+   */
+  omit?: Prisma.MovimientoStockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MovimientoStockInclude<ExtArgs> | null
+  where?: Prisma.MovimientoStockWhereInput
+  orderBy?: Prisma.MovimientoStockOrderByWithRelationInput | Prisma.MovimientoStockOrderByWithRelationInput[]
+  cursor?: Prisma.MovimientoStockWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MovimientoStockScalarFieldEnum | Prisma.MovimientoStockScalarFieldEnum[]
+}
+
+/**
+ * Temporada.ventas
+ */
+export type Temporada$ventasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Venta
+   */
+  select?: Prisma.VentaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Venta
+   */
+  omit?: Prisma.VentaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentaInclude<ExtArgs> | null
+  where?: Prisma.VentaWhereInput
+  orderBy?: Prisma.VentaOrderByWithRelationInput | Prisma.VentaOrderByWithRelationInput[]
+  cursor?: Prisma.VentaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VentaScalarFieldEnum | Prisma.VentaScalarFieldEnum[]
 }
 
 /**

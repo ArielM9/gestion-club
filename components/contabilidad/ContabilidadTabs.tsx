@@ -1,12 +1,58 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { LayoutDashboard, UsersRound, Settings2 } from "lucide-react";
+import { LayoutDashboard, UsersRound, Link2 } from "lucide-react";
 import CardKpi from "./CardKpi";
 import LibroDiario from "./LibroDiario";
 import ListaDeudores from "./ListaDeudores";
 import GraficaFinanciera from "./GraficaFinanciera";
 import GraficaGastos from "./GraficaGastos";
+import VincularComprobantes from "./VincularComprobantes";
+
+interface Resumen {
+    saldoTotal: number;
+    ingresosTotales: number;
+    gastosTotales: number;
+}
+
+interface Movimiento {
+    id: string;
+    fecha: Date;
+    entidad: string;
+    socioId: string | null;
+    concepto: string | null;
+    monto: number;
+    tipo: string;
+    metodo: string;
+    estado: string;
+    esSocio: boolean;
+}
+
+interface Deudor {
+    id: string;
+    nombre: string;
+    dni: string;
+    categoria: string;
+    totalCargos: number;
+    totalAbonos: number;
+    deuda: number;
+    detalles: {
+        cargos: { id: string; monto: number; concepto: string; fecha: Date }[];
+        abonos: { id: string; monto: number; fecha: Date }[];
+    };
+}
+
+interface DatosGrafica {
+    name: string;
+    ingresos: number;
+    gastos: number;
+}
+
+interface DatosCategorias {
+    name: string;
+    value: number;
+    fill: string;
+}
 
 export default function ContabilidadTabs({
     resumen,
@@ -15,15 +61,19 @@ export default function ContabilidadTabs({
     totalPages,
     currentPage,
     datosGrafica,
-    datosCategorias
+    datosCategorias,
+    movimientosTotalPages = 1,
+    movimientosTotalItems = 0
 }: {
-    resumen: any,
-    movimientos: any[],
-    deudores: any[],
-    totalPages: number,
-    currentPage: number,
-    datosGrafica: any,
-    datosCategorias: any
+    resumen: Resumen | null;
+    movimientos: Movimiento[];
+    deudores: Deudor[];
+    totalPages: number;
+    currentPage: number;
+    datosGrafica: DatosGrafica[];
+    datosCategorias: DatosCategorias[];
+    movimientosTotalPages?: number;
+    movimientosTotalItems?: number;
 }) {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -53,6 +103,12 @@ export default function ContabilidadTabs({
                     icon={<UsersRound size={16} />}
                     label="Cuentas a Cobrar"
                 />
+                <TabButton
+                    active={activeTab === "comprobantes"}
+                    onClick={() => setActiveTab("comprobantes")}
+                    icon={<Link2 size={16} />}
+                    label="Vincular Comprobantes"
+                />
             </div>
 
             {/* CONTENIDO DINÁMICO */}
@@ -60,22 +116,25 @@ export default function ContabilidadTabs({
                 {activeTab === "dashboard" && (
                     <div className="space-y-8 animate-in fade-in duration-300">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <CardKpi title="Saldo Total" value={resumen.saldoTotal} type="balance" />
-                            <CardKpi title="Ingresos" value={resumen.ingresosTotales} trend="+12%" type="income" />
-                            <CardKpi title="Gastos" value={resumen.gastosTotales} trend="-3%" type="expense" />
+                            <CardKpi title="Saldo Total" value={resumen?.saldoTotal ?? 0} type="balance" />
+                            <CardKpi title="Ingresos" value={resumen?.ingresosTotales ?? 0} trend="+12%" type="income" />
+                            <CardKpi title="Gastos" value={resumen?.gastosTotales ?? 0} trend="-3%" type="expense" />
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-80">
-                            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic">
-                                <GraficaFinanciera data={datosGrafica} />
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic min-h-[300px]">
+                                <GraficaFinanciera data={datosGrafica || []} />
                             </div>
-                            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic">
-
-                                <GraficaGastos data={datosCategorias} />
+                            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic min-h-[300px]">
+                                <GraficaGastos data={datosCategorias || []} />
                             </div>
                         </div>
 
-                        <LibroDiario movimientos={movimientos} />
+                        <LibroDiario 
+                            movimientos={movimientos} 
+                            totalPages={movimientosTotalPages}
+                            totalItems={movimientosTotalItems}
+                        />
                     </div>
                 )}
 
@@ -88,12 +147,18 @@ export default function ContabilidadTabs({
                         />
                     </div>
                 )}
+
+                {activeTab === "comprobantes" && (
+                    <div className="animate-in fade-in duration-300">
+                        <VincularComprobantes />
+                    </div>
+                )}
             </div>
         </div>
     );
 }
 
-function TabButton({ active, onClick, icon, label }: any) {
+function TabButton({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
     return (
         <button
             onClick={onClick}

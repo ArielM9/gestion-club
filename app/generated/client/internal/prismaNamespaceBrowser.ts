@@ -57,6 +57,7 @@ export const ModelName = {
   Verification: 'Verification',
   Socio: 'Socio',
   Temporada: 'Temporada',
+  TemporadaCategoria: 'TemporadaCategoria',
   Inscripcion: 'Inscripcion',
   Cargo: 'Cargo',
   Abono: 'Abono',
@@ -65,7 +66,14 @@ export const ModelName = {
   Log: 'Log',
   Evento: 'Evento',
   Equipo: 'Equipo',
-  Categoria: 'Categoria'
+  Categoria: 'Categoria',
+  Documento: 'Documento',
+  DocumentoPendiente: 'DocumentoPendiente',
+  Producto: 'Producto',
+  ProductoTalla: 'ProductoTalla',
+  MovimientoStock: 'MovimientoStock',
+  Venta: 'Venta',
+  VentaProducto: 'VentaProducto'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -93,6 +101,7 @@ export const UserScalarFieldEnum = {
   username: 'username',
   role: 'role',
   status: 'status',
+  mustChangePassword: 'mustChangePassword',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -151,6 +160,7 @@ export const SocioScalarFieldEnum = {
   apellidos: 'apellidos',
   mote: 'mote',
   dni: 'dni',
+  sexo: 'sexo',
   fechaNacimiento: 'fechaNacimiento',
   nacionalidad: 'nacionalidad',
   fotoUrl: 'fotoUrl',
@@ -162,6 +172,7 @@ export const SocioScalarFieldEnum = {
   localidad: 'localidad',
   cuentaBancaria: 'cuentaBancaria',
   activo: 'activo',
+  deudaPendiente: 'deudaPendiente',
   nombreTutor: 'nombreTutor',
   dniTutor: 'dniTutor',
   telefonoTutor: 'telefonoTutor',
@@ -183,17 +194,34 @@ export const TemporadaScalarFieldEnum = {
   nombre: 'nombre',
   fechaInicio: 'fechaInicio',
   fechaFin: 'fechaFin',
-  activa: 'activa'
+  activa: 'activa',
+  balancePdf: 'balancePdf',
+  fechaCierre: 'fechaCierre',
+  balanceGenerado: 'balanceGenerado'
 } as const
 
 export type TemporadaScalarFieldEnum = (typeof TemporadaScalarFieldEnum)[keyof typeof TemporadaScalarFieldEnum]
+
+
+export const TemporadaCategoriaScalarFieldEnum = {
+  id: 'id',
+  temporadaId: 'temporadaId',
+  categoriaId: 'categoriaId',
+  costeCuota: 'costeCuota',
+  costeFicha: 'costeFicha',
+  incluyeRopa: 'incluyeRopa'
+} as const
+
+export type TemporadaCategoriaScalarFieldEnum = (typeof TemporadaCategoriaScalarFieldEnum)[keyof typeof TemporadaCategoriaScalarFieldEnum]
 
 
 export const InscripcionScalarFieldEnum = {
   id: 'id',
   socioId: 'socioId',
   temporadaId: 'temporadaId',
-  equipoId: 'equipoId'
+  categoriaId: 'categoriaId',
+  equipoId: 'equipoId',
+  federado: 'federado'
 } as const
 
 export type InscripcionScalarFieldEnum = (typeof InscripcionScalarFieldEnum)[keyof typeof InscripcionScalarFieldEnum]
@@ -285,7 +313,9 @@ export const EquipoScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre',
   temporadaId: 'temporadaId',
-  categoriaId: 'categoriaId'
+  categoriaId: 'categoriaId',
+  federado: 'federado',
+  cerrado: 'cerrado'
 } as const
 
 export type EquipoScalarFieldEnum = (typeof EquipoScalarFieldEnum)[keyof typeof EquipoScalarFieldEnum]
@@ -293,13 +323,112 @@ export type EquipoScalarFieldEnum = (typeof EquipoScalarFieldEnum)[keyof typeof 
 
 export const CategoriaScalarFieldEnum = {
   id: 'id',
-  nombre: 'nombre',
-  costeFicha: 'costeFicha',
-  costeCuota: 'costeCuota',
-  incluyeRopa: 'incluyeRopa'
+  nombre: 'nombre'
 } as const
 
 export type CategoriaScalarFieldEnum = (typeof CategoriaScalarFieldEnum)[keyof typeof CategoriaScalarFieldEnum]
+
+
+export const DocumentoScalarFieldEnum = {
+  id: 'id',
+  tipo: 'tipo',
+  filename: 'filename',
+  storagePath: 'storagePath',
+  concepto: 'concepto',
+  socioId: 'socioId',
+  temporadaId: 'temporadaId',
+  cargoId: 'cargoId',
+  subidoPorId: 'subidoPorId',
+  estado: 'estado',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentoScalarFieldEnum = (typeof DocumentoScalarFieldEnum)[keyof typeof DocumentoScalarFieldEnum]
+
+
+export const DocumentoPendienteScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  tempPath: 'tempPath',
+  tipoDetectado: 'tipoDetectado',
+  nombreDetectado: 'nombreDetectado',
+  temporadaDetectada: 'temporadaDetectada',
+  concepto: 'concepto',
+  socioId: 'socioId',
+  estado: 'estado',
+  error: 'error',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentoPendienteScalarFieldEnum = (typeof DocumentoPendienteScalarFieldEnum)[keyof typeof DocumentoPendienteScalarFieldEnum]
+
+
+export const ProductoScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  categoria: 'categoria',
+  descripcion: 'descripcion',
+  precioVenta: 'precioVenta',
+  precioCosto: 'precioCosto',
+  activoVenta: 'activoVenta',
+  activoPedido: 'activoPedido',
+  tipo: 'tipo',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductoScalarFieldEnum = (typeof ProductoScalarFieldEnum)[keyof typeof ProductoScalarFieldEnum]
+
+
+export const ProductoTallaScalarFieldEnum = {
+  id: 'id',
+  productoId: 'productoId',
+  talla: 'talla',
+  stock: 'stock'
+} as const
+
+export type ProductoTallaScalarFieldEnum = (typeof ProductoTallaScalarFieldEnum)[keyof typeof ProductoTallaScalarFieldEnum]
+
+
+export const MovimientoStockScalarFieldEnum = {
+  id: 'id',
+  productoId: 'productoId',
+  talla: 'talla',
+  cantidad: 'cantidad',
+  tipo: 'tipo',
+  razon: 'razon',
+  ventaId: 'ventaId',
+  temporadaId: 'temporadaId'
+} as const
+
+export type MovimientoStockScalarFieldEnum = (typeof MovimientoStockScalarFieldEnum)[keyof typeof MovimientoStockScalarFieldEnum]
+
+
+export const VentaScalarFieldEnum = {
+  id: 'id',
+  socioId: 'socioId',
+  tipo: 'tipo',
+  estado: 'estado',
+  metodo: 'metodo',
+  total: 'total',
+  fecha: 'fecha',
+  temporadaId: 'temporadaId',
+  aprobadoPorId: 'aprobadoPorId',
+  observaciones: 'observaciones'
+} as const
+
+export type VentaScalarFieldEnum = (typeof VentaScalarFieldEnum)[keyof typeof VentaScalarFieldEnum]
+
+
+export const VentaProductoScalarFieldEnum = {
+  id: 'id',
+  ventaId: 'ventaId',
+  productoId: 'productoId',
+  talla: 'talla',
+  cantidad: 'cantidad',
+  precioUnitario: 'precioUnitario'
+} as const
+
+export type VentaProductoScalarFieldEnum = (typeof VentaProductoScalarFieldEnum)[keyof typeof VentaProductoScalarFieldEnum]
 
 
 export const SortOrder = {

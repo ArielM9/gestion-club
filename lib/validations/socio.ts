@@ -8,6 +8,7 @@ export type SocioFormValues = z.infer<typeof SocioSchema>;
 export const SocioSchema = z.object({
   nombre: z.string().min(2, "Obligatorio"),
   apellidos: z.string().min(2, "Obligatorio"),
+  sexo: z.enum(["M", "F"], { message: "Obligatorio" }),
   dni: z.string().toUpperCase().regex(dniNieRegex, "DNI/NIE inválido"),
   fechaNacimiento: z.string().min(1, "Obligatorio"),
   nacionalidad: z.string().min(1, "Obligatorio"),
@@ -21,10 +22,7 @@ export const SocioSchema = z.object({
   cuentaBancaria: z.string().optional().or(z.literal("")), // NO obligatorio
   observaciones: z.string().optional(),
   tallaRopa: z.string().optional(),
-  rgpdFirmado: z.boolean().optional(),
-  declaracionResponsable: z.boolean().optional(),
-  exoneracionResponsabilidad: z.boolean().optional(),
-  declaracionExtranjera: z.boolean().optional(),
+  // Eliminados campos de documentación (ahora es automático)
   // Campos del Tutor (Opcionales por defecto)
   nombreTutor: z.string().optional(),
   dniTutor: z.string().toUpperCase().regex(dniNieRegex, "DNI/NIE inválido").optional().or(z.literal("")),

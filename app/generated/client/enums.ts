@@ -9,6 +9,39 @@
 * 🟢 You can import this file directly.
 */
 
+export const EstadoProcesamiento = {
+  SUBIDO: 'SUBIDO',
+  ANALIZANDO: 'ANALIZANDO',
+  MATCH_AUTOMATICO: 'MATCH_AUTOMATICO',
+  REQUIERE_REVISION: 'REQUIERE_REVISION',
+  CONFIRMADO: 'CONFIRMADO'
+} as const
+
+export type EstadoProcesamiento = (typeof EstadoProcesamiento)[keyof typeof EstadoProcesamiento]
+
+
+export const TipoDocumento = {
+  DNI: 'DNI',
+  DR: 'DR',
+  DJ: 'DJ',
+  ER: 'ER',
+  AI: 'AI',
+  COMPROBANTE_PAGO: 'COMPROBANTE_PAGO'
+} as const
+
+export type TipoDocumento = (typeof TipoDocumento)[keyof typeof TipoDocumento]
+
+
+export const EstadoDocumento = {
+  PENDIENTE: 'PENDIENTE',
+  VALIDADO: 'VALIDADO',
+  RECHAZADO: 'RECHAZADO',
+  ORFANO: 'ORFANO'
+} as const
+
+export type EstadoDocumento = (typeof EstadoDocumento)[keyof typeof EstadoDocumento]
+
+
 export const Role = {
   ADMIN: 'ADMIN',
   CONTABILIDAD: 'CONTABILIDAD',
@@ -57,3 +90,42 @@ export const TipoEvento = {
 } as const
 
 export type TipoEvento = (typeof TipoEvento)[keyof typeof TipoEvento]
+
+
+export const TipoProducto = {
+  ROPA: 'ROPA',
+  COMPLEMENTO: 'COMPLEMENTO'
+} as const
+
+export type TipoProducto = (typeof TipoProducto)[keyof typeof TipoProducto]
+
+
+export const TipoMovimiento = {
+  COMPRA: 'COMPRA',
+  VENTA: 'VENTA',
+  ENTREGA: 'ENTREGA',
+  REGALO: 'REGALO',
+  AJUSTE: 'AJUSTE'
+} as const
+
+export type TipoMovimiento = (typeof TipoMovimiento)[keyof typeof TipoMovimiento]
+
+
+export const TipoVenta = {
+  DIRECTA: 'DIRECTA',
+  ENTREGADA: 'ENTREGADA',
+  PLAZOS: 'PLAZOS',
+  FIADO: 'FIADO'
+} as const
+
+export type TipoVenta = (typeof TipoVenta)[keyof typeof TipoVenta]
+
+
+export const EstadoVenta = {
+  PENDIENTE: 'PENDIENTE',
+  APROBADA: 'APROBADA',
+  RECHAZADA: 'RECHAZADA',
+  COMPLETADA: 'COMPLETADA'
+} as const
+
+export type EstadoVenta = (typeof EstadoVenta)[keyof typeof EstadoVenta]

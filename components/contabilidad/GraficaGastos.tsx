@@ -2,8 +2,14 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-export default function GraficaGastos({ data }: { data: any[] }) {
-    if (data.length === 0) {
+interface GraficaData {
+    name: string;
+    value: number;
+    fill: string;
+}
+
+export default function GraficaGastos({ data }: { data?: GraficaData[] }) {
+    if (!data || data.length === 0) {
         return (
             <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm h-full flex items-center justify-center text-slate-400 italic text-xs">
                 Sin gastos registrados
@@ -24,7 +30,7 @@ export default function GraficaGastos({ data }: { data: any[] }) {
                             paddingAngle={5}
                             dataKey="value"
                         >
-                            {data.map((entry, index) => (
+                            {data.map((entry, index: number) => (
                                 <Cell key={`cell-${index}`} fill={entry.fill} stroke="none" />
                             ))}
                         </Pie>
@@ -35,7 +41,7 @@ export default function GraficaGastos({ data }: { data: any[] }) {
                             verticalAlign="bottom"
                             align="center"
                             iconType="circle"
-                            formatter={(value) => <span className="text-[10px] font-bold text-slate-500 uppercase">{value}</span>}
+                            formatter={(value: string) => <span className="text-[10px] font-bold text-slate-500 uppercase">{value}</span>}
                         />
                     </PieChart>
                 </ResponsiveContainer>

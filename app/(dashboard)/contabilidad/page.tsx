@@ -6,15 +6,15 @@ import BotonesAccion from "@/components/contabilidad/BotonesAccion";
 export default async function ContabilidadPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; page?: string; tab?: string }>;
+  searchParams: Promise<{ search?: string; page?: string; tab?: string; filtro?: string }>;
 }) {
-  const { search, page } = await searchParams;
+  const { search, page, filtro } = await searchParams;
   const currentPage = Number(page) || 1;
   const query = search || "";
+  const tipoFiltro = filtro || "todos";
 
-  // Pedimos todos los datos en paralelo para ir rápido
   const [dataGlobal, deudoresData, datosGrafica, datosCategorias] = await Promise.all([
-    getMovimientosGlobales(),
+    getMovimientosGlobales(query, currentPage, tipoFiltro),
     getSociosDeudores(query, currentPage, 10),
     getDatosGraficaMensual(),
     getDatosGastosPorCategoria()
@@ -31,17 +31,26 @@ export default async function ContabilidadPage({
         <BotonesAccion />
       </header>
 
-      <Suspense fallback={<div className="min-h-[600px] flex items-center justify-center text-slate-400 font-bold animate-pulse">Cargando gestión...</div>}>
-        <ContabilidadTabs
-          resumen={dataGlobal.resumen}
-          movimientos={dataGlobal.movimientos}
-          deudores={deudoresData.deudores}
-          totalPages={deudoresData.totalPages}
-          currentPage={currentPage}
-          datosGrafica={datosGrafica}
-          datosCategorias={datosCategorias}
-        />
-      </Suspense>
+      {!dataGlobal.resumen ? (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center">
+          <p className="text-amber-800 font-bold text-lg">No hay temporada activa</p>
+          <p className="text-amber-600 text-sm mt-2">Crea una temporada en <a href="/admin/temporadas" className="underline hover:text-amber-700">Administración de Temporadas</a> para ver los datos financieros.</p>
+        </div>
+      ) : (
+        <Suspense fallback={<div className="min-h-[600px] flex items-center justify-center text-slate-400 font-bold animate-pulse">Cargando gestión...</div>}>
+          <ContabilidadTabs
+            resumen={dataGlobal.resumen}
+            movimientos={dataGlobal.movimientos}
+            deudores={deudoresData.deudores}
+            totalPages={deudoresData.totalPages}
+            currentPage={currentPage}
+            datosGrafica={datosGrafica}
+            datosCategorias={datosCategorias}
+            movimientosTotalPages={dataGlobal.totalPages}
+            movimientosTotalItems={dataGlobal.totalItems}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

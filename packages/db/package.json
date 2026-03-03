@@ -1,0 +1,14 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./prisma.ts",
+  "dependencies": {
+    "@prisma/client": "^7.3.0",
+    "@prisma/adapter-pg": "^8.17.2",
+    "pg": "^8.17.2"
+  },
+  "devDependencies": {
+    "prisma": "^7.3.0"
+  }
+}

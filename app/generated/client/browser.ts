@@ -48,6 +48,11 @@ export type Socio = Prisma.SocioModel
  */
 export type Temporada = Prisma.TemporadaModel
 /**
+ * Model TemporadaCategoria
+ * 
+ */
+export type TemporadaCategoria = Prisma.TemporadaCategoriaModel
+/**
  * Model Inscripcion
  * 
  */
@@ -92,3 +97,38 @@ export type Equipo = Prisma.EquipoModel
  * 
  */
 export type Categoria = Prisma.CategoriaModel
+/**
+ * Model Documento
+ * 
+ */
+export type Documento = Prisma.DocumentoModel
+/**
+ * Model DocumentoPendiente
+ * 
+ */
+export type DocumentoPendiente = Prisma.DocumentoPendienteModel
+/**
+ * Model Producto
+ * 
+ */
+export type Producto = Prisma.ProductoModel
+/**
+ * Model ProductoTalla
+ * 
+ */
+export type ProductoTalla = Prisma.ProductoTallaModel
+/**
+ * Model MovimientoStock
+ * 
+ */
+export type MovimientoStock = Prisma.MovimientoStockModel
+/**
+ * Model Venta
+ * 
+ */
+export type Venta = Prisma.VentaModel
+/**
+ * Model VentaProducto
+ * 
+ */
+export type VentaProducto = Prisma.VentaProductoModel

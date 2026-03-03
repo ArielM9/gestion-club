@@ -4,15 +4,19 @@ import { getSessionCookie } from "better-auth/cookies";
 // 1. Definimos el "Libro de Permisos"
 // Esto es mucho más fácil de mantener que llenar el código de IFs
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-    COLABORADOR: ["/dashboard", "/jugadores", "/contabilidad", "/eventos"],
-    CONTABILIDAD: ["/dashboard", "/contabilidad", "/jugadores", "/eventos"],
-    ADMIN: ["/dashboard", "/contabilidad", "/jugadores", "/eventos", "/admin"], // El admin llega a todo
+    COLABORADOR: ["/dashboard", "/jugadores", "/contabilidad", "/eventos", "/documentos", "/categorias"],
+    CONTABILIDAD: ["/dashboard", "/contabilidad", "/jugadores", "/eventos", "/documentos", "/categorias", "/tienda"],
+    DIRECTIVA: ["/dashboard", "/contabilidad", "/jugadores", "/eventos", "/documentos", "/categorias", "/tienda"], // Acceso a todo excepto /admin
+    ADMIN: ["/dashboard", "/contabilidad", "/jugadores", "/eventos", "/admin", "/documentos", "/categorias", "/tienda"], // Acceso total
 };
 
 // 2. Rutas que SIEMPRE son públicas (para evitar bucles infinitos)
-const PUBLIC_ROUTES = ["/login", "/register", "/api/auth"];
+const PUBLIC_ROUTES = ["/login", "/register", "/api/auth", "/api/storage/test", "/api/tienda"];
 
-export async function proxy(request: NextRequest) {
+// 3. Rutas que requieren sesión pero están permitidas para todos los roles autenticados
+const AUTHENTICATED_ROUTES = ["/api/documentos", "/api/socios", "/api/storage", "/api/tienda"];
+
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // A. Si es una ruta pública, no hacemos nada, que pase.
@@ -43,8 +47,11 @@ export async function proxy(request: NextRequest) {
     // D. LA REGLA DE ORO: Si la ruta actual no empieza por ninguna de tus rutas permitidas... ¡FUERA!
     const isAllowed = allowedRoutes.some(route => pathname.startsWith(route));
 
+    // D2. Si la ruta está en AUTHENTICATED_ROUTES, permitir si está autenticado (ya verificado en paso B)
+    const isAuthenticatedRoute = AUTHENTICATED_ROUTES.some(route => pathname.startsWith(route));
+
     // Permitimos la home "/" para todos los logueados, o redirigimos si no tiene permiso
-    if (pathname !== "/" && !isAllowed) {
+    if (pathname !== "/" && !isAllowed && !isAuthenticatedRoute) {
         return NextResponse.redirect(new URL("/", request.url));
     }
 

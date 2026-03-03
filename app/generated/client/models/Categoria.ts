@@ -20,80 +20,40 @@ export type CategoriaModel = runtime.Types.Result.DefaultSelection<Prisma.$Categ
 
 export type AggregateCategoria = {
   _count: CategoriaCountAggregateOutputType | null
-  _avg: CategoriaAvgAggregateOutputType | null
-  _sum: CategoriaSumAggregateOutputType | null
   _min: CategoriaMinAggregateOutputType | null
   _max: CategoriaMaxAggregateOutputType | null
-}
-
-export type CategoriaAvgAggregateOutputType = {
-  costeFicha: number | null
-  costeCuota: number | null
-}
-
-export type CategoriaSumAggregateOutputType = {
-  costeFicha: number | null
-  costeCuota: number | null
 }
 
 export type CategoriaMinAggregateOutputType = {
   id: string | null
   nombre: string | null
-  costeFicha: number | null
-  costeCuota: number | null
-  incluyeRopa: boolean | null
 }
 
 export type CategoriaMaxAggregateOutputType = {
   id: string | null
   nombre: string | null
-  costeFicha: number | null
-  costeCuota: number | null
-  incluyeRopa: boolean | null
 }
 
 export type CategoriaCountAggregateOutputType = {
   id: number
   nombre: number
-  costeFicha: number
-  costeCuota: number
-  incluyeRopa: number
   _all: number
 }
 
 
-export type CategoriaAvgAggregateInputType = {
-  costeFicha?: true
-  costeCuota?: true
-}
-
-export type CategoriaSumAggregateInputType = {
-  costeFicha?: true
-  costeCuota?: true
-}
-
 export type CategoriaMinAggregateInputType = {
   id?: true
   nombre?: true
-  costeFicha?: true
-  costeCuota?: true
-  incluyeRopa?: true
 }
 
 export type CategoriaMaxAggregateInputType = {
   id?: true
   nombre?: true
-  costeFicha?: true
-  costeCuota?: true
-  incluyeRopa?: true
 }
 
 export type CategoriaCountAggregateInputType = {
   id?: true
   nombre?: true
-  costeFicha?: true
-  costeCuota?: true
-  incluyeRopa?: true
   _all?: true
 }
 
@@ -135,18 +95,6 @@ export type CategoriaAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: CategoriaAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: CategoriaSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: CategoriaMinAggregateInputType
@@ -177,8 +125,6 @@ export type CategoriaGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   _count?: CategoriaCountAggregateInputType | true
-  _avg?: CategoriaAvgAggregateInputType
-  _sum?: CategoriaSumAggregateInputType
   _min?: CategoriaMinAggregateInputType
   _max?: CategoriaMaxAggregateInputType
 }
@@ -186,12 +132,7 @@ export type CategoriaGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type CategoriaGroupByOutputType = {
   id: string
   nombre: string
-  costeFicha: number
-  costeCuota: number
-  incluyeRopa: boolean
   _count: CategoriaCountAggregateOutputType | null
-  _avg: CategoriaAvgAggregateOutputType | null
-  _sum: CategoriaSumAggregateOutputType | null
   _min: CategoriaMinAggregateOutputType | null
   _max: CategoriaMaxAggregateOutputType | null
 }
@@ -217,21 +158,19 @@ export type CategoriaWhereInput = {
   NOT?: Prisma.CategoriaWhereInput | Prisma.CategoriaWhereInput[]
   id?: Prisma.StringFilter<"Categoria"> | string
   nombre?: Prisma.StringFilter<"Categoria"> | string
-  costeFicha?: Prisma.FloatFilter<"Categoria"> | number
-  costeCuota?: Prisma.FloatFilter<"Categoria"> | number
-  incluyeRopa?: Prisma.BoolFilter<"Categoria"> | boolean
   equipos?: Prisma.EquipoListRelationFilter
   socios?: Prisma.SocioListRelationFilter
+  precios?: Prisma.TemporadaCategoriaListRelationFilter
+  inscripciones?: Prisma.InscripcionListRelationFilter
 }
 
 export type CategoriaOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
-  incluyeRopa?: Prisma.SortOrder
   equipos?: Prisma.EquipoOrderByRelationAggregateInput
   socios?: Prisma.SocioOrderByRelationAggregateInput
+  precios?: Prisma.TemporadaCategoriaOrderByRelationAggregateInput
+  inscripciones?: Prisma.InscripcionOrderByRelationAggregateInput
 }
 
 export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
@@ -240,24 +179,18 @@ export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CategoriaWhereInput | Prisma.CategoriaWhereInput[]
   OR?: Prisma.CategoriaWhereInput[]
   NOT?: Prisma.CategoriaWhereInput | Prisma.CategoriaWhereInput[]
-  costeFicha?: Prisma.FloatFilter<"Categoria"> | number
-  costeCuota?: Prisma.FloatFilter<"Categoria"> | number
-  incluyeRopa?: Prisma.BoolFilter<"Categoria"> | boolean
   equipos?: Prisma.EquipoListRelationFilter
   socios?: Prisma.SocioListRelationFilter
+  precios?: Prisma.TemporadaCategoriaListRelationFilter
+  inscripciones?: Prisma.InscripcionListRelationFilter
 }, "id" | "nombre">
 
 export type CategoriaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
-  incluyeRopa?: Prisma.SortOrder
   _count?: Prisma.CategoriaCountOrderByAggregateInput
-  _avg?: Prisma.CategoriaAvgOrderByAggregateInput
   _max?: Prisma.CategoriaMaxOrderByAggregateInput
   _min?: Prisma.CategoriaMinOrderByAggregateInput
-  _sum?: Prisma.CategoriaSumOrderByAggregateInput
 }
 
 export type CategoriaScalarWhereWithAggregatesInput = {
@@ -266,73 +199,57 @@ export type CategoriaScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CategoriaScalarWhereWithAggregatesInput | Prisma.CategoriaScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Categoria"> | string
   nombre?: Prisma.StringWithAggregatesFilter<"Categoria"> | string
-  costeFicha?: Prisma.FloatWithAggregatesFilter<"Categoria"> | number
-  costeCuota?: Prisma.FloatWithAggregatesFilter<"Categoria"> | number
-  incluyeRopa?: Prisma.BoolWithAggregatesFilter<"Categoria"> | boolean
 }
 
 export type CategoriaCreateInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
   equipos?: Prisma.EquipoCreateNestedManyWithoutCategoriaInput
   socios?: Prisma.SocioCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutCategoriaInput
 }
 
 export type CategoriaUncheckedCreateInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutCategoriaInput
   socios?: Prisma.SocioUncheckedCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutCategoriaInput
 }
 
 export type CategoriaUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
   equipos?: Prisma.EquipoUpdateManyWithoutCategoriaNestedInput
   socios?: Prisma.SocioUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutCategoriaNestedInput
 }
 
 export type CategoriaUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutCategoriaNestedInput
   socios?: Prisma.SocioUncheckedUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutCategoriaNestedInput
 }
 
 export type CategoriaCreateManyInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
 }
 
 export type CategoriaUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type CategoriaUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type CategoriaNullableScalarRelationFilter = {
@@ -348,35 +265,16 @@ export type CategoriaScalarRelationFilter = {
 export type CategoriaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
-  incluyeRopa?: Prisma.SortOrder
-}
-
-export type CategoriaAvgOrderByAggregateInput = {
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
 }
 
 export type CategoriaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
-  incluyeRopa?: Prisma.SortOrder
 }
 
 export type CategoriaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
-  incluyeRopa?: Prisma.SortOrder
-}
-
-export type CategoriaSumOrderByAggregateInput = {
-  costeFicha?: Prisma.SortOrder
-  costeCuota?: Prisma.SortOrder
 }
 
 export type CategoriaCreateNestedOneWithoutSociosInput = {
@@ -393,6 +291,34 @@ export type CategoriaUpdateOneWithoutSociosNestedInput = {
   delete?: Prisma.CategoriaWhereInput | boolean
   connect?: Prisma.CategoriaWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CategoriaUpdateToOneWithWhereWithoutSociosInput, Prisma.CategoriaUpdateWithoutSociosInput>, Prisma.CategoriaUncheckedUpdateWithoutSociosInput>
+}
+
+export type CategoriaCreateNestedOneWithoutPreciosInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutPreciosInput, Prisma.CategoriaUncheckedCreateWithoutPreciosInput>
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutPreciosInput
+  connect?: Prisma.CategoriaWhereUniqueInput
+}
+
+export type CategoriaUpdateOneRequiredWithoutPreciosNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutPreciosInput, Prisma.CategoriaUncheckedCreateWithoutPreciosInput>
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutPreciosInput
+  upsert?: Prisma.CategoriaUpsertWithoutPreciosInput
+  connect?: Prisma.CategoriaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoriaUpdateToOneWithWhereWithoutPreciosInput, Prisma.CategoriaUpdateWithoutPreciosInput>, Prisma.CategoriaUncheckedUpdateWithoutPreciosInput>
+}
+
+export type CategoriaCreateNestedOneWithoutInscripcionesInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutInscripcionesInput, Prisma.CategoriaUncheckedCreateWithoutInscripcionesInput>
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutInscripcionesInput
+  connect?: Prisma.CategoriaWhereUniqueInput
+}
+
+export type CategoriaUpdateOneRequiredWithoutInscripcionesNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutInscripcionesInput, Prisma.CategoriaUncheckedCreateWithoutInscripcionesInput>
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutInscripcionesInput
+  upsert?: Prisma.CategoriaUpsertWithoutInscripcionesInput
+  connect?: Prisma.CategoriaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoriaUpdateToOneWithWhereWithoutInscripcionesInput, Prisma.CategoriaUpdateWithoutInscripcionesInput>, Prisma.CategoriaUncheckedUpdateWithoutInscripcionesInput>
 }
 
 export type CategoriaCreateNestedOneWithoutEquiposInput = {
@@ -412,19 +338,17 @@ export type CategoriaUpdateOneRequiredWithoutEquiposNestedInput = {
 export type CategoriaCreateWithoutSociosInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
   equipos?: Prisma.EquipoCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutCategoriaInput
 }
 
 export type CategoriaUncheckedCreateWithoutSociosInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
   equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutCategoriaInput
 }
 
 export type CategoriaCreateOrConnectWithoutSociosInput = {
@@ -446,37 +370,129 @@ export type CategoriaUpdateToOneWithWhereWithoutSociosInput = {
 export type CategoriaUpdateWithoutSociosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
   equipos?: Prisma.EquipoUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutCategoriaNestedInput
 }
 
 export type CategoriaUncheckedUpdateWithoutSociosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
   equipos?: Prisma.EquipoUncheckedUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutCategoriaNestedInput
+}
+
+export type CategoriaCreateWithoutPreciosInput = {
+  id?: string
+  nombre: string
+  equipos?: Prisma.EquipoCreateNestedManyWithoutCategoriaInput
+  socios?: Prisma.SocioCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutCategoriaInput
+}
+
+export type CategoriaUncheckedCreateWithoutPreciosInput = {
+  id?: string
+  nombre: string
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutCategoriaInput
+  socios?: Prisma.SocioUncheckedCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutCategoriaInput
+}
+
+export type CategoriaCreateOrConnectWithoutPreciosInput = {
+  where: Prisma.CategoriaWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoriaCreateWithoutPreciosInput, Prisma.CategoriaUncheckedCreateWithoutPreciosInput>
+}
+
+export type CategoriaUpsertWithoutPreciosInput = {
+  update: Prisma.XOR<Prisma.CategoriaUpdateWithoutPreciosInput, Prisma.CategoriaUncheckedUpdateWithoutPreciosInput>
+  create: Prisma.XOR<Prisma.CategoriaCreateWithoutPreciosInput, Prisma.CategoriaUncheckedCreateWithoutPreciosInput>
+  where?: Prisma.CategoriaWhereInput
+}
+
+export type CategoriaUpdateToOneWithWhereWithoutPreciosInput = {
+  where?: Prisma.CategoriaWhereInput
+  data: Prisma.XOR<Prisma.CategoriaUpdateWithoutPreciosInput, Prisma.CategoriaUncheckedUpdateWithoutPreciosInput>
+}
+
+export type CategoriaUpdateWithoutPreciosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  equipos?: Prisma.EquipoUpdateManyWithoutCategoriaNestedInput
+  socios?: Prisma.SocioUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutCategoriaNestedInput
+}
+
+export type CategoriaUncheckedUpdateWithoutPreciosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutCategoriaNestedInput
+  socios?: Prisma.SocioUncheckedUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutCategoriaNestedInput
+}
+
+export type CategoriaCreateWithoutInscripcionesInput = {
+  id?: string
+  nombre: string
+  equipos?: Prisma.EquipoCreateNestedManyWithoutCategoriaInput
+  socios?: Prisma.SocioCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutCategoriaInput
+}
+
+export type CategoriaUncheckedCreateWithoutInscripcionesInput = {
+  id?: string
+  nombre: string
+  equipos?: Prisma.EquipoUncheckedCreateNestedManyWithoutCategoriaInput
+  socios?: Prisma.SocioUncheckedCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutCategoriaInput
+}
+
+export type CategoriaCreateOrConnectWithoutInscripcionesInput = {
+  where: Prisma.CategoriaWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoriaCreateWithoutInscripcionesInput, Prisma.CategoriaUncheckedCreateWithoutInscripcionesInput>
+}
+
+export type CategoriaUpsertWithoutInscripcionesInput = {
+  update: Prisma.XOR<Prisma.CategoriaUpdateWithoutInscripcionesInput, Prisma.CategoriaUncheckedUpdateWithoutInscripcionesInput>
+  create: Prisma.XOR<Prisma.CategoriaCreateWithoutInscripcionesInput, Prisma.CategoriaUncheckedCreateWithoutInscripcionesInput>
+  where?: Prisma.CategoriaWhereInput
+}
+
+export type CategoriaUpdateToOneWithWhereWithoutInscripcionesInput = {
+  where?: Prisma.CategoriaWhereInput
+  data: Prisma.XOR<Prisma.CategoriaUpdateWithoutInscripcionesInput, Prisma.CategoriaUncheckedUpdateWithoutInscripcionesInput>
+}
+
+export type CategoriaUpdateWithoutInscripcionesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  equipos?: Prisma.EquipoUpdateManyWithoutCategoriaNestedInput
+  socios?: Prisma.SocioUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutCategoriaNestedInput
+}
+
+export type CategoriaUncheckedUpdateWithoutInscripcionesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  equipos?: Prisma.EquipoUncheckedUpdateManyWithoutCategoriaNestedInput
+  socios?: Prisma.SocioUncheckedUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutCategoriaNestedInput
 }
 
 export type CategoriaCreateWithoutEquiposInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
   socios?: Prisma.SocioCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionCreateNestedManyWithoutCategoriaInput
 }
 
 export type CategoriaUncheckedCreateWithoutEquiposInput = {
   id?: string
   nombre: string
-  costeFicha?: number
-  costeCuota?: number
-  incluyeRopa?: boolean
   socios?: Prisma.SocioUncheckedCreateNestedManyWithoutCategoriaInput
+  precios?: Prisma.TemporadaCategoriaUncheckedCreateNestedManyWithoutCategoriaInput
+  inscripciones?: Prisma.InscripcionUncheckedCreateNestedManyWithoutCategoriaInput
 }
 
 export type CategoriaCreateOrConnectWithoutEquiposInput = {
@@ -498,19 +514,17 @@ export type CategoriaUpdateToOneWithWhereWithoutEquiposInput = {
 export type CategoriaUpdateWithoutEquiposInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
   socios?: Prisma.SocioUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUpdateManyWithoutCategoriaNestedInput
 }
 
 export type CategoriaUncheckedUpdateWithoutEquiposInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  costeFicha?: Prisma.FloatFieldUpdateOperationsInput | number
-  costeCuota?: Prisma.FloatFieldUpdateOperationsInput | number
-  incluyeRopa?: Prisma.BoolFieldUpdateOperationsInput | boolean
   socios?: Prisma.SocioUncheckedUpdateManyWithoutCategoriaNestedInput
+  precios?: Prisma.TemporadaCategoriaUncheckedUpdateManyWithoutCategoriaNestedInput
+  inscripciones?: Prisma.InscripcionUncheckedUpdateManyWithoutCategoriaNestedInput
 }
 
 
@@ -521,11 +535,15 @@ export type CategoriaUncheckedUpdateWithoutEquiposInput = {
 export type CategoriaCountOutputType = {
   equipos: number
   socios: number
+  precios: number
+  inscripciones: number
 }
 
 export type CategoriaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   equipos?: boolean | CategoriaCountOutputTypeCountEquiposArgs
   socios?: boolean | CategoriaCountOutputTypeCountSociosArgs
+  precios?: boolean | CategoriaCountOutputTypeCountPreciosArgs
+  inscripciones?: boolean | CategoriaCountOutputTypeCountInscripcionesArgs
 }
 
 /**
@@ -552,46 +570,52 @@ export type CategoriaCountOutputTypeCountSociosArgs<ExtArgs extends runtime.Type
   where?: Prisma.SocioWhereInput
 }
 
+/**
+ * CategoriaCountOutputType without action
+ */
+export type CategoriaCountOutputTypeCountPreciosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TemporadaCategoriaWhereInput
+}
+
+/**
+ * CategoriaCountOutputType without action
+ */
+export type CategoriaCountOutputTypeCountInscripcionesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InscripcionWhereInput
+}
+
 
 export type CategoriaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nombre?: boolean
-  costeFicha?: boolean
-  costeCuota?: boolean
-  incluyeRopa?: boolean
   equipos?: boolean | Prisma.Categoria$equiposArgs<ExtArgs>
   socios?: boolean | Prisma.Categoria$sociosArgs<ExtArgs>
+  precios?: boolean | Prisma.Categoria$preciosArgs<ExtArgs>
+  inscripciones?: boolean | Prisma.Categoria$inscripcionesArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoria"]>
 
 export type CategoriaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nombre?: boolean
-  costeFicha?: boolean
-  costeCuota?: boolean
-  incluyeRopa?: boolean
 }, ExtArgs["result"]["categoria"]>
 
 export type CategoriaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nombre?: boolean
-  costeFicha?: boolean
-  costeCuota?: boolean
-  incluyeRopa?: boolean
 }, ExtArgs["result"]["categoria"]>
 
 export type CategoriaSelectScalar = {
   id?: boolean
   nombre?: boolean
-  costeFicha?: boolean
-  costeCuota?: boolean
-  incluyeRopa?: boolean
 }
 
-export type CategoriaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "costeFicha" | "costeCuota" | "incluyeRopa", ExtArgs["result"]["categoria"]>
+export type CategoriaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre", ExtArgs["result"]["categoria"]>
 export type CategoriaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   equipos?: boolean | Prisma.Categoria$equiposArgs<ExtArgs>
   socios?: boolean | Prisma.Categoria$sociosArgs<ExtArgs>
+  precios?: boolean | Prisma.Categoria$preciosArgs<ExtArgs>
+  inscripciones?: boolean | Prisma.Categoria$inscripcionesArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CategoriaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -602,13 +626,12 @@ export type $CategoriaPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     equipos: Prisma.$EquipoPayload<ExtArgs>[]
     socios: Prisma.$SocioPayload<ExtArgs>[]
+    precios: Prisma.$TemporadaCategoriaPayload<ExtArgs>[]
+    inscripciones: Prisma.$InscripcionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     nombre: string
-    costeFicha: number
-    costeCuota: number
-    incluyeRopa: boolean
   }, ExtArgs["result"]["categoria"]>
   composites: {}
 }
@@ -1005,6 +1028,8 @@ export interface Prisma__CategoriaClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   equipos<T extends Prisma.Categoria$equiposArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Categoria$equiposArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EquipoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   socios<T extends Prisma.Categoria$sociosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Categoria$sociosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SocioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  precios<T extends Prisma.Categoria$preciosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Categoria$preciosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TemporadaCategoriaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  inscripciones<T extends Prisma.Categoria$inscripcionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Categoria$inscripcionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InscripcionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1036,9 +1061,6 @@ export interface Prisma__CategoriaClient<T, Null = never, ExtArgs extends runtim
 export interface CategoriaFieldRefs {
   readonly id: Prisma.FieldRef<"Categoria", 'String'>
   readonly nombre: Prisma.FieldRef<"Categoria", 'String'>
-  readonly costeFicha: Prisma.FieldRef<"Categoria", 'Float'>
-  readonly costeCuota: Prisma.FieldRef<"Categoria", 'Float'>
-  readonly incluyeRopa: Prisma.FieldRef<"Categoria", 'Boolean'>
 }
     
 
@@ -1472,6 +1494,54 @@ export type Categoria$sociosArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.SocioScalarFieldEnum | Prisma.SocioScalarFieldEnum[]
+}
+
+/**
+ * Categoria.precios
+ */
+export type Categoria$preciosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TemporadaCategoria
+   */
+  select?: Prisma.TemporadaCategoriaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TemporadaCategoria
+   */
+  omit?: Prisma.TemporadaCategoriaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TemporadaCategoriaInclude<ExtArgs> | null
+  where?: Prisma.TemporadaCategoriaWhereInput
+  orderBy?: Prisma.TemporadaCategoriaOrderByWithRelationInput | Prisma.TemporadaCategoriaOrderByWithRelationInput[]
+  cursor?: Prisma.TemporadaCategoriaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TemporadaCategoriaScalarFieldEnum | Prisma.TemporadaCategoriaScalarFieldEnum[]
+}
+
+/**
+ * Categoria.inscripciones
+ */
+export type Categoria$inscripcionesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Inscripcion
+   */
+  select?: Prisma.InscripcionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Inscripcion
+   */
+  omit?: Prisma.InscripcionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InscripcionInclude<ExtArgs> | null
+  where?: Prisma.InscripcionWhereInput
+  orderBy?: Prisma.InscripcionOrderByWithRelationInput | Prisma.InscripcionOrderByWithRelationInput[]
+  cursor?: Prisma.InscripcionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InscripcionScalarFieldEnum | Prisma.InscripcionScalarFieldEnum[]
 }
 
 /**

@@ -32,8 +32,8 @@ export default function ModalIngresoExterno({ isOpen, onClose }: { isOpen: boole
     };
 
     return (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-            <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
+            <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
                 <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-green-50/30">
                     <div>
                         <h3 className="text-xl font-black text-slate-900">Ingreso Externo</h3>
