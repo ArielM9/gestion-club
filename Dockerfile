@@ -21,6 +21,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=prisma /app/app/generated ./app/generated
 COPY . .
 
+ENV NEXT_TURBOPACK=0
 RUN npm run build
 
 # Production runtime
