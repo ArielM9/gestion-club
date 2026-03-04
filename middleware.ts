@@ -11,7 +11,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
 };
 
 // 2. Rutas que SIEMPRE son públicas (para evitar bucles infinitos)
-const PUBLIC_ROUTES = ["/login", "/register", "/api/auth", "/api/storage/test", "/api/tienda"];
+const PUBLIC_ROUTES = ["/login", "/register", "/api/auth", "/api/storage/test"];
 
 // 3. Rutas que requieren sesión pero están permitidas para todos los roles autenticados
 const AUTHENTICATED_ROUTES = ["/api/documentos", "/api/socios", "/api/storage", "/api/tienda"];
@@ -41,7 +41,6 @@ export async function middleware(request: NextRequest) {
         headers: { cookie: request.headers.get("cookie") || "" },
     });
     const session = await res.json();
-    console.log(session);
 
     if (!session?.user) {
         return NextResponse.redirect(new URL("/login", request.url));
