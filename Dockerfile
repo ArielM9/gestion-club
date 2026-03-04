@@ -26,7 +26,7 @@ COPY package.json yarn.lock* ./
 COPY turbo.json ./
 COPY packages ./packages
 COPY .env* ./
-RUN yarn turbo run db:generate --filter=@repo/db
+RUN npx prisma generate --schema=packages/db/schema.prisma
 
 # Build the application
 FROM base AS builder
@@ -47,7 +47,7 @@ COPY packages ./packages
 
 ENV NEXT_TURBOPACK=0
 ENV NEXT_USE_WEBPACK=1
-RUN yarn turbo run build --filter=victorianos-gestion
+RUN yarn build
 
 # Production runtime
 FROM base AS runner
