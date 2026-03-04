@@ -5,7 +5,7 @@
   
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node -e \"const fs=require('fs');const src='app/generated/client';const dst='.next/standalone/app/generated/client';if(fs.existsSync(src)){fs.cpSync(src,dst,{recursive:true});console.log('Copied Prisma engine to standalone');}\"",
+    "build": "next build && cp -r app/generated/client .next/standalone/app/ && cp -r node_modules/.prisma .next/standalone/ 2>/dev/null || true",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",

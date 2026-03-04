@@ -21,7 +21,7 @@ export default async function InventarioPage() {
     orderBy: { categoria: 'asc' }
   });
 
-  const categorias = [...new Set(productos.map(p => p.categoria))];
+  const categorias = [...new Set(productos.map(p => p.categoria))] as string[];
 
   const totalStock = productos.reduce((acc, p) => 
     acc + p.tallas.reduce((t, ta) => t + ta.stock, 0), 0
