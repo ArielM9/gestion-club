@@ -32,9 +32,7 @@ RUN npx prisma generate --schema=packages/db/schema.prisma
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=prisma /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=prisma /app/packages/generated ./packages/generated
+COPY --from=prisma /app/packages/generated/prisma ./packages/generated/prisma
 COPY turbo.json ./
 COPY package.json yarn.lock* ./
 COPY tsconfig.json ./
@@ -61,8 +59,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nextjs:nodejs /app/packages/generated/prisma ./packages/generated/prisma
 COPY --from=builder --chown=nextjs:nodejs /app/packages ./packages
 
 USER nextjs
