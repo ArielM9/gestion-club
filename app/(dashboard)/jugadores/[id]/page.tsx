@@ -2,8 +2,12 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import FichaCliente from "../../../../components/jugadores/FichaCliente";
 
-export default async function JugadorPage({ params }: { params: { id: string } }) {
-    const { id } = await params;
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function JugadorPage({ params }: PageProps) {
+  const { id } = await params;
 
     const socio = await prisma.socio.findUnique({
         where: { id },
