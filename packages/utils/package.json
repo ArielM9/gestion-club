@@ -4,7 +4,7 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@repo/db": "workspace:*",
-    "@repo/storage": "workspace:*"
+    "@repo/db": "*",
+    "@repo/storage": "*"
   }
 }
