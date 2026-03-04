@@ -2,26 +2,31 @@
 FROM node:20-slim AS base
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
+
+# Install yarn
+RUN curl -o- -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && apt-get install -y yarn && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies (skip postinstall which requires prisma schema)
 FROM base AS deps
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json yarn.lock* ./
 COPY turbo.json ./
 COPY packages ./packages
-RUN npm install --ignore-scripts
+RUN yarn install --ignore-scripts --ignore-engines
 
 # Generate Prisma client
 FROM base AS prisma
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json package-lock.json* ./
+COPY package.json yarn.lock* ./
 COPY turbo.json ./
 COPY packages ./packages
 COPY .env* ./
-RUN npx turbo run db:generate --filter=@repo/db
+RUN yarn turbo run db:generate --filter=@repo/db
 
 # Build the application
 FROM base AS builder
@@ -31,7 +36,7 @@ COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=prisma /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=prisma /app/packages/generated ./packages/generated
 COPY turbo.json ./
-COPY package.json package-lock.json* ./
+COPY package.json yarn.lock* ./
 COPY tsconfig.json ./
 COPY next.config.ts ./
 COPY .env* ./
@@ -42,7 +47,7 @@ COPY packages ./packages
 
 ENV NEXT_TURBOPACK=0
 ENV NEXT_USE_WEBPACK=1
-RUN npx turbo run build --filter=victorianos-gestion
+RUN yarn turbo run build --filter=victorianos-gestion
 
 # Production runtime
 FROM base AS runner
