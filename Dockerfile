@@ -37,6 +37,8 @@ COPY turbo.json ./
 COPY package.json yarn.lock* ./
 COPY tsconfig.json ./
 COPY next.config.ts ./
+COPY tailwind.config.ts ./
+COPY postcss.config.mjs ./
 COPY .env* ./
 COPY app ./app
 COPY components ./components
