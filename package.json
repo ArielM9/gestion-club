@@ -2,26 +2,27 @@
   "name": "victorianos-gestion",
   "version": "0.1.0",
   "private": true,
-  
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build && cp -r app/generated/client .next/standalone/app/ && cp -r node_modules/.prisma .next/standalone/ 2>/dev/null || true",
+    "build": "NEXT_USE_WEBPACK=1 next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:push": "bun --filter @repo/db db:push",
+    "db:migrate": "bun --filter @repo/db db:migrate",
+    "db:studio": "bun --filter @repo/db db:studio",
+    "db:seed": "tsx packages/db/prisma/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",
     "@aws-sdk/s3-request-presigner": "^3.1000.0",
     "@better-auth/prisma-adapter": "^1.4.18",
     "@hookform/resolvers": "^5.2.2",
-    "@prisma/adapter-libsql": "^6.0.0",
-    "@prisma/adapter-pg": "^6.0.0",
-    "@prisma/client": "^6.0.0",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.4.2",
+    "@repo/db": "*",
     "better-auth": "^1.4.18",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
@@ -46,7 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "prisma": "^6.0.0",
+    "prisma": "^7.3.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
@@ -58,8 +59,5 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ],
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  }
+  ]
 }

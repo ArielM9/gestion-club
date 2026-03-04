@@ -94,7 +94,7 @@ export async function getMovimientosGlobales(search: string = "", page: number =
 }
 
 import { normalizeString } from "@/lib/utils/stringUtils";
-import { MetodoPago } from "@/app/generated/client/enums";
+import { MetodoPago } from "@repo/db";
 
 export async function getSociosDeudores(search: string = "", page: number = 1, pageSize: number = 10) {
   const socios = await prisma.socio.findMany({

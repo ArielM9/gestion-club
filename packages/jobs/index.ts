@@ -1,4 +1,4 @@
-import db from "../db/client";
+import { db } from "@repo/db";
 
 export enum JobType {
   DOCUMENT_ANALYSIS = 'DOCUMENT_ANALYSIS',

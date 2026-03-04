@@ -1,4 +1,4 @@
-import { TipoDocumento } from "@/app/generated/client/enums";
+import { TipoDocumento } from "@repo/db";
 
 
 interface ParseResult {
