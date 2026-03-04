@@ -10,6 +10,6 @@ export default defineConfig({
     seed: "prisma"
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: process.env["DATABASE_URL"]!,
   },
 });
