@@ -1,6 +1,6 @@
 import { db as prisma } from "@repo/db";
 import * as dotenv from "dotenv";
-import { Role, UserStatus } from "@repo/db";
+import { Role, UserStatus } from "../../generated/prisma/client"
 
 dotenv.config();
 
