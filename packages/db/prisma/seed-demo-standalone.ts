@@ -1,6 +1,5 @@
 import { db as prisma } from "@repo/db";
 import * as dotenv from "dotenv";
-import { Role, UserStatus } from "../../generated/prisma/client"
 
 dotenv.config();
 
@@ -15,8 +14,8 @@ async function main() {
       email: "admin@demo.com",
       name: "Admin Demo",
       username: "admin",
-      role: Role.ADMIN,
-      status: UserStatus.ACTIVE,
+      role: "ADMIN",
+      status: "ACTIVE",
       mustChangePassword: true,
       emailVerified: true
     }
