@@ -17,6 +17,7 @@ interface Usuario {
 const ROLES = [
   { value: "COLABORADOR", label: "Colaborador", description: "Acceso básico" },
   { value: "CONTABILIDAD", label: "Contabilidad", description: "Gestión económica" },
+  { value: "DIRECTIVA", label: "Directiva", description: "Gestión del club" },
   { value: "ADMIN", label: "Administrador", description: "Acceso total" },
 ];
 
@@ -45,7 +46,7 @@ export default function ModalEditarUsuario({ usuario, onClose, onUpdated }: Moda
       email: formData.email,
       name: formData.name || undefined,
       username: formData.username || undefined,
-      role: formData.role as "ADMIN" | "CONTABILIDAD" | "COLABORADOR",
+      role: formData.role as "ADMIN" | "CONTABILIDAD" | "DIRECTIVA" | "COLABORADOR",
       status: formData.status as "ACTIVE" | "PENDING" | "DISABLED",
     });
 

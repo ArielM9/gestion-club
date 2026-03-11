@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "crypto";
 
-export type Role = "ADMIN" | "CONTABILIDAD" | "COLABORADOR";
+export type Role = "ADMIN" | "CONTABILIDAD" | "DIRECTIVA" | "COLABORADOR";
 export type UserStatus = "ACTIVE" | "PENDING" | "DISABLED";
 
 export async function getUsuarios() {

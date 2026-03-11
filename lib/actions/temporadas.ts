@@ -737,8 +737,11 @@ export async function crearEquipoAction(temporadaId: string, categoriaId: string
 
     revalidatePath("/admin/temporadas");
     return { success: true, equipo };
-  } catch (error) {
+  } catch (error: any) {
     console.error("ERROR_CREAR_EQUIPO:", error);
+    if (error.code === 'P2002') {
+      return { error: "Ya existe un equipo con ese nombre en esta temporada" };
+    }
     return { error: "Error al crear el equipo" };
   }
 }

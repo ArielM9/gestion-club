@@ -16,8 +16,9 @@ export default async function CategoriasPage() {
     where: { activa: true }
   });
 
+  const ORDER_CATEGORIAS = ["M6", "M8", "M10", "M12", "M14", "M16", "M18", "Senior Masculino", "Senior Femenino"];
+
   const categorias = await prisma.categoria.findMany({
-    orderBy: { nombre: "asc" },
     include: {
       equipos: {
         where: { temporadaId: temporadaActiva?.id },
@@ -26,6 +27,15 @@ export default async function CategoriasPage() {
         }
       }
     }
+  });
+
+  const categoriasOrdenadas = [...categorias].sort((a, b) => {
+    const idxA = ORDER_CATEGORIAS.indexOf(a.nombre);
+    const idxB = ORDER_CATEGORIAS.indexOf(b.nombre);
+    if (idxA === -1 && idxB === -1) return a.nombre.localeCompare(b.nombre);
+    if (idxA === -1) return 1;
+    if (idxB === -1) return -1;
+    return idxA - idxB;
   });
 
   const inscripcionesTemporada = temporadaActiva 
@@ -53,7 +63,7 @@ export default async function CategoriasPage() {
     }
   }
 
-  const categoriasConDatos = categorias.map(cat => {
+  const categoriasConDatos = categoriasOrdenadas.map(cat => {
     const equiposActivos = cat.equipos.filter(e => !e.cerrado);
     let totalFederados = 0;
     for (const eq of equiposActivos) {
@@ -120,7 +130,7 @@ export default async function CategoriasPage() {
         ))}
       </div>
 
-      {categorias.length === 0 && (
+      {categoriasOrdenadas.length === 0 && (
         <div className="bg-white rounded-[2rem] p-12 text-center">
           <Trophy size={48} className="mx-auto text-slate-300 mb-4" />
           <p className="text-slate-400 font-medium">No hay categorías creadas</p>
