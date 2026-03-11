@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SocioSchema, SocioFormValues } from "@/lib/validations/socio";
 import { crearSocioAction } from "@/lib/actions/socios";
 import { useRouter } from "next/navigation";
-import { User, IdCard, Mail, Phone, Calendar, Loader2, Camera, CreditCard, Users2, MessageSquare, Shirt } from "lucide-react";
+import { User, IdCard, Mail, Phone, Calendar, Loader2, Camera, CreditCard, Users2, MessageSquare, Shirt, Info } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -35,6 +35,34 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
   };
 
   const mostrarSeccionTutor = esMenorDeEdad(fechaNacimiento);
+
+  const calcularCategoria = (fecha: string, sexo: string | undefined): string => {
+    if (!fecha) return "Selecciona fecha de nacimiento";
+    const hoy = new Date();
+    const cumple = new Date(fecha);
+    let edad = hoy.getFullYear() - cumple.getFullYear();
+    if (hoy < new Date(cumple.setFullYear(hoy.getFullYear()))) edad--;
+    
+    const anoTemporada = hoy.getFullYear();
+    const anoNacimiento = cumple.getFullYear();
+    const edadTemporada = anoTemporada - anoNacimiento;
+    
+    if (edadTemporada >= 18) {
+      return sexo === "F" ? "Senior Femenino" : "Senior Masculino";
+    }
+    if (edadTemporada >= 16) return "M18";
+    if (edadTemporada >= 14) return "M16";
+    if (edadTemporada >= 12) return "M14";
+    if (edadTemporada >= 10) return "M12";
+    if (edadTemporada >= 8) return "M10";
+    if (edadTemporada >= 6) return "M8";
+    if (edadTemporada >= 4) return "M6";
+    
+    return "Sin categoría";
+  };
+
+  const categoriaCalculada = calcularCategoria(fechaNacimiento, watch("sexo"));
+  const sexoValue = watch("sexo");
 
   const onSubmit = async (data: SocioFormValues) => {
     setIsPending(true);
@@ -179,13 +207,15 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Categoría</label>
-            <select {...register("categoriaId")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
-              <option value="">Seleccionar...</option>
-              {categorias.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.nombre}</option>
-              ))}
-            </select>
-            {errors.categoriaId && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.categoriaId.message}</p>}
+            <div className={`px-5 py-3 rounded-2xl font-bold flex items-center gap-2 ${
+              fechaNacimiento && sexoValue 
+                ? "bg-blue-50 text-blue-700 border-2 border-blue-200" 
+                : "bg-slate-100 text-slate-400 border-2 border-slate-200"
+            }`}>
+              <Info size={18} />
+              {fechaNacimiento && sexoValue ? categoriaCalculada : "Selecciona fecha de nacimiento y sexo"}
+            </div>
+            <p className="text-[10px] text-slate-400 ml-2">Se calcula automáticamente según edad y sexo</p>
           </div>
 
           <div className="space-y-2">

@@ -45,7 +45,6 @@ export async function crearSocioAction(data: any) {
         telefonoTutor: result.data.telefonoTutor || null,
         observaciones: result.data.observaciones || null,
         tallaRopa: result.data.tallaRopa || null,
-        categoriaId: result.data.categoriaId || null,
         sexo: result.data.sexo || "M",
         activo: true,
       },

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, UserCog, RefreshCcw, ToggleLeft, ToggleRight, Pencil } from "lucide-react";
+import { MoreHorizontal, UserCog, RefreshCcw, ToggleLeft, ToggleRight, Pencil, Copy, Check, X } from "lucide-react";
 import { toggleUsuarioStatus, resetPassword } from "@/lib/actions/admin/usuarios";
 import { toast } from "sonner";
 import ModalEditarUsuario from "./ModalEditarUsuario";
@@ -21,6 +21,7 @@ interface Usuario {
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrador",
   CONTABILIDAD: "Contabilidad",
+  DIRECTIVA: "Directiva",
   COLABORADOR: "Colaborador",
 };
 
@@ -35,6 +36,8 @@ export default function UsuariosTable({ usuarios }: { usuarios: Usuario[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [editandoUsuario, setEditandoUsuario] = useState<Usuario | null>(null);
+  const [passwordModal, setPasswordModal] = useState<{ show: boolean; password: string; nombre: string } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleToggleStatus = async (id: string) => {
     setLoadingAction(id);
@@ -55,9 +58,22 @@ export default function UsuariosTable({ usuarios }: { usuarios: Usuario[] }) {
     setLoadingAction(null);
 
     if (res.success && res.tempPassword) {
-      toast.success(`Contraseña reseteada: ${res.tempPassword}`);
+      const usuario = usuarios.find(u => u.id === id);
+      setPasswordModal({ 
+        show: true, 
+        password: res.tempPassword,
+        nombre: usuario?.name || usuario?.username || usuario?.email || "Usuario"
+      });
     } else {
       toast.error(res.error || "Error al resetear contraseña");
+    }
+  };
+
+  const copyPassword = () => {
+    if (passwordModal) {
+      navigator.clipboard.writeText(passwordModal.password);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -183,6 +199,52 @@ export default function UsuariosTable({ usuarios }: { usuarios: Usuario[] }) {
           onClose={() => setEditandoUsuario(null)}
           onUpdated={() => router.refresh()}
         />
+      )}
+
+      {passwordModal?.show && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setPasswordModal(null)}>
+          <div className="bg-white rounded-[2rem] p-8 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-black text-slate-900">Contraseña Reseteada</h3>
+              <button onClick={() => setPasswordModal(null)} className="p-2 hover:bg-slate-100 rounded-xl">
+                <X size={20} className="text-slate-400" />
+              </button>
+            </div>
+
+            <p className="text-sm text-slate-500 mb-4">
+              La contraseña de <span className="font-bold text-slate-700">{passwordModal.nombre}</span> ha sido reseteada.
+            </p>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+              <p className="text-xs font-black text-amber-600 uppercase tracking-widest mb-2">
+                Nueva contraseña temporal
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-lg font-mono font-bold text-slate-800 bg-white px-4 py-3 rounded-xl border border-amber-200">
+                  {passwordModal.password}
+                </code>
+                <button
+                  onClick={copyPassword}
+                  className="p-3 bg-white border border-amber-200 rounded-xl hover:bg-amber-50 transition-colors"
+                  title="Copiar al portapapeles"
+                >
+                  {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} className="text-amber-600" />}
+                </button>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-500 mb-6">
+              Esta contraseña es temporal. El usuario deberá cambiarla en su próximo inicio de sesión.
+            </p>
+
+            <button
+              onClick={() => setPasswordModal(null)}
+              className="w-full bg-[#1e293b] text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all"
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
       )}
     </>
   );

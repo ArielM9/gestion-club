@@ -18,7 +18,6 @@ export const SocioSchema = z.object({
   codigoPostal: z.string().optional(),
   localidad: z.string().optional(),
   urlDniFrontal: z.string().optional(),
-  categoriaId: z.string().min(1, "Selecciona una categoría"),
   cuentaBancaria: z.string().optional().or(z.literal("")), // NO obligatorio
   observaciones: z.string().optional(),
   tallaRopa: z.string().optional(),
