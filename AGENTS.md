@@ -298,31 +298,56 @@ If adding tests:
 
 Estas features se implementarán después del MVP, según prioridades del club.
 
-### Sistema de Categorías y Asignación Automática
+### Sistema de Categorías y Equipos
 
-#### Categorías de rugby (España):
-| Categoría | Edad | Observaciones |
-|-----------|------|---------------|
-| M6 | ≤6 años | Prebenjamín |
-| M8 | ≤8 años | Benjamín |
-| M10 | ≤10 años | Alevín |
-| M12 | ≤12 años | Infantil |
-| M14 | ≤14 años | Cadete |
-| M16 | ≤16 años | Juvenil |
-| M18 | ≤18 años | Junior |
-| M20 | ≤20 años | Sub20 |
-| M22 | ≤22 años | Sub22 |
-| Senior | >18 años | Absoluto |
+#### Tipos de Categorías
 
-#### Lógica de asignación automática:
-1. **Fecha de nacimiento** → determina categoría automáticamente
-2. **Si edad ≥18 años** → equipo Senior (M20 y M22 van a Senior)
-3. **Sexo** (solo adultos) → equipo Masculino o Femenino
-4. **Excepciones**: editable manualmente en ficha del jugador
+| Tipo | Categorías |
+|------|------------|
+| **Escuelita** | M6, M8, M10, M12, M14, M16, M18 |
+| **Senior** | M20, M22, Senior Masculino, Senior Femenino |
 
-#### Precios por temporada:
-- **Precio ficha**: configurable por categoría (se establece al crear temporada)
-- **Precio cuota club**: único para todos los jugadores (se establece al crear temporada)
+#### Reglas del Sistema
+
+1. **M20 y M22**: Solo afectan al precio de la ficha federativa. Para todo lo demás son Senior.
+2. **Cuota club**: Solo Senior paga cuota de club (M20, M22, Senior Masculino, Senior Femenino)
+3. **Escuelita (M6-M18)**: Se gestiona a través de Cluber (no tiene cuota de club)
+4. **Federado**: Es un estado del jugador (nivel de federación), no del equipo
+5. **Segundo año**: Un jugador de segundo año puede jugar en su categoría + la siguiente
+6. **Senior no puede bajar**: Un jugador de M18 2º año NO puede jugar en Senior
+7. **Un jugador puede estar en varios equipos**: Simultáneamente
+
+#### Cálculo de Categoría
+
+- Se calcula desde: `añoInicioTemporada - añoNacimiento`
+- Ejemplo: Temporada inicio 2025, jugador nacido 2012 → 2025-2012=13 años → M14
+
+| Edad (Temporada - Nac) | Categoría |
+|------------------------|-----------|
+| 22+ | Senior |
+| 20-21 | M22 |
+| 18-19 | M20 |
+| 16-17 | M18 |
+| 14-15 | M16 |
+| 12-13 | M14 |
+| 10-11 | M12 |
+| 8-9 | M10 |
+| 6-7 | M8 |
+| 4-5 | M6 |
+
+#### Equipo vs Categoría
+
+- **Categoría**: Dato para pagos (ficha federativa, cuota club)
+- **Equipo**: Organización deportiva (partidos, entrenamiento)
+- Un equipo tiene una categoría asociada (para precios)
+- Un equipo puede tener jugadores de su categoría + jugadores de segundo año de la categoría inferior
+
+#### Flujo de Temporada
+
+1. Admin crea temporada y configura precios por categoría
+2. Al crear jugador → se calcula y guarda categoría automáticamente
+3. Al cerrar temporada → se borra categoría del jugador (se recalcula al reinscribir)
+4. Al federar un jugador → se crea cargo de ficha federativa
 
 ### Zona de Entrenadores (Futuro)
 - Control de asistencia a entrenamientos y partidos
