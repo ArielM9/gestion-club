@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, User, Check, RotateCcw, Loader2 } from 'lucide-react';
 import { buscarSocios } from '@/lib/server/actions/socios';
 
@@ -20,6 +21,8 @@ export default function SocioSelector({ onConfirm, initialSocio = null }: Props)
     const [tempSocio, setTempSocio] = useState<Socio | null>(initialSocio);
     const [socios, setSocios] = useState<Socio[]>([]);
     const [loading, setLoading] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number; width: number } | null>(null);
 
     useEffect(() => {
         if (query.length < 2) {
@@ -70,23 +73,36 @@ export default function SocioSelector({ onConfirm, initialSocio = null }: Props)
     }
 
     return (
-        <div className="relative w-full max-w-xs">
-            <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+        <div className="relative w-full max-w-xs overflow-visible">
+            <div className="relative overflow-visible">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 overflow-visible" size={14} />
                 <input
                     type="text"
                     className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                     placeholder="Escribe nombre o DNI..."
                     value={query}
                     onChange={(e) => { setQuery(e.target.value); setIsOpen(true); }}
-                    onFocus={() => setIsOpen(true)}
+                    onFocus={() => {
+                        setIsOpen(true);
+                        if (inputRef.current) {
+                            const rect = inputRef.current.getBoundingClientRect();
+                            setDropdownPosition({ top: rect.bottom + window.scrollY, left: rect.left, width: rect.width });
+                        }
+                    }}
                 />
             </div>
 
-            {isOpen && query.length > 1 && (
+            {isOpen && query.length > 1 && dropdownPosition && typeof window !== 'undefined' && createPortal(
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <ul className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-2xl max-h-60 overflow-auto divide-y divide-slate-50 left-0">
+                    <ul 
+                        className="fixed z-50 bg-white border border-slate-200 rounded-lg shadow-2xl max-h-60 overflow-auto divide-y divide-slate-50"
+                        style={{ 
+                            top: dropdownPosition.top, 
+                            left: dropdownPosition.left, 
+                            width: dropdownPosition.width 
+                        }}
+                    >
                         {loading ? (
                             <li className="p-4 flex items-center justify-center gap-2 text-slate-400">
                                 <Loader2 size={16} className="animate-spin text-blue-500" />
@@ -120,7 +136,8 @@ export default function SocioSelector({ onConfirm, initialSocio = null }: Props)
                             <li className="p-4 text-xs text-slate-400 italic text-center">No hay coincidencias</li>
                         )}
                     </ul>
-                </>
+                </>,
+                document.body
             )}
         </div>
     );

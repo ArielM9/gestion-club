@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { Users, Tag, Layers, Download } from "lucide-react";
+import { Users, Tag, Layers, Download, Trophy } from "lucide-react";
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -24,6 +24,13 @@ export default async function AdminPage() {
       href: "/admin/usuarios",
       icon: Users,
       color: "bg-blue-50 text-blue-600",
+    },
+    {
+      title: "Categorías",
+      description: "Gestionar categorías (M6, M8, Senior...)",
+      href: "/admin/categorias",
+      icon: Trophy,
+      color: "bg-emerald-50 text-emerald-600",
     },
     {
       title: "Temporadas",

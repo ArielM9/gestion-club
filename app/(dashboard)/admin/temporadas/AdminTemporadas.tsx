@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Calendar, Users, Lock, DollarSign, AlertTriangle, X, Check, FileText, Send, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
-import { crearTemporadaAction, actualizarPreciosTemporadaAction, cerrarTemporadaAction, generarCargosTemporadaAction } from "@/lib/actions/temporadas";
+import { crearTemporadaAction, actualizarPreciosTemporadaAction, cerrarTemporadaAction } from "@/lib/actions/temporadas";
 
 interface Categoria {
   id: string;
@@ -69,6 +69,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
 
   // Formulario precios
   const [preciosForm, setPreciosForm] = useState<{ categoriaId: string; nombre: string; costeCuota: string; costeFicha: string; incluyeRopa: boolean }[]>([]);
+  const [preciosOriginales, setPreciosOriginales] = useState<{ categoriaId: string; costeCuota: string; costeFicha: string }[]>([]);
 
   const handleCrearTemporada = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +101,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
     setLoading(false);
     
     if (res.success) {
-      toast.success("Precios actualizados");
+      toast.success(res.message || "Precios actualizados");
       setShowPrecios(false);
       router.refresh();
     } else {
@@ -139,35 +140,50 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
       incluyeRopa: p.incluyeRopa,
     })) || [];
 
-    // Agregar M20 y M22 si no existen
+    // Guardar precios originales para detectar cambios
+    const originales = preciosBase.map(p => ({
+      categoriaId: p.categoriaId,
+      costeCuota: p.costeCuota,
+      costeFicha: p.costeFicha,
+    }));
+    setPreciosOriginales(originales);
+
+    // Agregar todas las categorías que no tienen precio aún
     const nombresExistentes = preciosBase.map(p => p.nombre);
-    const extras: typeof preciosForm = [];
-    if (!nombresExistentes.includes("M20")) {
-      extras.push({ categoriaId: "M20", nombre: "M20", costeCuota: "", costeFicha: "", incluyeRopa: false });
-    }
-    if (!nombresExistentes.includes("M22")) {
-      extras.push({ categoriaId: "M22", nombre: "M22", costeCuota: "", costeFicha: "", incluyeRopa: false });
-    }
+    const categoriasSinPrecio = categorias.filter(c => !nombresExistentes.includes(c.nombre));
+    
+    const extras = categoriasSinPrecio.map(c => ({
+      categoriaId: c.id,
+      nombre: c.nombre,
+      costeCuota: "",
+      costeFicha: "",
+      incluyeRopa: false,
+    }));
 
     setPreciosForm([...preciosBase, ...extras]);
     setShowPrecios(true);
   };
 
-  const hayPreciosCompletos = preciosForm.every(p => p.costeCuota && p.costeCuota !== "");
+  const hayPreciosCompletos = preciosForm.every(p => p.costeCuota !== "" && p.costeFicha !== "");
   const hayEquipos = temporadaActiva?.equipos && temporadaActiva.equipos.length > 0;
 
-  const handleGenerarCargos = async () => {
-    setLoading(true);
-    const res = await generarCargosTemporadaAction(temporadaActiva!.id);
-    setLoading(false);
-    
-    if (res.success) {
-      toast.success(res.message);
-      router.refresh();
-    } else {
-      toast.error(res.error);
+  // Detectar si hubo cambios en los precios
+  const detectCambiosPrecios = () => {
+    for (const p of preciosForm) {
+      const original = preciosOriginales.find(o => o.categoriaId === p.categoriaId);
+      if (!original) return true; // Nueva categoría
+      
+      const originalCuota = original.costeCuota || "";
+      const originalFicha = original.costeFicha || "";
+      
+      if (originalCuota !== p.costeCuota || originalFicha !== p.costeFicha) {
+        return true;
+      }
     }
+    return false;
   };
+  
+  const hayCambiosPrecios = detectCambiosPrecios();
 
   return (
     <div className="space-y-8">
@@ -206,20 +222,38 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
           {/* Estado de precios */}
           <div className="mb-6 p-4 rounded-2xl bg-slate-50">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-black text-slate-700">Precios por Categoría</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-black text-slate-700">Precios por Categoría</h3>
+                {temporadaActiva.precios.some(p => p.costeCuota === null || p.costeFicha === null) && (
+                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full">
+                    Pendiente
+                  </span>
+                )}
+              </div>
               <button onClick={initPreciosForm} className="text-blue-600 text-sm font-bold hover:underline">
-                {temporadaActiva.precios.some(p => p.costeCuota !== null) ? "Editar" : "Configurar"}
+                {temporadaActiva.precios.some(p => p.costeCuota !== null && p.costeFicha !== null) ? "Editar" : "Configurar"}
               </button>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {temporadaActiva.precios.map(p => (
-                <div key={p.id} className={`p-2 rounded-lg text-center ${p.costeCuota !== null ? "bg-green-50" : "bg-amber-50"}`}>
-                  <p className="text-xs font-black text-slate-600">{p.categoria.nombre}</p>
-                  <p className={`text-sm font-bold ${p.costeCuota !== null ? "text-green-600" : "text-amber-600"}`}>
-                    {p.costeCuota !== null ? `${p.costeCuota}€` : "Sin definir"}
-                  </p>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+              {temporadaActiva.precios.map(p => {
+                const tienePrecios = p.costeCuota !== null && p.costeFicha !== null;
+                return (
+                  <div 
+                    key={p.id} 
+                    className={`p-2 rounded-lg text-center ${tienePrecios ? "bg-green-50" : "bg-amber-50 border border-amber-200"}`}
+                  >
+                    <p className="text-xs font-black text-slate-600">{p.categoria.nombre}</p>
+                    <div className="mt-1 space-y-0.5">
+                      <p className={`text-xs font-bold ${p.costeCuota !== null ? "text-green-600" : "text-amber-500"}`}>
+                        Cuota: {p.costeCuota !== null ? `${p.costeCuota}€` : "—"}
+                      </p>
+                      <p className={`text-xs font-bold ${p.costeFicha !== null ? "text-blue-600" : "text-amber-500"}`}>
+                        Ficha: {p.costeFicha !== null ? `${p.costeFicha}€` : "—"}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -246,26 +280,6 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
               <Lock size={18} /> Cerrar Temporada
             </button>
           </div>
-
-          {/* Banner de generar cargos si hay precios y equipos */}
-          {hayPreciosCompletos && hayEquipos && (
-            <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-bold text-emerald-800">Precios y equipos configurados</p>
-                  <p className="text-sm text-emerald-600">Ya puedes generar los cargos de la temporada</p>
-                </div>
-                <button 
-                  onClick={handleGenerarCargos} 
-                  disabled={loading}
-                  className="px-6 py-2 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
-                >
-                  <Send size={16} />
-                  {loading ? "Generando..." : "Generar Cargos"}
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       ) : (
         <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
@@ -432,8 +446,14 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
               <button onClick={() => setShowPrecios(false)} className="flex-1 py-3 rounded-2xl font-bold text-slate-500 border border-slate-200 hover:bg-slate-50">
                 Cancelar
               </button>
-              <button onClick={handleGuardarPrecios} disabled={loading} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 disabled:opacity-50">
-                {loading ? "Guardando..." : "Guardar"}
+              <button 
+                onClick={handleGuardarPrecios} 
+                disabled={loading} 
+                className={`flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-50 ${
+                  hayCambiosPrecios ? "bg-amber-500 hover:bg-amber-600" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {loading ? "Guardando..." : hayCambiosPrecios ? "Guardar y actualizar cargos" : "Guardar"}
               </button>
             </div>
           </div>

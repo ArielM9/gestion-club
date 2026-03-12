@@ -172,11 +172,35 @@ export async function inscribirJugadorEnTemporadaAction(
       }
     });
 
+    // Generar cargo de cuota si es categoría senior (M20, M22, Senior Masculino, Senior Femenino)
+    const esSenior = ["M20", "M22", "Senior Masculino", "Senior Femenino"].includes(categoriaNombre);
+    
+    if (esSenior) {
+      const precioTemporada = await prisma.temporadaCategoria.findFirst({
+        where: {
+          temporadaId: temporadaActiva.id,
+          categoriaId: categoria.id,
+        },
+      });
+
+      if (precioTemporada && precioTemporada.costeCuota !== null && precioTemporada.costeCuota > 0) {
+        await prisma.cargo.create({
+          data: {
+            monto: precioTemporada.costeCuota,
+            concepto: `Cuota club - ${categoriaNombre}`,
+            socioId: socio.id,
+            temporadaId: temporadaActiva.id,
+          },
+        });
+      }
+    }
+
     revalidatePath("/jugadores");
     revalidatePath("/jugadores/[id]");
     revalidatePath("/admin/categorias");
     revalidatePath("/categorias");
     revalidatePath("/categorias/[categoryId]");
+    revalidatePath("/contabilidad");
     
     return { success: true, tieneDeuda: false };
   } catch (error) {
@@ -259,9 +283,37 @@ export async function inscribirJugadorAction(equipoId: string, socioId: string) 
       },
     });
 
+    // Generar cargo de cuota si es categoría senior (M20, M22, Senior Masculino, Senior Femenino)
+    const categoria = await prisma.categoria.findUnique({
+      where: { id: equipo.categoriaId },
+    });
+    
+    const esSenior = categoria && ["M20", "M22", "Senior Masculino", "Senior Femenino"].includes(categoria.nombre);
+    
+    if (esSenior) {
+      const precioTemporada = await prisma.temporadaCategoria.findFirst({
+        where: {
+          temporadaId: equipo.temporadaId,
+          categoriaId: equipo.categoriaId,
+        },
+      });
+
+      if (precioTemporada && precioTemporada.costeCuota !== null && precioTemporada.costeCuota > 0) {
+        await prisma.cargo.create({
+          data: {
+            monto: precioTemporada.costeCuota,
+            concepto: `Cuota club - ${categoria.nombre}`,
+            socioId,
+            temporadaId: equipo.temporadaId,
+          },
+        });
+      }
+    }
+
     revalidatePath("/admin/categorias");
     revalidatePath("/categorias");
     revalidatePath("/categorias/[categoryId]");
+    revalidatePath("/contabilidad");
     return { success: true };
   } catch (error) {
     console.error("ERROR_INSCRIBIR_JUGADOR:", error);
@@ -526,7 +578,7 @@ export async function togglearInscripcionAction(
   try {
     const equipo = await prisma.equipo.findUnique({
       where: { id: equipoId },
-      include: { temporada: true },
+      include: { temporada: true, categoria: true },
     });
     if (!equipo) return { error: "Equipo no encontrado" };
 
@@ -538,14 +590,56 @@ export async function togglearInscripcionAction(
     });
 
     if (inscripcionExistente) {
-      await prisma.inscripcion.delete({
+      // El jugador ya está inscrito, actualizar estado federado
+      const estadoAnterior = inscripcionExistente.federado;
+      
+      await prisma.inscripcion.update({
         where: { id: inscripcionExistente.id },
+        data: { federado },
       });
+
+      // Manejar cargo de ficha federativa
+      const categoria = await prisma.categoria.findUnique({
+        where: { id: equipo.categoriaId },
+      });
+
+      if (federado && !estadoAnterior) {
+        // Cambió a federado → crear cargo de ficha
+        const precioTemporada = await prisma.temporadaCategoria.findFirst({
+          where: {
+            temporadaId: equipo.temporadaId,
+            categoriaId: equipo.categoriaId,
+          },
+        });
+
+        if (precioTemporada && precioTemporada.costeFicha !== null && precioTemporada.costeFicha > 0) {
+          await prisma.cargo.create({
+            data: {
+              monto: precioTemporada.costeFicha,
+              concepto: `Ficha federativa - ${categoria?.nombre || "Unknown"}`,
+              socioId,
+              temporadaId: equipo.temporadaId,
+            },
+          });
+        }
+      } else if (!federado && estadoAnterior) {
+        // Cambió a no federado → eliminar cargo de ficha
+        await prisma.cargo.deleteMany({
+          where: {
+            socioId,
+            temporadaId: equipo.temporadaId,
+            concepto: { startsWith: "Ficha federativa" },
+          },
+        });
+      }
+
       revalidatePath("/admin/categorias");
       revalidatePath("/categorias");
       revalidatePath("/categorias/[categoryId]");
-      return { success: true, federado: false };
+      revalidatePath("/contabilidad");
+      return { success: true, federado };
     } else {
+      // El jugador no está inscrito, crear inscripción
       await prisma.inscripcion.create({
         data: {
           socioId,
@@ -555,10 +649,37 @@ export async function togglearInscripcionAction(
           federado,
         },
       });
+
+      // Si federado, crear cargo de ficha
+      if (federado) {
+        const categoria = await prisma.categoria.findUnique({
+          where: { id: equipo.categoriaId },
+        });
+
+        const precioTemporada = await prisma.temporadaCategoria.findFirst({
+          where: {
+            temporadaId: equipo.temporadaId,
+            categoriaId: equipo.categoriaId,
+          },
+        });
+
+        if (precioTemporada && precioTemporada.costeFicha !== null && precioTemporada.costeFicha > 0) {
+          await prisma.cargo.create({
+            data: {
+              monto: precioTemporada.costeFicha,
+              concepto: `Ficha federativa - ${categoria?.nombre || "Unknown"}`,
+              socioId,
+              temporadaId: equipo.temporadaId,
+            },
+          });
+        }
+      }
+
       revalidatePath("/admin/categorias");
       revalidatePath("/categorias");
       revalidatePath("/categorias/[categoryId]");
-      return { success: true, federado: true };
+      revalidatePath("/contabilidad");
+      return { success: true, federado };
     }
   } catch (error) {
     console.error("ERROR_TOGGLE_INSCRIPCION:", error);
@@ -674,7 +795,22 @@ export async function actualizarPreciosTemporadaAction(
   precios: { categoriaId: string; costeCuota: number | null; costeFicha: number | null; incluyeRopa: boolean }[]
 ) {
   try {
+    // Obtener precios actuales antes de actualizar
+    const preciosActuales = await prisma.temporadaCategoria.findMany({
+      where: { temporadaId },
+      include: { categoria: true },
+    });
+
+    const preciosMap = new Map(preciosActuales.map(p => [p.categoriaId, p]));
+    const categoriaIdToNombre = new Map(preciosActuales.map(p => [p.categoriaId, p.categoria.nombre]));
+
+    let cargosActualizados = 0;
+
     for (const p of precios) {
+      const precioActual = preciosMap.get(p.categoriaId);
+      const nombreCategoria = categoriaIdToNombre.get(p.categoriaId) || "";
+
+      // Actualizar precio en TemporadaCategoria
       await prisma.temporadaCategoria.upsert({
         where: {
           temporadaId_categoriaId: {
@@ -695,13 +831,94 @@ export async function actualizarPreciosTemporadaAction(
           incluyeRopa: p.incluyeRopa,
         },
       });
+
+      // Si el precio de cuota cambió, actualizar cargos existentes
+      if (precioActual && precioActual.costeCuota !== null && p.costeCuota !== null && precioActual.costeCuota !== p.costeCuota) {
+        const result = await prisma.cargo.updateMany({
+          where: {
+            temporadaId,
+            concepto: { startsWith: `Cuota club - ${nombreCategoria}` },
+          },
+          data: { monto: p.costeCuota },
+        });
+        cargosActualizados += result.count;
+      }
+
+      // Si el precio de ficha cambió, actualizar cargos existentes
+      if (precioActual && precioActual.costeFicha !== null && p.costeFicha !== null && precioActual.costeFicha !== p.costeFicha) {
+        const result = await prisma.cargo.updateMany({
+          where: {
+            temporadaId,
+            concepto: { startsWith: `Ficha federativa - ${nombreCategoria}` },
+          },
+          data: { monto: p.costeFicha },
+        });
+        cargosActualizados += result.count;
+      }
     }
 
     revalidatePath("/admin/temporadas");
-    return { success: true };
+    revalidatePath("/contabilidad");
+    revalidatePath("/jugadores");
+    
+    return { 
+      success: true, 
+      message: cargosActualizados > 0 
+        ? `Precios actualizados. ${cargosActualizados} cargo(s) actualizado(s).`
+        : "Precios actualizados correctamente."
+    };
   } catch (error) {
     console.error("ERROR_ACTUALIZAR_PRECIOS:", error);
     return { error: "Error al actualizar los precios" };
+  }
+}
+
+export async function corregirPrecioCategoriaAction(
+  temporadaId: string,
+  categoriaId: string,
+  nuevoCoste: number,
+  tipo: "cuota" | "ficha"
+) {
+  try {
+    const precio = await prisma.temporadaCategoria.findFirst({
+      where: { temporadaId, categoriaId },
+    });
+
+    if (!precio) return { error: "Precio no encontrado" };
+
+    const updateData = tipo === "cuota" 
+      ? { costeCuota: nuevoCoste }
+      : { costeFicha: nuevoCoste };
+
+    await prisma.temporadaCategoria.update({
+      where: { id: precio.id },
+      data: updateData,
+    });
+
+    const conceptoBuscar = tipo === "cuota" ? "Cuota club" : "Ficha federativa";
+
+    const categoria = await prisma.categoria.findUnique({ where: { id: categoriaId } });
+    const conceptoPattern = `${conceptoBuscar} - ${categoria?.nombre}`;
+
+    const cargosActualizados = await prisma.cargo.updateMany({
+      where: {
+        temporadaId,
+        concepto: { startsWith: conceptoPattern },
+      },
+      data: { monto: nuevoCoste },
+    });
+
+    revalidatePath("/admin/temporadas");
+    revalidatePath("/contabilidad");
+    revalidatePath("/jugadores");
+    
+    return { 
+      success: true, 
+      message: `Precio actualizado. ${cargosActualizados.count} cargo(s) corregido(s).`
+    };
+  } catch (error) {
+    console.error("ERROR_CORREGIR_PRECIO:", error);
+    return { error: "Error al corregir el precio" };
   }
 }
 
@@ -793,6 +1010,15 @@ export async function cerrarTemporadaAction(temporadaId: string, nuevaTemporadaI
       data: { cerrado: true },
     });
 
+    // Marcar todos los socios inscritos como inactivos
+    const socioIds = [...new Set(temporada.inscripciones.map(i => i.socioId))];
+    if (socioIds.length > 0) {
+      await prisma.socio.updateMany({
+        where: { id: { in: socioIds } },
+        data: { activo: false },
+      });
+    }
+
     // Si hay nueva temporada, crear balance de apertura
     if (nuevaTemporadaId) {
       for (const [socioId, deuda] of Object.entries(deudasPorSocio)) {
@@ -809,9 +1035,10 @@ export async function cerrarTemporadaAction(temporadaId: string, nuevaTemporadaI
 
     revalidatePath("/admin/temporadas");
     revalidatePath("/historico");
+    revalidatePath("/jugadores");
     return { 
       success: true, 
-      message: `Temporada cerrada. ${Object.keys(deudasPorSocio).length} socios con deuda transferida.`,
+      message: `Temporada cerrada. ${socioIds.length} socios marcados como inactivos. ${Object.keys(deudasPorSocio).length} socios con deuda transferida.`,
       deudasCount: Object.keys(deudasPorSocio).length,
     };
   } catch (error) {

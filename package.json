@@ -13,7 +13,8 @@
     "db:push": "bun --filter @repo/db db:push",
     "db:migrate": "bun --filter @repo/db db:migrate",
     "db:studio": "bun --filter @repo/db db:studio",
-    "db:seed": "tsx packages/db/prisma/seed.ts"
+    "db:seed": "tsx packages/db/prisma/seed.ts",
+    "db:seed:categorias": "tsx packages/db/prisma/seed-categorias.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",

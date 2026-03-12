@@ -54,15 +54,15 @@ async function main() {
 
   // 3. CATEGORÍAS (todas las categorías de rugby)
   const categoriasData = [
-    { nombre: "M6", costeFicha: 30, costeCuota: 50, incluyeRopa: false },
-    { nombre: "M8", costeFicha: 35, costeCuota: 60, incluyeRopa: false },
-    { nombre: "M10", costeFicha: 40, costeCuota: 70, incluyeRopa: true },
-    { nombre: "M12", costeFicha: 50, costeCuota: 80, incluyeRopa: true },
-    { nombre: "M14", costeFicha: 70, costeCuota: 100, incluyeRopa: true },
-    { nombre: "M16", costeFicha: 100, costeCuota: 130, incluyeRopa: true },
-    { nombre: "M18", costeFicha: 140, costeCuota: 160, incluyeRopa: true },
-    { nombre: "Senior Masculino", costeFicha: 180, costeCuota: 200, incluyeRopa: true },
-    { nombre: "Senior Femenino", costeFicha: 140, costeCuota: 160, incluyeRopa: true },
+    { nombre: "M6" },
+    { nombre: "M8" },
+    { nombre: "M10" },
+    { nombre: "M12" },
+    { nombre: "M14" },
+    { nombre: "M16" },
+    { nombre: "M18" },
+    { nombre: "Senior Masculino" },
+    { nombre: "Senior Femenino" },
   ];
 
   const categorias: Record<string, any> = {};
@@ -74,6 +74,7 @@ async function main() {
     });
     categorias[c.nombre] = cat;
   }
+  console.log("✅ Categorías creadas:", Object.keys(categorias).join(", "));
 
   // 4. JUGADORES - 30 casos realistas
   const jugadoresData: Array<{
