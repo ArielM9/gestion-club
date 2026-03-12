@@ -2,25 +2,25 @@ export function getYear(fechaNacimiento: Date): number {
   return new Date(fechaNacimiento).getFullYear();
 }
 
-export function getYearTemporada(temporadaNombre: string): number {
-  const match = temporadaNombre.match(/(\d{4})/);
-  if (match) return parseInt(match[1]);
-  return new Date().getFullYear();
+export function getYearTemporada(fechaInicio: Date): number {
+  return new Date(fechaInicio).getFullYear();
 }
 
 export function getCategoriaPorAnoNacimiento(anoNacimiento: number, anoTemporada: number, sexo: string | null): string {
   const edadPorAno = anoTemporada - anoNacimiento;
   
-  if (edadPorAno >= 18) {
+  if (edadPorAno >= 22) {
     return sexo === "F" ? "Senior Femenino" : "Senior Masculino";
   }
-  if (edadPorAno === 17 || edadPorAno === 16) return "M18";
-  if (edadPorAno === 15 || edadPorAno === 14) return "M16";
-  if (edadPorAno === 13 || edadPorAno === 12) return "M14";
-  if (edadPorAno === 11 || edadPorAno === 10) return "M12";
-  if (edadPorAno === 9 || edadPorAno === 8) return "M10";
-  if (edadPorAno === 7 || edadPorAno === 6) return "M8";
-  if (edadPorAno === 5 || edadPorAno === 4) return "M6";
+  if (edadPorAno === 20 || edadPorAno === 21) return "M22";
+  if (edadPorAno === 18 || edadPorAno === 19) return "M20";
+  if (edadPorAno === 16 || edadPorAno === 17) return "M18";
+  if (edadPorAno === 14 || edadPorAno === 15) return "M16";
+  if (edadPorAno === 12 || edadPorAno === 13) return "M14";
+  if (edadPorAno === 10 || edadPorAno === 11) return "M12";
+  if (edadPorAno === 8 || edadPorAno === 9) return "M10";
+  if (edadPorAno === 6 || edadPorAno === 7) return "M8";
+  if (edadPorAno === 4 || edadPorAno === 5) return "M6";
   
   return "";
 }

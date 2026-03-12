@@ -132,7 +132,7 @@ export async function inscribirJugadorEnTemporadaAction(
       });
     }
 
-    const anoTemporada = getYearTemporada(temporadaActiva.nombre);
+    const anoTemporada = getYearTemporada(temporadaActiva.fechaInicio);
     const categoriaNombre = getCategoriaPorAnoNacimiento(
       getYear(socio.fechaNacimiento),
       anoTemporada,
@@ -170,6 +170,12 @@ export async function inscribirJugadorEnTemporadaAction(
         equipoId: null,
         federado: false
       }
+    });
+
+    // Actualizar categoriaId del socio con la categoría calculada
+    await prisma.socio.update({
+      where: { id: socio.id },
+      data: { categoriaId: categoria.id }
     });
 
     // Generar cargo de cuota si es categoría senior (M20, M22, Senior Masculino, Senior Femenino)
@@ -283,6 +289,12 @@ export async function inscribirJugadorAction(equipoId: string, socioId: string) 
       },
     });
 
+    // Actualizar categoriaId del socio con la categoría del equipo
+    await prisma.socio.update({
+      where: { id: socioId },
+      data: { categoriaId: equipo.categoriaId }
+    });
+
     // Generar cargo de cuota si es categoría senior (M20, M22, Senior Masculino, Senior Femenino)
     const categoria = await prisma.categoria.findUnique({
       where: { id: equipo.categoriaId },
@@ -354,7 +366,7 @@ export async function getJugadoresPorCategoriaAction(categoriaId: string, tempor
     const temporada = await prisma.temporada.findUnique({ where: { id: temporadaId } });
     if (!temporada) return { error: "Temporada no encontrada" };
 
-    const anoTemporada = getYearTemporada(temporada.nombre);
+    const anoTemporada = getYearTemporada(temporada.fechaInicio);
     const anosCategoria = getAnosNacimientoCategoria(categoria.nombre, anoTemporada);
     const sexoRequerido = getSexoCategoria(categoria.nombre);
 
@@ -450,7 +462,7 @@ export async function getJugadoresParaEquipoAction(categoriaId: string, temporad
     const temporada = await prisma.temporada.findUnique({ where: { id: temporadaId } });
     if (!temporada) return { error: "Temporada no encontrada" };
 
-    const anoTemporada = getYearTemporada(temporada.nombre);
+    const anoTemporada = getYearTemporada(temporada.fechaInicio);
     const anosCategoria = getAnosNacimientoCategoria(categoria.nombre, anoTemporada);
     const sexoRequerido = getSexoCategoria(categoria.nombre);
 
@@ -1010,12 +1022,15 @@ export async function cerrarTemporadaAction(temporadaId: string, nuevaTemporadaI
       data: { cerrado: true },
     });
 
-    // Marcar todos los socios inscritos como inactivos
+    // Marcar todos los socios inscritos como inactivos y borrar su categoría
     const socioIds = [...new Set(temporada.inscripciones.map(i => i.socioId))];
     if (socioIds.length > 0) {
       await prisma.socio.updateMany({
         where: { id: { in: socioIds } },
-        data: { activo: false },
+        data: { 
+          activo: false,
+          categoriaId: null, // Se borrará para forzar recalcular al reinscribir
+        },
       });
     }
 
@@ -1115,7 +1130,7 @@ export async function generarCargosTemporadaAction(temporadaId: string) {
         nombreCategoria = inscripcion.equipo.categoria.nombre;
       } else {
         // Jugador inscrito pero no federado - calcular categoría
-        const anoTemporada = getYearTemporada(temporada.nombre);
+        const anoTemporada = getYearTemporada(temporada.fechaInicio);
         const catNombre = getCategoriaPorAnoNacimiento(
           getYear(inscripcion.socio.fechaNacimiento),
           anoTemporada,

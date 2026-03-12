@@ -26,6 +26,22 @@ export async function crearSocioAction(data: any) {
     });
 
     // Crear el socio
+    let categoriaId: string | null = null;
+    
+    // Si hay temporada activa, calcular categoría
+    if (temporadaActiva && result.data.fechaNacimiento) {
+      const anoTemporada = getYearTemporada(temporadaActiva.fechaInicio);
+      const anoNacimiento = new Date(result.data.fechaNacimiento).getFullYear();
+      const nombreCategoria = getCategoriaPorAnoNacimiento(anoNacimiento, anoTemporada, result.data.sexo || "M");
+
+      if (nombreCategoria) {
+        const categoria = await prisma.categoria.findFirst({
+          where: { nombre: nombreCategoria }
+        });
+        categoriaId = categoria?.id || null;
+      }
+    }
+
     const socio = await prisma.socio.create({
       data: {
         nombre: result.data.nombre,
@@ -47,32 +63,9 @@ export async function crearSocioAction(data: any) {
         tallaRopa: result.data.tallaRopa || null,
         sexo: result.data.sexo || "M",
         activo: true,
+        categoriaId: categoriaId,
       },
     });
-
-    // Si hay temporada activa, inscribir automáticamente
-    if (temporadaActiva && socio.fechaNacimiento) {
-      const anoTemporada = getYearTemporada(temporadaActiva.nombre);
-      const anoNacimiento = socio.fechaNacimiento.getFullYear();
-      const nombreCategoria = getCategoriaPorAnoNacimiento(anoNacimiento, anoTemporada, socio.sexo);
-
-      if (nombreCategoria) {
-        const categoria = await prisma.categoria.findFirst({
-          where: { nombre: nombreCategoria }
-        });
-
-        if (categoria) {
-          await prisma.inscripcion.create({
-            data: {
-              socioId: socio.id,
-              temporadaId: temporadaActiva.id,
-              categoriaId: categoria.id,
-              federado: false,
-            }
-          });
-        }
-      }
-    }
 
     revalidatePath("/jugadores");
     revalidatePath("/categorias");
