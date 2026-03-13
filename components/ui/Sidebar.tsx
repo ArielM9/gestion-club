@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Settings, Users, Wallet, ShoppingBag, Calendar, FileText, Trophy } from "lucide-react";
+import { LayoutDashboard, Settings, Users, Wallet, ShoppingBag, Calendar, FileText, Trophy, Shield } from "lucide-react";
 import { LogoutButton } from "../auth/LogoutButton";
 
 export default function Sidebar({ session }: { session: any }) {
@@ -11,7 +11,7 @@ export default function Sidebar({ session }: { session: any }) {
 
   const menuItems = [
     { label: "Inicio", href: "/", icon: LayoutDashboard, roles: ["ADMIN", "CONTABILIDAD", "COLABORADOR"] },
-    { label: "Categorías", href: "/categorias", icon: Trophy, roles: ["ADMIN", "CONTABILIDAD", "COLABORADOR"] },
+    { label: "Equipos", href: "/equipos", icon: Shield, roles: ["ADMIN", "CONTABILIDAD", "COLABORADOR"] },
     { label: "Jugadores", href: "/jugadores", icon: Users, roles: ["ADMIN", "COLABORADOR", "CONTABILIDAD"] },
     { label: "Documentos", href: "/documentos", icon: FileText, roles: ["ADMIN", "COLABORADOR", "CONTABILIDAD"] },
     { label: "Contabilidad", href: "/contabilidad", icon: Wallet, roles: ["ADMIN", "CONTABILIDAD"] },

@@ -152,3 +152,87 @@ export async function getTodosLosSocios() {
     return [];
   }
 }
+
+export async function togglearFederadoAction(socioId: string) {
+  try {
+    const socio = await prisma.socio.findUnique({
+      where: { id: socioId },
+      include: { categoria: true },
+    });
+
+    if (!socio) {
+      return { error: "Socio no encontrado" };
+    }
+
+    const nuevoEstado = !socio.federado;
+
+    // Obtener temporada activa
+    const temporadaActiva = await prisma.temporada.findFirst({
+      where: { activa: true },
+    });
+
+    if (!temporadaActiva) {
+      return { error: "No hay temporada activa" };
+    }
+
+    // Si se federa, crear cargo de ficha federativa
+    if (nuevoEstado && socio.categoria) {
+      // Verificar si ya existe el cargo
+      const yaTieneCargo = await prisma.cargo.findFirst({
+        where: {
+          socioId,
+          temporadaId: temporadaActiva.id,
+          concepto: { startsWith: "Ficha federativa" },
+        },
+      });
+
+      if (!yaTieneCargo) {
+        // Obtener precio de ficha de la categoría
+        const precioCategoria = await prisma.temporadaCategoria.findFirst({
+          where: {
+            temporadaId: temporadaActiva.id,
+            categoriaId: socio.categoriaId,
+          },
+        });
+
+        if (precioCategoria && precioCategoria.costeFicha !== null && precioCategoria.costeFicha > 0) {
+          await prisma.cargo.create({
+            data: {
+              monto: precioCategoria.costeFicha,
+              concepto: `Ficha federativa - ${socio.categoria!.nombre}`,
+              socioId,
+              temporadaId: temporadaActiva.id,
+            },
+          });
+        }
+      }
+    }
+
+    // Si se desfedera, eliminar cargo de ficha federativa
+    if (!nuevoEstado) {
+      await prisma.cargo.deleteMany({
+        where: {
+          socioId,
+          temporadaId: temporadaActiva.id,
+          concepto: { startsWith: "Ficha federativa" },
+        },
+      });
+    }
+
+    // Actualizar estado federado del socio
+    await prisma.socio.update({
+      where: { id: socioId },
+      data: { federado: nuevoEstado },
+    });
+
+    revalidatePath("/jugadores");
+    revalidatePath(`/jugadores/${socioId}`);
+    revalidatePath("/equipos");
+    revalidatePath("/contabilidad");
+
+    return { success: true, federado: nuevoEstado };
+  } catch (error) {
+    console.error("ERROR_TOGGLE_FEDERADO:", error);
+    return { error: "Error al actualizar estado de federación" };
+  }
+}

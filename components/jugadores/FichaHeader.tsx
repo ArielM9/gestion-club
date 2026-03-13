@@ -1,4 +1,4 @@
-import { Pencil, Save, X, UserPlus } from "lucide-react";
+import { Pencil, Save, X, UserPlus, Shield, ShieldCheck, ShieldOff } from "lucide-react";
 import type { SocioData } from "@/lib/types/jugador";
 
 interface Props {
@@ -12,6 +12,8 @@ interface Props {
   onCancelEdit: () => void;
   onSave: () => void;
   onInscribir: () => void;
+  onTogglarFederado: () => void;
+  federando: boolean;
 }
 
 export function FichaHeader({
@@ -25,6 +27,8 @@ export function FichaHeader({
   onCancelEdit,
   onSave,
   onInscribir,
+  onTogglarFederado,
+  federando,
 }: Props) {
   return (
     <div className="flex justify-between items-center bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
@@ -61,6 +65,26 @@ export function FichaHeader({
             <span className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-xl font-bold text-sm border border-green-200">
               <UserPlus size={16} /> Inscrito
             </span>
+          )}
+          {tieneInscripcionActiva && (
+            <button
+              onClick={onTogglarFederado}
+              disabled={federando}
+              className={`px-4 py-2 rounded-xl font-bold text-sm border flex items-center gap-2 transition-all ${
+                (socio as any).federado
+                  ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+              } disabled:opacity-50`}
+            >
+              {federando ? (
+                <span className="animate-spin">⏳</span>
+              ) : (socio as any).federado ? (
+                <ShieldCheck size={16} />
+              ) : (
+                <ShieldOff size={16} />
+              )}
+              {(socio as any).federado ? "Federado" : "No federado"}
+            </button>
           )}
           <button
             onClick={onEdit}

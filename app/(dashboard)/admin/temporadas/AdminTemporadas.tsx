@@ -59,7 +59,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
   const [showPrecios, setShowPrecios] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   // Formulario crear temporada
   const [formData, setFormData] = useState({
     nombre: "",
@@ -74,9 +74,9 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
   const handleCrearTemporada = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const res = await crearTemporadaAction(formData);
-    
+
     setLoading(false);
     if (res.success) {
       toast.success("Temporada creada correctamente");
@@ -96,10 +96,10 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
       costeFicha: p.costeFicha ? parseFloat(p.costeFicha) : null,
       incluyeRopa: p.incluyeRopa,
     }));
-    
+
     const res = await actualizarPreciosTemporadaAction(temporadaActiva!.id, precios);
     setLoading(false);
-    
+
     if (res.success) {
       toast.success(res.message || "Precios actualizados");
       setShowPrecios(false);
@@ -116,9 +116,9 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
     }
 
     setLoading(true);
-    
+
     const res = await cerrarTemporadaAction(temporadaActiva!.id);
-    
+
     setLoading(false);
     if (res.success) {
       toast.success(res.message);
@@ -151,7 +151,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
     // Agregar todas las categorías que no tienen precio aún
     const nombresExistentes = preciosBase.map(p => p.nombre);
     const categoriasSinPrecio = categorias.filter(c => !nombresExistentes.includes(c.nombre));
-    
+
     const extras = categoriasSinPrecio.map(c => ({
       categoriaId: c.id,
       nombre: c.nombre,
@@ -172,17 +172,17 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
     for (const p of preciosForm) {
       const original = preciosOriginales.find(o => o.categoriaId === p.categoriaId);
       if (!original) return true; // Nueva categoría
-      
+
       const originalCuota = original.costeCuota || "";
       const originalFicha = original.costeFicha || "";
-      
+
       if (originalCuota !== p.costeCuota || originalFicha !== p.costeFicha) {
         return true;
       }
     }
     return false;
   };
-  
+
   const hayCambiosPrecios = detectCambiosPrecios();
 
   return (
@@ -238,8 +238,8 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
               {temporadaActiva.precios.map(p => {
                 const tienePrecios = p.costeCuota !== null && p.costeFicha !== null;
                 return (
-                  <div 
-                    key={p.id} 
+                  <div
+                    key={p.id}
                     className={`p-2 rounded-lg text-center ${tienePrecios ? "bg-green-50" : "bg-amber-50 border border-amber-200"}`}
                   >
                     <p className="text-xs font-black text-slate-600">{p.categoria.nombre}</p>
@@ -259,21 +259,21 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
 
           {/* Botones de acción */}
           <div className="flex flex-wrap gap-3">
-            <button 
+            <button
               onClick={() => { initPreciosForm(); }}
               className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800"
             >
               <DollarSign size={18} /> Configurar Precios
             </button>
-            
-            <a 
-              href="/admin/categorias"
+
+            <a
+              href="/equipos"
               className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800"
             >
               <ExternalLink size={18} /> Ver Equipos
             </a>
-            
-            <button 
+
+            <button
               onClick={() => setShowCerrar(true)}
               className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700"
             >
@@ -285,7 +285,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
         <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
           <div className="text-center py-8">
             <p className="text-slate-500 font-medium mb-4">No hay temporada activa</p>
-            <button 
+            <button
               onClick={() => setShowCrear(true)}
               className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold text-sm hover:bg-blue-700 mx-auto"
             >
@@ -298,7 +298,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
       {/* Historial de temporadas */}
       <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
         <h3 className="font-black text-slate-900 uppercase text-xs tracking-widest mb-6">Historial de Temporadas</h3>
-        
+
         {temporadas.filter(t => !t.activa).length === 0 ? (
           <p className="text-slate-400 text-center py-4">No hay temporadas cerradas</p>
         ) : (
@@ -312,7 +312,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <a 
+                  <a
                     href={`/historico/${t.id}`}
                     className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50"
                   >
@@ -446,12 +446,11 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
               <button onClick={() => setShowPrecios(false)} className="flex-1 py-3 rounded-2xl font-bold text-slate-500 border border-slate-200 hover:bg-slate-50">
                 Cancelar
               </button>
-              <button 
-                onClick={handleGuardarPrecios} 
-                disabled={loading} 
-                className={`flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-50 ${
-                  hayCambiosPrecios ? "bg-amber-500 hover:bg-amber-600" : "bg-blue-600 hover:bg-blue-700"
-                }`}
+              <button
+                onClick={handleGuardarPrecios}
+                disabled={loading}
+                className={`flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-50 ${hayCambiosPrecios ? "bg-amber-500 hover:bg-amber-600" : "bg-blue-600 hover:bg-blue-700"
+                  }`}
               >
                 {loading ? "Guardando..." : hayCambiosPrecios ? "Guardar y actualizar cargos" : "Guardar"}
               </button>
@@ -472,7 +471,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
             </div>
             <div className="p-8 space-y-4">
               <p className="text-slate-600 font-medium">
-                Va a cerrar la temporada <strong>{temporadaActiva?.nombre}</strong>. 
+                Va a cerrar la temporada <strong>{temporadaActiva?.nombre}</strong>.
               </p>
               <ul className="text-sm text-slate-500 space-y-2">
                 <li>• Se generará un PDF con el balance</li>
@@ -518,9 +517,9 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
                 <button onClick={() => { setShowCerrar(false); setCerrarStep(1); setConfirmText(""); }} className="flex-1 py-3 rounded-2xl font-bold text-slate-500 border border-slate-200 hover:bg-slate-50">
                   Cancelar
                 </button>
-                <button 
-                  onClick={handleCerrarTemporada} 
-                  disabled={loading || confirmText.length !== 6} 
+                <button
+                  onClick={handleCerrarTemporada}
+                  disabled={loading || confirmText.length !== 6}
                   className="flex-1 py-3 bg-red-600 text-white rounded-2xl font-bold hover:bg-red-700 disabled:opacity-50"
                 >
                   {loading ? "Cerrando..." : "Cerrar Temporada"}

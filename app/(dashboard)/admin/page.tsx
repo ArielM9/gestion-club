@@ -46,6 +46,13 @@ export default async function AdminPage() {
       icon: Download,
       color: "bg-purple-50 text-purple-600",
     },
+    {
+      title: "Equipos",
+      description: "Gestionar equipos y jugadores",
+      href: "/equipos",
+      icon: Trophy,
+      color: "bg-blue-50 text-blue-600",
+    },
   ];
 
   return (

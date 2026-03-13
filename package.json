@@ -10,9 +10,10 @@
     "build": "NEXT_USE_WEBPACK=1 next build",
     "start": "next start",
     "lint": "eslint",
-    "db:push": "bun --filter @repo/db db:push",
-    "db:migrate": "bun --filter @repo/db db:migrate",
-    "db:studio": "bun --filter @repo/db db:studio",
+    "db:generate": "source .env && bunx prisma generate --schema=packages/db/schema.prisma",
+    "db:push": "source .env && bunx prisma db push --schema=packages/db/schema.prisma",
+    "db:migrate": "source .env && bunx prisma migrate dev --schema=packages/db/schema.prisma",
+    "db:studio": "source .env && bunx prisma studio --schema=packages/db/schema.prisma",
     "db:seed": "tsx packages/db/prisma/seed.ts",
     "db:seed:categorias": "tsx packages/db/prisma/seed-categorias.ts"
   },

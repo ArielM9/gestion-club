@@ -52,6 +52,7 @@ export type SocioMinAggregateOutputType = {
   localidad: string | null
   cuentaBancaria: string | null
   activo: boolean | null
+  federado: boolean | null
   deudaPendiente: number | null
   nombreTutor: string | null
   dniTutor: string | null
@@ -84,6 +85,7 @@ export type SocioMaxAggregateOutputType = {
   localidad: string | null
   cuentaBancaria: string | null
   activo: boolean | null
+  federado: boolean | null
   deudaPendiente: number | null
   nombreTutor: string | null
   dniTutor: string | null
@@ -116,6 +118,7 @@ export type SocioCountAggregateOutputType = {
   localidad: number
   cuentaBancaria: number
   activo: number
+  federado: number
   deudaPendiente: number
   nombreTutor: number
   dniTutor: number
@@ -158,6 +161,7 @@ export type SocioMinAggregateInputType = {
   localidad?: true
   cuentaBancaria?: true
   activo?: true
+  federado?: true
   deudaPendiente?: true
   nombreTutor?: true
   dniTutor?: true
@@ -190,6 +194,7 @@ export type SocioMaxAggregateInputType = {
   localidad?: true
   cuentaBancaria?: true
   activo?: true
+  federado?: true
   deudaPendiente?: true
   nombreTutor?: true
   dniTutor?: true
@@ -222,6 +227,7 @@ export type SocioCountAggregateInputType = {
   localidad?: true
   cuentaBancaria?: true
   activo?: true
+  federado?: true
   deudaPendiente?: true
   nombreTutor?: true
   dniTutor?: true
@@ -341,6 +347,7 @@ export type SocioGroupByOutputType = {
   localidad: string | null
   cuentaBancaria: string | null
   activo: boolean
+  federado: boolean
   deudaPendiente: number
   nombreTutor: string | null
   dniTutor: string | null
@@ -396,6 +403,7 @@ export type SocioWhereInput = {
   localidad?: Prisma.StringNullableFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableFilter<"Socio"> | string | null
   activo?: Prisma.BoolFilter<"Socio"> | boolean
+  federado?: Prisma.BoolFilter<"Socio"> | boolean
   deudaPendiente?: Prisma.FloatFilter<"Socio"> | number
   nombreTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
   dniTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
@@ -435,6 +443,7 @@ export type SocioOrderByWithRelationInput = {
   localidad?: Prisma.SortOrderInput | Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrderInput | Prisma.SortOrder
   activo?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
   deudaPendiente?: Prisma.SortOrder
   nombreTutor?: Prisma.SortOrderInput | Prisma.SortOrder
   dniTutor?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -477,6 +486,7 @@ export type SocioWhereUniqueInput = Prisma.AtLeast<{
   localidad?: Prisma.StringNullableFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableFilter<"Socio"> | string | null
   activo?: Prisma.BoolFilter<"Socio"> | boolean
+  federado?: Prisma.BoolFilter<"Socio"> | boolean
   deudaPendiente?: Prisma.FloatFilter<"Socio"> | number
   nombreTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
   dniTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
@@ -516,6 +526,7 @@ export type SocioOrderByWithAggregationInput = {
   localidad?: Prisma.SortOrderInput | Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrderInput | Prisma.SortOrder
   activo?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
   deudaPendiente?: Prisma.SortOrder
   nombreTutor?: Prisma.SortOrderInput | Prisma.SortOrder
   dniTutor?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -556,6 +567,7 @@ export type SocioScalarWhereWithAggregatesInput = {
   localidad?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
   activo?: Prisma.BoolWithAggregatesFilter<"Socio"> | boolean
+  federado?: Prisma.BoolWithAggregatesFilter<"Socio"> | boolean
   deudaPendiente?: Prisma.FloatWithAggregatesFilter<"Socio"> | number
   nombreTutor?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
   dniTutor?: Prisma.StringNullableWithAggregatesFilter<"Socio"> | string | null
@@ -588,6 +600,7 @@ export type SocioCreateInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -626,6 +639,7 @@ export type SocioUncheckedCreateInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -664,6 +678,7 @@ export type SocioUpdateInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -702,6 +717,7 @@ export type SocioUncheckedUpdateInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -740,6 +756,7 @@ export type SocioCreateManyInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -772,6 +789,7 @@ export type SocioUpdateManyMutationInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -803,6 +821,7 @@ export type SocioUncheckedUpdateManyInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -835,6 +854,7 @@ export type SocioCountOrderByAggregateInput = {
   localidad?: Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
   deudaPendiente?: Prisma.SortOrder
   nombreTutor?: Prisma.SortOrder
   dniTutor?: Prisma.SortOrder
@@ -871,6 +891,7 @@ export type SocioMaxOrderByAggregateInput = {
   localidad?: Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
   deudaPendiente?: Prisma.SortOrder
   nombreTutor?: Prisma.SortOrder
   dniTutor?: Prisma.SortOrder
@@ -903,6 +924,7 @@ export type SocioMinOrderByAggregateInput = {
   localidad?: Prisma.SortOrder
   cuentaBancaria?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  federado?: Prisma.SortOrder
   deudaPendiente?: Prisma.SortOrder
   nombreTutor?: Prisma.SortOrder
   dniTutor?: Prisma.SortOrder
@@ -1097,6 +1119,7 @@ export type SocioCreateWithoutInscripcionesInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1134,6 +1157,7 @@ export type SocioUncheckedCreateWithoutInscripcionesInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1187,6 +1211,7 @@ export type SocioUpdateWithoutInscripcionesInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1224,6 +1249,7 @@ export type SocioUncheckedUpdateWithoutInscripcionesInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1261,6 +1287,7 @@ export type SocioCreateWithoutCargosInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1298,6 +1325,7 @@ export type SocioUncheckedCreateWithoutCargosInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1351,6 +1379,7 @@ export type SocioUpdateWithoutCargosInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1388,6 +1417,7 @@ export type SocioUncheckedUpdateWithoutCargosInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1425,6 +1455,7 @@ export type SocioCreateWithoutAbonosInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1462,6 +1493,7 @@ export type SocioUncheckedCreateWithoutAbonosInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1515,6 +1547,7 @@ export type SocioUpdateWithoutAbonosInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1552,6 +1585,7 @@ export type SocioUncheckedUpdateWithoutAbonosInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1589,6 +1623,7 @@ export type SocioCreateWithoutCategoriaInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1626,6 +1661,7 @@ export type SocioUncheckedCreateWithoutCategoriaInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1692,6 +1728,7 @@ export type SocioScalarWhereInput = {
   localidad?: Prisma.StringNullableFilter<"Socio"> | string | null
   cuentaBancaria?: Prisma.StringNullableFilter<"Socio"> | string | null
   activo?: Prisma.BoolFilter<"Socio"> | boolean
+  federado?: Prisma.BoolFilter<"Socio"> | boolean
   deudaPendiente?: Prisma.FloatFilter<"Socio"> | number
   nombreTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
   dniTutor?: Prisma.StringNullableFilter<"Socio"> | string | null
@@ -1724,6 +1761,7 @@ export type SocioCreateWithoutDocumentosInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1761,6 +1799,7 @@ export type SocioUncheckedCreateWithoutDocumentosInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1814,6 +1853,7 @@ export type SocioUpdateWithoutDocumentosInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1851,6 +1891,7 @@ export type SocioUncheckedUpdateWithoutDocumentosInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1888,6 +1929,7 @@ export type SocioCreateWithoutDocumentoPendientesInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1925,6 +1967,7 @@ export type SocioUncheckedCreateWithoutDocumentoPendientesInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -1978,6 +2021,7 @@ export type SocioUpdateWithoutDocumentoPendientesInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2015,6 +2059,7 @@ export type SocioUncheckedUpdateWithoutDocumentoPendientesInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2052,6 +2097,7 @@ export type SocioCreateWithoutVentasInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -2089,6 +2135,7 @@ export type SocioUncheckedCreateWithoutVentasInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -2142,6 +2189,7 @@ export type SocioUpdateWithoutVentasInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2179,6 +2227,7 @@ export type SocioUncheckedUpdateWithoutVentasInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2216,6 +2265,7 @@ export type SocioCreateManyCategoriaInput = {
   localidad?: string | null
   cuentaBancaria?: string | null
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: number
   nombreTutor?: string | null
   dniTutor?: string | null
@@ -2247,6 +2297,7 @@ export type SocioUpdateWithoutCategoriaInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2284,6 +2335,7 @@ export type SocioUncheckedUpdateWithoutCategoriaInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2321,6 +2373,7 @@ export type SocioUncheckedUpdateManyWithoutCategoriaInput = {
   localidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cuentaBancaria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  federado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deudaPendiente?: Prisma.FloatFieldUpdateOperationsInput | number
   nombreTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dniTutor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2428,6 +2481,7 @@ export type SocioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   localidad?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: boolean
   nombreTutor?: boolean
   dniTutor?: boolean
@@ -2468,6 +2522,7 @@ export type SocioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   localidad?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: boolean
   nombreTutor?: boolean
   dniTutor?: boolean
@@ -2501,6 +2556,7 @@ export type SocioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   localidad?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: boolean
   nombreTutor?: boolean
   dniTutor?: boolean
@@ -2534,6 +2590,7 @@ export type SocioSelectScalar = {
   localidad?: boolean
   cuentaBancaria?: boolean
   activo?: boolean
+  federado?: boolean
   deudaPendiente?: boolean
   nombreTutor?: boolean
   dniTutor?: boolean
@@ -2548,7 +2605,7 @@ export type SocioSelectScalar = {
   categoriaId?: boolean
 }
 
-export type SocioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "apellidos" | "mote" | "dni" | "sexo" | "fechaNacimiento" | "nacionalidad" | "fotoUrl" | "urlDniFrontal" | "telefono" | "email" | "direccion" | "codigoPostal" | "localidad" | "cuentaBancaria" | "activo" | "deudaPendiente" | "nombreTutor" | "dniTutor" | "telefonoTutor" | "observaciones" | "tallaRopa" | "rgpdFirmado" | "urlDocumentoRgpd" | "declaracionResponsable" | "exoneracionResponsabilidad" | "declaracionExtranjera" | "categoriaId", ExtArgs["result"]["socio"]>
+export type SocioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "apellidos" | "mote" | "dni" | "sexo" | "fechaNacimiento" | "nacionalidad" | "fotoUrl" | "urlDniFrontal" | "telefono" | "email" | "direccion" | "codigoPostal" | "localidad" | "cuentaBancaria" | "activo" | "federado" | "deudaPendiente" | "nombreTutor" | "dniTutor" | "telefonoTutor" | "observaciones" | "tallaRopa" | "rgpdFirmado" | "urlDocumentoRgpd" | "declaracionResponsable" | "exoneracionResponsabilidad" | "declaracionExtranjera" | "categoriaId", ExtArgs["result"]["socio"]>
 export type SocioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   abonos?: boolean | Prisma.Socio$abonosArgs<ExtArgs>
   cargos?: boolean | Prisma.Socio$cargosArgs<ExtArgs>
@@ -2595,6 +2652,7 @@ export type $SocioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     localidad: string | null
     cuentaBancaria: string | null
     activo: boolean
+    federado: boolean
     deudaPendiente: number
     nombreTutor: string | null
     dniTutor: string | null
@@ -3054,6 +3112,7 @@ export interface SocioFieldRefs {
   readonly localidad: Prisma.FieldRef<"Socio", 'String'>
   readonly cuentaBancaria: Prisma.FieldRef<"Socio", 'String'>
   readonly activo: Prisma.FieldRef<"Socio", 'Boolean'>
+  readonly federado: Prisma.FieldRef<"Socio", 'Boolean'>
   readonly deudaPendiente: Prisma.FieldRef<"Socio", 'Float'>
   readonly nombreTutor: Prisma.FieldRef<"Socio", 'String'>
   readonly dniTutor: Prisma.FieldRef<"Socio", 'String'>

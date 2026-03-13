@@ -1,6 +1,6 @@
 "use client";
 
-import { actualizarSocioAction } from "@/lib/actions/socios";
+import { actualizarSocioAction, togglearFederadoAction } from "@/lib/actions/socios";
 import { inscribirJugadorEnTemporadaAction } from "@/lib/actions/temporadas";
 import { useState } from "react";
 import type { SocioData, CategoriaBasic, JugadorPageProps, InscripcionData } from "@/lib/types/jugador";
@@ -36,6 +36,8 @@ export default function FichaCliente({
 
     const [ropaEntregada, setRopaEntregada] = useState(false);
     const [inscribiendo, setInscribiendo] = useState(false);
+    const [showFederadoModal, setShowFederadoModal] = useState(false);
+    const [federando, setFederando] = useState(false);
 
     const tieneInscripcionActiva = socio.inscripciones?.some((i: InscripcionData) => i.temporada?.activa);
 
@@ -67,6 +69,19 @@ export default function FichaCliente({
         } else if (resultado.success) {
             toast.success("Jugador inscrito correctamente");
             window.location.reload();
+        }
+    };
+
+    const handleTogglarFederado = async () => {
+        setFederando(true);
+        const res = await togglearFederadoAction(socio.id);
+        setFederando(false);
+
+        if (res.success) {
+            toast.success(res.federado ? "Jugador federado" : "Federación retirada");
+            window.location.reload();
+        } else {
+            toast.error(res.error);
         }
     };
 
@@ -130,6 +145,8 @@ export default function FichaCliente({
                 onEdit={() => setIsEditing(true)}
                 onCancelEdit={() => setIsEditing(false)}
                 onSave={handleSave}
+                onTogglarFederado={handleTogglarFederado}
+                federando={federando}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

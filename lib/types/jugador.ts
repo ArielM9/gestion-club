@@ -49,6 +49,7 @@ export interface SocioData {
   tallaRopa: string | null;
   categoriaId: string | null;
   activo: boolean;
+  federado?: boolean;
   categoria: { id: string; nombre: string } | null;
   cargos: CargoData[];
   abonos: AbonoData[];

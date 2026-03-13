@@ -172,6 +172,7 @@ export const SocioScalarFieldEnum = {
   localidad: 'localidad',
   cuentaBancaria: 'cuentaBancaria',
   activo: 'activo',
+  federado: 'federado',
   deudaPendiente: 'deudaPendiente',
   nombreTutor: 'nombreTutor',
   dniTutor: 'dniTutor',

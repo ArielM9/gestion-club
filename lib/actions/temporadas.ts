@@ -780,17 +780,9 @@ export async function crearTemporadaAction(data: {
             incluyeRopa: false,
           })),
         },
-        // Crear un equipo por cada categoría automáticamente
-        equipos: {
-          create: categorias.map((cat) => ({
-            nombre: cat.nombre, // El equipo recibe el nombre de la categoría
-            categoriaId: cat.id,
-            federado: false,
-            cerrado: false,
-          })),
-        },
+        // Los equipos se crean manualmente desde el panel de equipos
       },
-      include: { precios: true, equipos: true },
+      include: { precios: true },
     });
 
     revalidatePath("/admin/temporadas");
