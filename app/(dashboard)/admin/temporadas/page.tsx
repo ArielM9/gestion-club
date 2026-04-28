@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import AdminTemporadas from "./AdminTemporadas";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function TemporadasPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -27,14 +28,11 @@ export default async function TemporadasPage() {
   ]);
 
   return (
-    <div className="max-w-6xl mx-auto p-8 space-y-8">
-      <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Gestión de Temporadas</h1>
-        <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">
-          Administra las temporadas del club
-        </p>
-      </header>
-
+    <PageContainer
+      title="Temporadas"
+      subtitle="Gestiona las temporadas y precios"
+      maxWidth="lg"
+    >
       <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse rounded-3xl" />}>
         <AdminTemporadas 
           temporadas={temporadas}
@@ -42,6 +40,6 @@ export default async function TemporadasPage() {
           categorias={categorias}
         />
       </Suspense>
-    </div>
+    </PageContainer>
   );
 }

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Users, Tag, Layers, Download, Trophy } from "lucide-react";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -56,12 +57,11 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      <header className="px-2">
-        <h1 className="text-3xl font-black text-slate-900">Administración</h1>
-        <p className="text-slate-500 font-medium">Configuración y gestión del club</p>
-      </header>
-
+    <PageContainer
+      title="Administración"
+      subtitle="Configuración y gestión del club"
+      maxWidth="lg"
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {adminModules.map((module) => (
           <Link
@@ -77,6 +77,6 @@ export default async function AdminPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }

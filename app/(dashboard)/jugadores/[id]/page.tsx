@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import FichaCliente from "../../../../components/jugadores/FichaCliente";
 
 interface PageProps {
@@ -8,6 +10,9 @@ interface PageProps {
 
 export default async function JugadorPage({ params }: PageProps) {
   const { id } = await params;
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userRole = session?.user?.role || "COLABORADOR";
 
     const socio = await prisma.socio.findUnique({
         where: { id },
@@ -61,6 +66,7 @@ export default async function JugadorPage({ params }: PageProps) {
                 socio={socioFormateado} 
                 categorias={categorias}
                 temporadaActiva={temporadas[0]?.nombre}
+                userRole={userRole}
             />
         </div>
     );

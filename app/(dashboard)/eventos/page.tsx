@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import EventTable from "@/components/eventos/EventTable";
 import SearchEventos from "@/components/eventos/SearchEventos";
 import TipoFilter from "@/components/eventos/TipoFilter";
+import { PageContainer } from "@/components/ui/PageContainer";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -63,22 +64,18 @@ export default async function EventosPage({
   const eventosPaginados = eventosFiltrados.slice(skip, skip + ITEMS_PER_PAGE);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex justify-between items-end px-2">
-        <div>
-          <h1 className="text-2xl font-black text-slate-900">Eventos</h1>
-          <p className="text-sm text-slate-500 font-medium">
-            Partidos, torneos, reuniones y eventos del club
-          </p>
-        </div>
+    <PageContainer
+      title="Eventos"
+      subtitle="Partidos, torneos, reuniones y eventos del club"
+      actions={
         <Link
           href="/eventos/nuevo"
-          className="flex items-center gap-2 bg-[#1e293b] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
+          className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
         >
           <Plus size={18} /> Nuevo Evento
         </Link>
-      </div>
-
+      }
+    >
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center">
         <div className="flex-1">
           <SearchEventos />
@@ -97,6 +94,6 @@ export default async function EventosPage({
         eventosProximos={eventosProximos}
         eventosPasados={eventosPasados}
       />
-    </div>
+    </PageContainer>
   );
 }

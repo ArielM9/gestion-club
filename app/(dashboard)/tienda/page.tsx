@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Package, ShoppingCart, Users, Truck, TrendingUp, ArrowRight } from "lucide-react";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function TiendaPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -29,11 +30,10 @@ export default async function TiendaPage() {
   });
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-slate-900">Tienda e Inventario</h1>
-        <p className="text-slate-500 font-medium mt-1">Gestión de productos, ventas y entregas</p>
-      </div>
+    <PageContainer
+      title="Tienda e Inventario"
+      subtitle="Gestión de productos, ventas y entregas"
+    >
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
@@ -133,6 +133,6 @@ export default async function TiendaPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

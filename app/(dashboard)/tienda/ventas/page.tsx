@@ -3,8 +3,9 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ShoppingCart, Plus } from "lucide-react";
+import { Plus, ShoppingCart } from "lucide-react";
 import VentasLista from "@/components/tienda/VentasLista";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function VentasPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -33,17 +34,15 @@ export default async function VentasPage() {
   const rechazadas = ventas.filter(v => v.estado === 'RECHAZADA');
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900">Ventas</h1>
-          <p className="text-slate-500 font-medium mt-1">Registro de ventas y aprobaciones</p>
-        </div>
-        <Link href="/tienda/ventas/nueva" className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center gap-2">
+    <PageContainer
+      title="Ventas"
+      subtitle="Registro de ventas y aprobaciones"
+      actions={
+        <Link href="/tienda/ventas/nueva" className="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center gap-2">
           <Plus size={18} /> Nueva Venta
         </Link>
-      </div>
-
+      }
+    >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white p-6 rounded-2xl border border-slate-100">
           <p className="text-[10px] font-black text-slate-400 uppercase">Total</p>
@@ -77,6 +76,6 @@ export default async function VentasPage() {
           <VentasLista ventas={ventas} puedeAprobar={puedeAprobar} />
         )}
       </div>
-    </div>
+    </PageContainer>
   );
 }

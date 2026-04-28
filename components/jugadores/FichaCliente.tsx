@@ -30,6 +30,7 @@ export default function FichaCliente({
     socio,
     categorias,
     temporadaActiva,
+    userRole = "COLABORADOR",
 }: JugadorPageProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<SocioData>(socio);
@@ -302,7 +303,7 @@ export default function FichaCliente({
                 </div>
             </div>
 
-            <HistorialMovimientos socio={socio} />
+            <HistorialMovimientos socio={socio} userRole={userRole} />
 
             <ModalPago
                 socioId={socio.id}

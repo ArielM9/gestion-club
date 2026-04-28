@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { LayoutDashboard, Settings, Users, Wallet, ShoppingBag, Calendar, FileText, Trophy, Shield } from "lucide-react";
 import { LogoutButton } from "../auth/LogoutButton";
 
-export default function Sidebar({ session }: { session: any }) {
+export default function Sidebar({ session, className = "" }: { session: any; className?: string }) {
   const pathname = usePathname();
   const userRole = session?.user?.role;
 
@@ -21,7 +21,7 @@ export default function Sidebar({ session }: { session: any }) {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-[#1e293b] text-slate-400 p-4 w-64 border-r border-slate-800">
+    <div className={`flex flex-col h-full bg-[#1e293b] text-slate-400 p-4 w-64 border-r border-slate-800 ${className}`}>
       {/* Cabecera Logo */}
       <div className="flex items-center gap-3 mb-10 px-2 py-4">
         <div className="bg-yellow-500 text-slate-900 font-black p-2 rounded-lg text-xs">RC</div>

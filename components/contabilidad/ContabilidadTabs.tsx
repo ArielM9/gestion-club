@@ -55,6 +55,7 @@ interface DatosCategorias {
 }
 
 export default function ContabilidadTabs({
+    userRole = "COLABORADOR",
     resumen,
     movimientos,
     deudores,
@@ -65,6 +66,7 @@ export default function ContabilidadTabs({
     movimientosTotalPages = 1,
     movimientosTotalItems = 0
 }: {
+    userRole?: string;
     resumen: Resumen | null;
     movimientos: Movimiento[];
     deudores: Deudor[];
@@ -114,14 +116,14 @@ export default function ContabilidadTabs({
             {/* CONTENIDO DINÁMICO */}
             <div className="min-h-[600px] transition-all duration-300">
                 {activeTab === "dashboard" && (
-                    <div className="space-y-8 animate-in fade-in duration-300">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-6 md:space-y-8 animate-in fade-in duration-300">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                             <CardKpi title="Saldo Total" value={resumen?.saldoTotal ?? 0} type="balance" />
                             <CardKpi title="Ingresos" value={resumen?.ingresosTotales ?? 0} trend="+12%" type="income" />
                             <CardKpi title="Gastos" value={resumen?.gastosTotales ?? 0} trend="-3%" type="expense" />
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-center text-slate-300 font-bold italic min-h-[300px]">
                                 <GraficaFinanciera data={datosGrafica || []} />
                             </div>
@@ -131,6 +133,7 @@ export default function ContabilidadTabs({
                         </div>
 
                         <LibroDiario 
+                            userRole={userRole}
                             movimientos={movimientos} 
                             totalPages={movimientosTotalPages}
                             totalItems={movimientosTotalItems}

@@ -3,13 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Pencil, Trash2, Users, Trophy, X, Loader2 } from "lucide-react";
+import { Plus, Users, Trophy, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   crearEquipoAction,
   actualizarEquipoAction,
   eliminarEquipoAction,
 } from "@/lib/actions/equipos";
+import { TableActions } from "@/components/ui/TableActions";
 
 interface Categoria {
   id: string;
@@ -19,6 +20,12 @@ interface Categoria {
 interface Temporada {
   id: string;
   nombre: string;
+}
+
+interface TemporadaActiva extends Temporada {
+  fechaInicio: Date;
+  fechaFin: Date;
+  activa: boolean;
 }
 
 interface Equipo {
@@ -35,12 +42,14 @@ interface AdminEquiposProps {
   equipos: Equipo[];
   categorias: Categoria[];
   temporadas: Temporada[];
+  temporadaActiva: TemporadaActiva | null;
 }
 
 export default function AdminEquipos({
   equipos,
   categorias,
   temporadas,
+  temporadaActiva,
 }: AdminEquiposProps) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
@@ -121,24 +130,92 @@ export default function AdminEquipos({
     equipos: equipos.filter((e) => e.temporada.id === t.id),
   }));
 
+  const tieneSoloTemporadaActiva = temporadaActiva && temporadas.length === 1;
+
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-sm text-slate-500">
-            {equipos.length} equipos configurados
+      {!temporadaActiva && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+          <p className="text-amber-800 font-bold">No hay temporada activa</p>
+          <p className="text-amber-600 text-sm mt-1">
+            Crea una temporada en Administración para gestionar equipos.
           </p>
         </div>
+      )}
+
+      <div className="flex justify-end">
         <button
           onClick={handleAbrirCrear}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700"
+          disabled={!temporadaActiva}
+          className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Plus size={18} />
           Nuevo Equipo
         </button>
       </div>
 
-      {temporadasAgrupadas.map((t) => (
+      {tieneSoloTemporadaActiva && (
+        <>
+          {equipos.length === 0 ? (
+            <div className="text-center py-12 bg-slate-50 rounded-2xl">
+              <p className="text-slate-500 font-medium">
+                No hay equipos en esta temporada
+              </p>
+              <p className="text-sm text-slate-400 mt-1">
+                Crea el primer equipo para comenzar
+              </p>
+            </div>
+          ) : (
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-slate-50/80 text-[10px] font-black uppercase text-slate-400 tracking-widest">
+                    <th className="px-6 py-4 text-left">Equipo</th>
+                    <th className="px-6 py-4 text-left">Categoría</th>
+                    <th className="px-6 py-4 text-right">Jugadores</th>
+                    <th className="px-6 py-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {equipos.map((equipo) => (
+                    <tr key={equipo.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <Link
+                          href={`/equipos/${equipo.id}`}
+                          className="font-bold text-slate-800 hover:text-blue-600 transition-colors"
+                        >
+                          {equipo.nombre}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-bold text-slate-600">
+                          {equipo.categoria.nombre}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <span className="text-sm font-bold text-slate-700">
+                          {equipo._count?.inscripciones || 0}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <TableActions
+                          viewUrl={`/equipos/${equipo.id}`}
+                          onEdit={() => handleAbrirEditar(equipo)}
+                          onDelete={() => handleEliminar(equipo)}
+                          isDeleting={eliminando === equipo.id}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {!tieneSoloTemporadaActiva && temporadaActiva && (
+        temporadasAgrupadas.map((t) => (
         <div key={t.id} className="space-y-4">
           <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
             <Trophy size={20} className="text-amber-500" />
@@ -150,63 +227,56 @@ export default function AdminEquipos({
               <p className="text-slate-500 font-medium">
                 No hay equipos en esta temporada
               </p>
-              <p className="text-sm text-slate-400 mt-1">
-                Crea el primer equipo para comenzar
-              </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {t.equipos.map((equipo) => (
-                <div
-                  key={equipo.id}
-                  className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-lg font-black text-slate-900">
-                      {equipo.nombre}
-                    </h3>
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => handleAbrirEditar(equipo)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      >
-                        <Pencil size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleEliminar(equipo)}
-                        disabled={eliminando === equipo.id}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                      >
-                        {eliminando === equipo.id ? (
-                          <Loader2 size={16} className="animate-spin" />
-                        ) : (
-                          <Trash2 size={16} />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 text-sm mb-4">
-                    <p className="text-slate-500">
-                      Categoría:{" "}
-                      <span className="font-bold text-slate-700">
-                        {equipo.categoria.nombre}
-                      </span>
-                    </p>
-                  </div>
-
-                  <Link
-                    href={`/equipos/${equipo.id}`}
-                    className="block w-full text-center py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors"
-                  >
-                    Ver Equipo
-                  </Link>
-                </div>
-              ))}
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-slate-50/80 text-[10px] font-black uppercase text-slate-400 tracking-widest">
+                    <th className="px-6 py-4 text-left">Equipo</th>
+                    <th className="px-6 py-4 text-left">Categoría</th>
+                    <th className="px-6 py-4 text-right">Jugadores</th>
+                    <th className="px-6 py-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {t.equipos.map((equipo) => (
+                    <tr key={equipo.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <Link
+                          href={`/equipos/${equipo.id}`}
+                          className="font-bold text-slate-800 hover:text-blue-600 transition-colors"
+                        >
+                          {equipo.nombre}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-bold text-slate-600">
+                          {equipo.categoria.nombre}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <span className="text-sm font-bold text-slate-700">
+                          {equipo._count?.inscripciones || 0}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <TableActions
+                          viewUrl={`/equipos/${equipo.id}`}
+                          onEdit={() => handleAbrirEditar(equipo)}
+                          onDelete={() => handleEliminar(equipo)}
+                          isDeleting={eliminando === equipo.id}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
-      ))}
+        ))
+      )}
 
       {equipos.length === 0 && temporadas.length === 0 && (
         <div className="text-center py-12 bg-slate-50 rounded-2xl">

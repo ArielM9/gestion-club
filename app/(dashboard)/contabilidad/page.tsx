@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getMovimientosGlobales, getSociosDeudores, getDatosGraficaMensual, getDatosGastosPorCategoria } from "@/lib/actions/contabilidad";
 import ContabilidadTabs from "@/components/contabilidad/ContabilidadTabs";
 import BotonesAccion from "@/components/contabilidad/BotonesAccion";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function ContabilidadPage({
   searchParams,
@@ -13,6 +15,9 @@ export default async function ContabilidadPage({
   const query = search || "";
   const tipoFiltro = filtro || "todos";
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userRole = session?.user?.role || "COLABORADOR";
+
   const [dataGlobal, deudoresData, datosGrafica, datosCategorias] = await Promise.all([
     getMovimientosGlobales(query, currentPage, tipoFiltro),
     getSociosDeudores(query, currentPage, 10),
@@ -21,10 +26,10 @@ export default async function ContabilidadPage({
   ]);
 
   return (
-    <div className="max-w-7xl mx-auto p-8 space-y-8">
-      <header className="flex justify-between items-end">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 lg:space-y-8">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 sm:gap-0">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Gestión Financiera</h1>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Gestión Financiera</h1>
           <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">Temporada 2025/2026</p>
         </div>
 
@@ -39,6 +44,7 @@ export default async function ContabilidadPage({
       ) : (
         <Suspense fallback={<div className="min-h-[600px] flex items-center justify-center text-slate-400 font-bold animate-pulse">Cargando gestión...</div>}>
           <ContabilidadTabs
+            userRole={userRole}
             resumen={dataGlobal.resumen}
             movimientos={dataGlobal.movimientos}
             deudores={deudoresData.deudores}

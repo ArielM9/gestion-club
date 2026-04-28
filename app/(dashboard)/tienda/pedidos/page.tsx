@@ -2,8 +2,8 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Truck, AlertTriangle, Package, Plus } from "lucide-react";
+import { Truck, AlertTriangle, Package } from "lucide-react";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function PedidosPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -45,13 +45,10 @@ export default async function PedidosPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900">Pedidos al Proveedor</h1>
-          <p className="text-slate-500 font-medium mt-1">Organiza los pedidos de reposición</p>
-        </div>
-      </div>
+    <PageContainer
+      title="Pedidos al Proveedor"
+      subtitle="Organiza los pedidos de reposición"
+    >
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-6 rounded-2xl border border-slate-100">
@@ -165,6 +162,6 @@ export default async function PedidosPage() {
           <li>Cuando recibas la mercancía, actualiza el stock en Inventario</li>
         </ol>
       </div>
-    </div>
+    </PageContainer>
   );
 }

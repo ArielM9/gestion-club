@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Package, Plus, AlertTriangle } from "lucide-react";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function InventarioPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -28,20 +29,17 @@ export default async function InventarioPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900">Inventario</h1>
-          <p className="text-slate-500 font-medium mt-1">
-            {productos.length} productos · {totalStock} unidades en stock
-          </p>
-        </div>
-        {session.user.role === "ADMIN" && (
-          <Link href="/tienda/inventario/nuevo" className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center gap-2">
+    <PageContainer
+      title="Inventario"
+      subtitle={`${productos.length} productos · ${totalStock} unidades en stock`}
+      actions={
+        session.user.role === "ADMIN" && (
+          <Link href="/tienda/inventario/nuevo" className="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center gap-2">
             <Plus size={18} /> Nuevo Producto
           </Link>
-        )}
-      </div>
+        )
+      }
+    >
 
       {categorias.map(cat => {
         const prods = productos.filter(p => p.categoria === cat);
@@ -104,6 +102,6 @@ export default async function InventarioPage() {
           </div>
         );
       })}
-    </div>
+    </PageContainer>
   );
 }

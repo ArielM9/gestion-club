@@ -66,4 +66,5 @@ export interface JugadorPageProps {
   socio: SocioData;
   categorias: CategoriaBasic[];
   temporadaActiva?: string;
+  userRole?: string;
 }

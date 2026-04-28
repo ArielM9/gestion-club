@@ -4,6 +4,7 @@ import StatCards from "@/components/dashboard/SatCards";
 import QuickActions from "@/components/dashboard/QuickActions";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function HomePage() {
   const session = await auth.api.getSession({
@@ -13,12 +14,11 @@ export default async function HomePage() {
   const userRole = session?.user?.role || "COLABORADOR";
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Panel de Control</h1>
-        <p className="text-slate-500">Resumen de actividad del club</p>
-      </div>
-
+    <PageContainer
+      title="Panel de Control"
+      subtitle="Resumen de actividad del club"
+      maxWidth="md"
+    >
       <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse rounded-3xl" />}>
         <StatCards />
       </Suspense>
@@ -32,6 +32,6 @@ export default async function HomePage() {
           <EventList />
         </Suspense>
       </div>
-    </div>
+    </PageContainer>
   );
 }

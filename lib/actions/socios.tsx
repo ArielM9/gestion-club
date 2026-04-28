@@ -236,3 +236,33 @@ export async function togglearFederadoAction(socioId: string) {
     return { error: "Error al actualizar estado de federación" };
   }
 }
+
+export async function eliminarCargoAction(cargoId: string, motivo: string) {
+  try {
+    await prisma.cargo.delete({
+      where: { id: cargoId }
+    });
+    
+    revalidatePath("/jugadores");
+    revalidatePath("/contabilidad");
+    return { success: true, message: `Cargo eliminado: ${motivo}` };
+  } catch (error: any) {
+    console.error("ERROR_ELIMINAR_CARGO:", error);
+    return { error: "Error al eliminar el cargo" };
+  }
+}
+
+export async function eliminarAbonoAction(abonoId: string, motivo: string) {
+  try {
+    await prisma.abono.delete({
+      where: { id: abonoId }
+    });
+    
+    revalidatePath("/jugadores");
+    revalidatePath("/contabilidad");
+    return { success: true, message: `Abono eliminado: ${motivo}` };
+  } catch (error: any) {
+    console.error("ERROR_ELIMINAR_ABONO:", error);
+    return { error: "Error al eliminar el abono" };
+  }
+}

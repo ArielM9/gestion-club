@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getTemporadasParaExport } from "@/lib/actions/admin/exportar";
 import ExportarCliente from "./ExportarCliente";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function ExportarPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -20,15 +21,13 @@ export default async function ExportarPage() {
   const temporadas = await getTemporadasParaExport();
 
   return (
-    <div className="max-w-6xl mx-auto p-8 space-y-8">
-      <header>
-        <h1 className="text-3xl font-black text-slate-900">Exportar Datos</h1>
-        <p className="text-slate-500 font-medium mt-1">
-          Descarga los datos del club en formato CSV
-        </p>
-      </header>
+    <PageContainer
+      title="Exportar Datos"
+      subtitle="Descarga los datos del club en formato CSV"
+      maxWidth="lg"
+    >
 
       <ExportarCliente temporadas={temporadas} />
-    </div>
+    </PageContainer>
   );
 }

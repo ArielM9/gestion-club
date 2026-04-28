@@ -3,7 +3,8 @@ import { getTemporadas } from "@/lib/actions/temporadas";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { Calendar, FileText, ChevronRight, Lock } from "lucide-react";
+import { Calendar, ChevronRight, Lock } from "lucide-react";
+import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function HistoricoPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -14,7 +15,6 @@ export default async function HistoricoPage() {
 
   const userRole = session?.user?.role;
   
-  // ADMIN, DIRECTIVA y CONTABILIDAD pueden acceder
   if (userRole !== "ADMIN" && userRole !== "DIRECTIVA" && userRole !== "CONTABILIDAD") {
     redirect("/");
   }
@@ -22,13 +22,11 @@ export default async function HistoricoPage() {
   const temporadas = await getTemporadas();
 
   return (
-    <div className="max-w-5xl mx-auto p-8 space-y-8">
-      <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Histórico de Temporadas</h1>
-        <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">
-          Consulta información de temporadas anteriores
-        </p>
-      </header>
+    <PageContainer
+      title="Histórico de Temporadas"
+      subtitle="Consulta información de temporadas anteriores"
+      maxWidth="lg"
+    >
 
       <div className="grid gap-4">
         {temporadas.map((temporada) => (
@@ -85,6 +83,6 @@ export default async function HistoricoPage() {
           <p className="text-slate-400 font-medium">No hay temporadas registradas</p>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

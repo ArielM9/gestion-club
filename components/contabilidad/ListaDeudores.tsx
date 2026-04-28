@@ -81,7 +81,6 @@ export default function ListaDeudores({
                                 <th className="px-8 py-4">Total Cargos</th>
                                 <th className="px-8 py-4">Total Pagado</th>
                                 <th className="px-8 py-4 text-right">Pendiente</th>
-                                <th className="px-8 py-4 text-center">Acción</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -96,7 +95,13 @@ export default function ListaDeudores({
                                             <div className="h-8 w-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">
                                                 {expandedId === d.id ? <ChevronUp size={18} /> : <UserCircle size={18} />}
                                             </div>
-                                            <span className="text-xs font-black text-slate-700">{d.nombre}</span>
+                                            <Link
+                                                href={`/jugadores/${d.id}`}
+                                                className="text-xs font-black text-slate-700 hover:text-blue-600 transition-colors"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                {d.nombre}
+                                            </Link>
                                         </td>
                                         <td className="px-8 py-4">
                                             <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md uppercase">
@@ -108,19 +113,10 @@ export default function ListaDeudores({
                                         <td className="px-8 py-4 text-right text-sm font-black text-red-600">
                                             {d.deuda.toFixed(2)}€
                                         </td>
-                                        <td className="px-8 py-4 text-center">
-                                            <Link
-                                                href={`/jugadores/${d.id}`}
-                                                className="text-[10px] font-black text-slate-400 hover:text-blue-600 uppercase tracking-tighter transition-colors"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                Ver Ficha
-                                            </Link>
-                                        </td>
                                     </tr>
                                     {expandedId === d.id && (
                                         <tr className="bg-slate-50/50">
-                                            <td colSpan={6} className="px-8 py-6">
+                                            <td colSpan={5} className="px-8 py-6">
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                     {/* Detalle de Cargos */}
                                                     <div>

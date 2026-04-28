@@ -21,7 +21,8 @@ import {
   agregarJugadorAEquipoAction,
   quitarJugadorDeEquipoAction,
 } from "@/lib/actions/equipos";
-import { getCategoriaPorAnoNacimiento, getYearTemporada } from "@/lib/utils/categorias";
+import { getYearTemporada } from "@/lib/utils/categorias";
+import { JugadorItem } from "@/components/ui/JugadorItem";
 
 interface Categoria {
   id: string;
@@ -212,29 +213,13 @@ export default function EquipoDetalle({ equipo, todosLosSocios }: EquipoDetalleP
                 key={inscripcion.id}
                 className="flex items-center justify-between p-4 rounded-2xl bg-slate-50"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center">
-                    <span className="font-bold text-slate-500">
-                      {inscripcion.socio.nombre[0]}
-                      {inscripcion.socio.apellidos?.[0]}
-                    </span>
-                  </div>
-                  <div>
-                    <Link
-                      href={`/jugadores/${inscripcion.socio.id}`}
-                      className="font-bold text-slate-900 hover:text-blue-600 transition-colors"
-                    >
-                      {inscripcion.socio.nombre} {inscripcion.socio.apellidos}
-                    </Link>
-                    <p className="text-xs text-slate-500">
-                      {inscripcion.socio.mote && (
-                        <span className="italic mr-2">"{inscripcion.socio.mote}"</span>
-                      )}
-                      {inscripcion.socio.categoria?.nombre || "Sin categoría"} ·{" "}
-                      {getEdadJugador(inscripcion.socio.fechaNacimiento)} años
-                    </p>
-                  </div>
-                </div>
+                <JugadorItem
+                  jugador={inscripcion.socio}
+                  showCategoria
+                  showEdad
+                  showMote
+                  temporadaAnno={anoTemporada}
+                />
                 <div className="flex items-center gap-2">
                   {inscripcion.federado && (
                     <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-lg">
