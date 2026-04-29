@@ -4,6 +4,7 @@ import type { SocioData } from "@/lib/types/jugador";
 interface Props {
   socio: SocioData;
   formData: SocioData;
+  federadoActual?: boolean;
   isEditing: boolean;
   tieneInscripcionActiva: boolean;
   inscribiendo: boolean;
@@ -19,6 +20,7 @@ interface Props {
 export function FichaHeader({
   socio,
   formData,
+  federadoActual = false,
   isEditing,
   tieneInscripcionActiva,
   inscribiendo,
@@ -71,19 +73,19 @@ export function FichaHeader({
               onClick={onTogglarFederado}
               disabled={federando}
               className={`px-4 py-2 rounded-xl font-bold text-sm border flex items-center gap-2 transition-all ${
-                (socio as any).federado
+                federadoActual
                   ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
                   : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
               } disabled:opacity-50`}
             >
               {federando ? (
                 <span className="animate-spin">⏳</span>
-              ) : (socio as any).federado ? (
+              ) : federadoActual ? (
                 <ShieldCheck size={16} />
               ) : (
                 <ShieldOff size={16} />
               )}
-              {(socio as any).federado ? "Federado ✓" : "No federado"}
+              {federadoActual ? "Federado ✓" : "No federado"}
             </button>
           )}
           <button

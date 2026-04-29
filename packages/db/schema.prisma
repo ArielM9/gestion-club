@@ -96,7 +96,6 @@ model Socio {
   localidad                  String?
   cuentaBancaria             String?
   activo                     Boolean              @default(true)
-  federado                    Boolean              @default(false) // Estado de federación
   deudaPendiente              Float                @default(0) // Deuda acumulada de temporadas anteriores
   // Nuevos campos
   nombreTutor                String?

@@ -52,6 +52,9 @@ export default async function JugadorPage({ params }: PageProps) {
 
     if (!socio) notFound();
 
+    const inscripcionActiva = socio.inscripciones?.find((i: any) => i.temporada?.activa);
+    const federadoActual = inscripcionActiva?.federado ?? false;
+
     const socioFormateado = {
         ...socio,
         documentos: socio.documentos.map(doc => ({
@@ -67,6 +70,7 @@ export default async function JugadorPage({ params }: PageProps) {
                 categorias={categorias}
                 temporadaActiva={temporadas[0]?.nombre}
                 userRole={userRole}
+                federadoActual={federadoActual}
             />
         </div>
     );

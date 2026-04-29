@@ -67,4 +67,5 @@ export interface JugadorPageProps {
   categorias: CategoriaBasic[];
   temporadaActiva?: string;
   userRole?: string;
+  federadoActual?: boolean;
 }

@@ -159,7 +159,6 @@ export async function getTodosLosSocios() {
 
 export async function togglearFederadoAction(socioId: string) {
   try {
-    // Verificar permisos del usuario
     const session = await auth.api.getSession({ headers: await headers() });
     const userRole = session?.user?.role || "COLABORADOR";
     
@@ -167,18 +166,6 @@ export async function togglearFederadoAction(socioId: string) {
       return { error: "No tienes permisos para cambiar el estado de federado. Contacta con un administrador." };
     }
     
-    const socio = await prisma.socio.findUnique({
-      where: { id: socioId },
-      include: { categoria: true },
-    });
-
-    if (!socio) {
-      return { error: "Socio no encontrado" };
-    }
-
-    const nuevoEstado = !socio.federado;
-
-    // Obtener temporada activa
     const temporadaActiva = await prisma.temporada.findFirst({
       where: { activa: true },
     });
@@ -187,9 +174,21 @@ export async function togglearFederadoAction(socioId: string) {
       return { error: "No hay temporada activa" };
     }
 
-    // Si se federa, crear cargo de ficha federativa
-    if (nuevoEstado && socio.categoria) {
-      // Verificar si ya existe el cargo
+    const inscripcion = await prisma.inscripcion.findFirst({
+      where: {
+        socioId,
+        temporadaId: temporadaActiva.id,
+      },
+      include: { categoria: true },
+    });
+
+    if (!inscripcion) {
+      return { error: "El jugador no tiene inscripción en la temporada activa" };
+    }
+
+    const nuevoEstado = !inscripcion.federado;
+
+    if (nuevoEstado && inscripcion.categoriaId) {
       const yaTieneCargo = await prisma.cargo.findFirst({
         where: {
           socioId,
@@ -199,11 +198,10 @@ export async function togglearFederadoAction(socioId: string) {
       });
 
       if (!yaTieneCargo) {
-        // Obtener precio de ficha de la categoría
         const precioCategoria = await prisma.temporadaCategoria.findFirst({
           where: {
             temporadaId: temporadaActiva.id,
-            categoriaId: socio.categoriaId,
+            categoriaId: inscripcion.categoriaId,
           },
         });
 
@@ -211,7 +209,7 @@ export async function togglearFederadoAction(socioId: string) {
           await prisma.cargo.create({
             data: {
               monto: precioCategoria.costeFicha,
-              concepto: `Ficha federativa - ${socio.categoria!.nombre}`,
+              concepto: `Ficha federativa - ${inscripcion.categoria!.nombre}`,
               socioId,
               temporadaId: temporadaActiva.id,
             },
@@ -220,7 +218,6 @@ export async function togglearFederadoAction(socioId: string) {
       }
     }
 
-    // Si se desfedera, eliminar cargo de ficha federativa
     if (!nuevoEstado) {
       await prisma.cargo.deleteMany({
         where: {
@@ -231,9 +228,8 @@ export async function togglearFederadoAction(socioId: string) {
       });
     }
 
-    // Actualizar estado federado del socio
-    await prisma.socio.update({
-      where: { id: socioId },
+    await prisma.inscripcion.update({
+      where: { id: inscripcion.id },
       data: { federado: nuevoEstado },
     });
 

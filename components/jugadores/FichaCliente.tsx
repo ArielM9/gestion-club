@@ -31,6 +31,7 @@ export default function FichaCliente({
     categorias,
     temporadaActiva,
     userRole = "COLABORADOR",
+    federadoActual = false,
 }: JugadorPageProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<SocioData>(socio);
@@ -138,6 +139,7 @@ export default function FichaCliente({
             <FichaHeader
                 socio={socio}
                 formData={formData}
+                federadoActual={federadoActual}
                 isEditing={isEditing}
                 tieneInscripcionActiva={tieneInscripcionActiva}
                 temporadaActiva={temporadaActiva}
