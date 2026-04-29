@@ -72,8 +72,8 @@ export function FichaHeader({
               disabled={federando}
               className={`px-4 py-2 rounded-xl font-bold text-sm border flex items-center gap-2 transition-all ${
                 (socio as any).federado
-                  ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
-                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                  ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
+                  : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
               } disabled:opacity-50`}
             >
               {federando ? (
@@ -83,7 +83,7 @@ export function FichaHeader({
               ) : (
                 <ShieldOff size={16} />
               )}
-              {(socio as any).federado ? "Federado" : "No federado"}
+              {(socio as any).federado ? "Federado ✓" : "No federado"}
             </button>
           )}
           <button

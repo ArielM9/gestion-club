@@ -4,6 +4,10 @@ import prisma from "@/lib/prisma";
 import { SocioSchema } from "@/lib/validations/socio";
 import { revalidatePath } from "next/cache";
 import { getCategoriaPorAnoNacimiento, getYearTemporada } from "@/lib/utils/categorias";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
+const ROLES_PERMITIDOS = ["ADMIN", "CONTABILIDAD", "DIRECTIVA"];
 
 const validarDNI = (dni: string) => {
   // Expresión regular para DNI (8 números + letra) o NIE (Letra + 7 números + letra)
@@ -155,6 +159,14 @@ export async function getTodosLosSocios() {
 
 export async function togglearFederadoAction(socioId: string) {
   try {
+    // Verificar permisos del usuario
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userRole = session?.user?.role || "COLABORADOR";
+    
+    if (!ROLES_PERMITIDOS.includes(userRole)) {
+      return { error: "No tienes permisos para cambiar el estado de federado. Contacta con un administrador." };
+    }
+    
     const socio = await prisma.socio.findUnique({
       where: { id: socioId },
       include: { categoria: true },
