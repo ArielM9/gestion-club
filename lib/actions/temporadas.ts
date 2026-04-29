@@ -189,16 +189,15 @@ export async function inscribirJugadorEnTemporadaAction(
         },
       });
 
-      if (precioTemporada && precioTemporada.costeCuota !== null && precioTemporada.costeCuota > 0) {
-        await prisma.cargo.create({
-          data: {
-            monto: precioTemporada.costeCuota,
-            concepto: `Cuota club - ${categoriaNombre}`,
-            socioId: socio.id,
-            temporadaId: temporadaActiva.id,
-          },
-        });
-      }
+      const montoCargo = precioTemporada?.costeCuota ?? 0;
+      await prisma.cargo.create({
+        data: {
+          monto: montoCargo,
+          concepto: `Cuota club - ${categoriaNombre}`,
+          socioId: socio.id,
+          temporadaId: temporadaActiva.id,
+        },
+      });
     }
 
     revalidatePath("/jugadores");
@@ -310,16 +309,15 @@ export async function inscribirJugadorAction(equipoId: string, socioId: string) 
         },
       });
 
-      if (precioTemporada && precioTemporada.costeCuota !== null && precioTemporada.costeCuota > 0) {
-        await prisma.cargo.create({
-          data: {
-            monto: precioTemporada.costeCuota,
-            concepto: `Cuota club - ${categoria.nombre}`,
-            socioId,
-            temporadaId: equipo.temporadaId,
-          },
-        });
-      }
+      const montoCargo = precioTemporada?.costeCuota ?? 0;
+      await prisma.cargo.create({
+        data: {
+          monto: montoCargo,
+          concepto: `Cuota club - ${categoria.nombre}`,
+          socioId,
+          temporadaId: equipo.temporadaId,
+        },
+      });
     }
 
     revalidatePath("/admin/categorias");
@@ -615,7 +613,7 @@ export async function togglearInscripcionAction(
         where: { id: equipo.categoriaId },
       });
 
-      if (federado && !estadoAnterior) {
+if (federado && !estadoAnterior) {
         // Cambió a federado → crear cargo de ficha
         const precioTemporada = await prisma.temporadaCategoria.findFirst({
           where: {
@@ -624,16 +622,15 @@ export async function togglearInscripcionAction(
           },
         });
 
-        if (precioTemporada && precioTemporada.costeFicha !== null && precioTemporada.costeFicha > 0) {
-          await prisma.cargo.create({
-            data: {
-              monto: precioTemporada.costeFicha,
-              concepto: `Ficha federativa - ${categoria?.nombre || "Unknown"}`,
-              socioId,
-              temporadaId: equipo.temporadaId,
-            },
-          });
-        }
+        const montoCargo = precioTemporada?.costeFicha ?? 0;
+        await prisma.cargo.create({
+          data: {
+            monto: montoCargo,
+            concepto: `Ficha federativa - ${categoria?.nombre || "Unknown"}`,
+            socioId,
+            temporadaId: equipo.temporadaId,
+          },
+        });
       } else if (!federado && estadoAnterior) {
         // Cambió a no federado → eliminar cargo de ficha
         await prisma.cargo.deleteMany({
@@ -675,24 +672,23 @@ export async function togglearInscripcionAction(
           },
         });
 
-        if (precioTemporada && precioTemporada.costeFicha !== null && precioTemporada.costeFicha > 0) {
-          await prisma.cargo.create({
-            data: {
-              monto: precioTemporada.costeFicha,
-              concepto: `Ficha federativa - ${categoria?.nombre || "Unknown"}`,
-              socioId,
-              temporadaId: equipo.temporadaId,
-            },
-          });
-        }
+        const montoCargo = precioTemporada?.costeFicha ?? 0;
+        await prisma.cargo.create({
+          data: {
+            monto: montoCargo,
+            concepto: `Ficha federativa - ${categoria?.nombre || "Unknown"}`,
+            socioId,
+            temporadaId: equipo.temporadaId,
+          },
+        });
       }
-
-      revalidatePath("/admin/categorias");
-      revalidatePath("/categorias");
-      revalidatePath("/categorias/[categoryId]");
-      revalidatePath("/contabilidad");
-      return { success: true, federado };
     }
+
+    revalidatePath("/admin/categorias");
+    revalidatePath("/categorias");
+    revalidatePath("/categorias/[categoryId]");
+    revalidatePath("/contabilidad");
+    return { success: true, federado };
   } catch (error) {
     console.error("ERROR_TOGGLE_INSCRIPCION:", error);
     return { error: "Error al actualizar inscripción" };
@@ -1147,10 +1143,10 @@ export async function generarCargosTemporadaAction(temporadaId: string) {
         },
       });
 
-      if (!yaTieneCuota && precio && precio.costeCuota !== null) {
+      if (!yaTieneCuota && precio) {
         await prisma.cargo.create({
           data: {
-            monto: precio.costeCuota,
+            monto: precio.costeCuota ?? 0,
             concepto: `Cuota club - ${nombreCategoria}`,
             socioId: inscripcion.socioId,
             temporadaId: temporada.id,
@@ -1160,11 +1156,11 @@ export async function generarCargosTemporadaAction(temporadaId: string) {
       }
 
       // 2. CREAR CARGO DE FICHA FEDERATIVA
-      // Solo si: equipo federado Y jugador federado Y hay precio de ficha
+      // Solo si: equipo federado Y jugador federado
       const equipoId = inscripcion.equipoId || null;
       const equipoFederado = equipoId ? equiposFederados.has(equipoId) : false;
       
-      if (equipoFederado && inscripcion.federado && precio && precio.costeFicha !== null) {
+      if (equipoFederado && inscripcion.federado && precio) {
         // Verificar si ya tiene cargo de ficha
         const yaTieneFicha = await prisma.cargo.findFirst({
           where: {
@@ -1174,10 +1170,10 @@ export async function generarCargosTemporadaAction(temporadaId: string) {
           },
         });
 
-        if (!yaTieneFicha) {
+if (!yaTieneFicha) {
           await prisma.cargo.create({
             data: {
-              monto: precio.costeFicha,
+              monto: precio.costeFicha ?? 0,
               concepto: `Ficha federativa - ${nombreCategoria}`,
               socioId: inscripcion.socioId,
               temporadaId: temporada.id,
