@@ -90,19 +90,19 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Nombre y Apellidos (como ya tenías) */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nombre</label>
-            <input {...register("nombre")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <label htmlFor="nombre" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nombre</label>
+            <input id="nombre" {...register("nombre")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.nombre && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.nombre.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Apellidos</label>
-            <input {...register("apellidos")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <label htmlFor="apellidos" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Apellidos</label>
+            <input id="apellidos" {...register("apellidos")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nacionalidad</label>
-            <select {...register("nacionalidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+            <label htmlFor="nacionalidad" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nacionalidad</label>
+            <select id="nacionalidad" {...register("nacionalidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
               {nacionalidades.map(nac => (
                 <option key={nac} value={nac}>{nac}</option>
               ))}
@@ -111,20 +111,20 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">{esEspañol ? "DNI" : "NIE"}</label>
-            <input {...register("dni")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all uppercase" placeholder={esEspañol ? "12345678Z" : "X1234567Z"} />
+            <label htmlFor="dni" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">{esEspañol ? "DNI" : "NIE"}</label>
+            <input id="dni" {...register("dni")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all uppercase" placeholder={esEspañol ? "12345678Z" : "X1234567Z"} />
             {errors.dni && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.dni.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Fecha Nacimiento</label>
-            <input {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <label htmlFor="fechaNacimiento" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Fecha Nacimiento</label>
+            <input id="fechaNacimiento" {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.fechaNacimiento && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.fechaNacimiento.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Sexo</label>
-            <select {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+            <label htmlFor="sexo" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Sexo</label>
+            <select id="sexo" {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
               <option value="">Seleccionar...</option>
               <option value="M">Masculino</option>
               <option value="F">Femenino</option>
@@ -145,8 +145,9 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-amber-700/60 uppercase ml-2 tracking-widest">Nombre del Tutor</label>
+                <label htmlFor="nombreTutor" className="text-[10px] font-black text-amber-700/60 uppercase ml-2 tracking-widest">Nombre del Tutor</label>
                 <input
+                  id="nombreTutor"
                   {...register("nombreTutor")}
                   className={`w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all ${errors.nombreTutor ? 'ring-2 ring-red-500' : ''}`}
                 />
@@ -154,16 +155,18 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-amber-700/60 uppercase ml-2 tracking-widest">DNI Tutor</label>
+                <label htmlFor="dniTutor" className="text-[10px] font-black text-amber-700/60 uppercase ml-2 tracking-widest">DNI Tutor</label>
                 <input
+                  id="dniTutor"
                   {...register("dniTutor")}
                   className="w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all uppercase"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-amber-700/60 uppercase ml-2 tracking-widest">Teléfono Tutor</label>
+                <label htmlFor="telefonoTutor" className="text-[10px] font-black text-amber-700/60 uppercase ml-2 tracking-widest">Teléfono Tutor</label>
                 <input
+                  id="telefonoTutor"
                   {...register("telefonoTutor")}
                   className="w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all"
                 />
@@ -219,32 +222,32 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Email</label>
-            <input {...register("email")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="ejemplo@correo.com" />
+            <label htmlFor="email" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Email</label>
+            <input id="email" {...register("email")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="ejemplo@correo.com" />
             {errors.email && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Teléfono</label>
-            <input {...register("telefono")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="600 000 000" />
+            <label htmlFor="telefono" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Teléfono</label>
+            <input id="telefono" {...register("telefono")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="600 000 000" />
             {errors.telefono && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.telefono.message}</p>}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-2 space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Dirección Completa</label>
-            <input {...register("direccion")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Calle, número, piso..." />
+            <label htmlFor="direccion" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Dirección Completa</label>
+            <input id="direccion" {...register("direccion")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Calle, número, piso..." />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Código Postal</label>
-            <input {...register("codigoPostal")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" placeholder="00000" />
+            <label htmlFor="codigoPostal" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Código Postal</label>
+            <input id="codigoPostal" {...register("codigoPostal")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" placeholder="00000" />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Localidad</label>
-            <input {...register("localidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Ciudad o Pueblo" />
+            <label htmlFor="localidad" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Localidad</label>
+            <input id="localidad" {...register("localidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Ciudad o Pueblo" />
           </div>
         </div>
       </section>
@@ -260,8 +263,9 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Talla de Ropa</label>
+            <label htmlFor="tallaRopa" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Talla de Ropa</label>
             <select
+              id="tallaRopa"
               {...register("tallaRopa")}
               className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700"
             >
@@ -288,8 +292,9 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           <h2 className="font-bold text-slate-800">Observaciones</h2>
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Notas Internas</label>
+          <label htmlFor="observaciones" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Notas Internas</label>
           <textarea
+            id="observaciones"
             {...register("observaciones")}
             rows={3}
             className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all resize-none"
@@ -305,8 +310,8 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           <h2 className="font-bold text-slate-800">Datos de Facturación</h2>
         </div>
         <div className="max-w-md space-y-2">
-          <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">IBAN (Cuenta Bancaria)</label>
-          <input {...register("cuentaBancaria")} placeholder="ES00 0000..." className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" />
+          <label htmlFor="cuentaBancaria" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">IBAN (Cuenta Bancaria)</label>
+          <input id="cuentaBancaria" {...register("cuentaBancaria")} placeholder="ES00 0000..." className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" />
         </div>
       </section>
 

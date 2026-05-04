@@ -9,6 +9,7 @@ import {
   getAnosNacimientoCategoria, 
   getSexoCategoria, 
   getCategoriaAnterior,
+  getCategoriaSeniorEquivalente,
   calcularEdad 
 } from "@/lib/utils/categorias";
 
@@ -182,22 +183,33 @@ export async function inscribirJugadorEnTemporadaAction(
     const esSenior = ["M20", "M22", "Senior Masculino", "Senior Femenino"].includes(categoriaNombre);
     
     if (esSenior) {
-      const precioTemporada = await prisma.temporadaCategoria.findFirst({
-        where: {
-          temporadaId: temporadaActiva.id,
-          categoriaId: categoria.id,
-        },
+      // M20 y M22 pagan cuota de Senior (precio propio solo para ficha federativa)
+      const categoriaSenior = getCategoriaSeniorEquivalente(categoriaNombre, socio.sexo);
+      
+      const categoriaSeniorDB = await prisma.categoria.findFirst({
+        where: { nombre: categoriaSenior }
       });
 
-      const montoCargo = precioTemporada?.costeCuota ?? 0;
-      await prisma.cargo.create({
-        data: {
-          monto: montoCargo,
-          concepto: `Cuota club - ${categoriaNombre}`,
-          socioId: socio.id,
-          temporadaId: temporadaActiva.id,
-        },
-      });
+      if (!categoriaSeniorDB) {
+        console.error("ERROR: Categoría Senior no encontrada:", categoriaSenior);
+      } else {
+        const precioTemporada = await prisma.temporadaCategoria.findFirst({
+          where: {
+            temporadaId: temporadaActiva.id,
+            categoriaId: categoriaSeniorDB.id,
+          },
+        });
+
+        const montoCargo = precioTemporada?.costeCuota ?? 0;
+        await prisma.cargo.create({
+          data: {
+            monto: montoCargo,
+            concepto: `Cuota club - ${categoriaSenior}`,
+            socioId: socio.id,
+            temporadaId: temporadaActiva.id,
+          },
+        });
+      }
     }
 
     revalidatePath("/jugadores");
@@ -288,7 +300,7 @@ export async function inscribirJugadorAction(equipoId: string, socioId: string) 
       },
     });
 
-    // Actualizar categoriaId del socio con la categoría del equipo
+// Actualizar categoriaId del socio con la categoría del equipo
     await prisma.socio.update({
       where: { id: socioId },
       data: { categoriaId: equipo.categoriaId }
@@ -302,22 +314,33 @@ export async function inscribirJugadorAction(equipoId: string, socioId: string) 
     const esSenior = categoria && ["M20", "M22", "Senior Masculino", "Senior Femenino"].includes(categoria.nombre);
     
     if (esSenior) {
-      const precioTemporada = await prisma.temporadaCategoria.findFirst({
-        where: {
-          temporadaId: equipo.temporadaId,
-          categoriaId: equipo.categoriaId,
-        },
+      // M20 y M22 pagan cuota de Senior (precio propio solo para ficha federativa)
+      const categoriaSenior = getCategoriaSeniorEquivalente(categoria.nombre, categoria ? getSexoCategoria(categoria.nombre) : null);
+      
+      const categoriaSeniorDB = await prisma.categoria.findFirst({
+        where: { nombre: categoriaSenior }
       });
 
-      const montoCargo = precioTemporada?.costeCuota ?? 0;
-      await prisma.cargo.create({
-        data: {
-          monto: montoCargo,
-          concepto: `Cuota club - ${categoria.nombre}`,
-          socioId,
-          temporadaId: equipo.temporadaId,
-        },
-      });
+      if (!categoriaSeniorDB) {
+        console.error("ERROR: Categoría Senior no encontrada:", categoriaSenior);
+      } else {
+        const precioTemporada = await prisma.temporadaCategoria.findFirst({
+          where: {
+            temporadaId: equipo.temporadaId,
+            categoriaId: categoriaSeniorDB.id,
+          },
+        });
+
+        const montoCargo = precioTemporada?.costeCuota ?? 0;
+        await prisma.cargo.create({
+          data: {
+            monto: montoCargo,
+            concepto: `Cuota club - ${categoriaSenior}`,
+            socioId,
+            temporadaId: equipo.temporadaId,
+          },
+        });
+      }
     }
 
     revalidatePath("/admin/categorias");
@@ -1133,6 +1156,19 @@ export async function generarCargosTemporadaAction(temporadaId: string) {
       // Obtener precio de la categoría
       const precio = temporada.precios.find(p => p.categoriaId === categoriaId);
       
+      // Determinar la categoría para cuota: M20/M22 usan precio de Senior
+      const esSeniorCategoria = ["M20", "M22", "Senior Masculino", "Senior Femenino"].includes(nombreCategoria);
+      let categoriaParaCuota = nombreCategoria;
+      
+      if (nombreCategoria === "M20" || nombreCategoria === "M22") {
+        categoriaParaCuota = inscripcion.socio.sexo === "F" ? "Senior Femenino" : "Senior Masculino";
+      }
+      
+      // Obtener precio de cuota (usando la categoría correcta)
+      const precioCuota = esSeniorCategoria 
+        ? temporada.precios.find(p => p.categoria?.nombre === categoriaParaCuota)
+        : precio;
+      
       // 1. CREAR CARGO DE CUOTA (siempre)
       // Verificar si ya tiene cargo de cuota
       const yaTieneCuota = await prisma.cargo.findFirst({
@@ -1143,11 +1179,11 @@ export async function generarCargosTemporadaAction(temporadaId: string) {
         },
       });
 
-      if (!yaTieneCuota && precio) {
+      if (!yaTieneCuota && precioCuota) {
         await prisma.cargo.create({
           data: {
-            monto: precio.costeCuota ?? 0,
-            concepto: `Cuota club - ${nombreCategoria}`,
+            monto: precioCuota.costeCuota ?? 0,
+            concepto: `Cuota club - ${categoriaParaCuota}`,
             socioId: inscripcion.socioId,
             temporadaId: temporada.id,
           },

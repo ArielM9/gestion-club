@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/app/generated/prisma
-AGENTS.md
+# opencode agents y skills (locales only)
+.opencode/
+.agents/
