@@ -1,6 +1,6 @@
 # Victorianos Gestión
 
-Gestión interna del Club de Fútbol Victorianos. Aplicación web para la administración de jugadores, equipos, eventos, contabilidad y tienda del club.
+Gestión interna del Club de rugby Victorianos. Aplicación web para la administración de jugadores, equipos, eventos, contabilidad y tienda del club.
 
 > Proyecto personal desarrollado en solitario. No es un producto comercial.
 
