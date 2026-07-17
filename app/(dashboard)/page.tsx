@@ -1,37 +1,68 @@
 import { Suspense } from "react";
 import EventList from "@/components/dashboard/EventList";
-import StatCards from "@/components/dashboard/SatCards";
 import QuickActions from "@/components/dashboard/QuickActions";
+import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
+import MetricsCards from "@/components/dashboard/MetricsCards";
+import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { PageContainer } from "@/components/ui/PageContainer";
 
 export default async function HomePage() {
+  // Session is a serial dependency — must resolve first to know who is looking.
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  const userRole = session?.user?.role || "COLABORADOR";
+  const userName = session?.user?.name ?? "Usuario";
+  const userRole = session?.user?.role ?? "COLABORADOR";
 
   return (
-    <PageContainer
-      title="Panel de Control"
-      subtitle="Resumen de actividad del club"
-      maxWidth="md"
-    >
-      <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse rounded-3xl" />}>
-        <StatCards />
+    <div className="space-y-4 md:space-y-6">
+      <Suspense
+        fallback={
+          <div className="h-32 bg-slate-100 animate-pulse rounded-[2rem]" />
+        }
+      >
+        <WelcomeHeader nombre={userName} role={userRole} />
       </Suspense>
 
-      <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse rounded-3xl" />}>
+      <Suspense
+        fallback={
+          <div className="h-32 bg-slate-100 animate-pulse rounded-[2rem]" />
+        }
+      >
+        <MetricsCards />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="h-32 bg-slate-100 animate-pulse rounded-2xl" />
+        }
+      >
         <QuickActions userRole={userRole} />
       </Suspense>
 
-      <div className="mt-15">
-        <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse rounded-3xl " />}>
-          <EventList />
-        </Suspense>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="lg:col-span-2">
+          <Suspense
+            fallback={
+              <div className="h-64 bg-slate-100 animate-pulse rounded-[2rem]" />
+            }
+          >
+            <EventList />
+          </Suspense>
+        </div>
+
+        <div className="lg:col-span-1">
+          <Suspense
+            fallback={
+              <div className="h-64 bg-slate-100 animate-pulse rounded-[2rem]" />
+            }
+          >
+            <ActivityFeed />
+          </Suspense>
+        </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }
