@@ -48,12 +48,12 @@ export function FichaHeader({
           ) : (
             formData.nombre[0]
           )}
-          {onPhotoUpload && !isEditing && (
+          {onPhotoUpload && (!formData.fotoUrl || isEditing) && (
             <button
               type="button"
               onClick={onPhotoUpload}
               className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-              aria-label="Cambiar foto"
+              aria-label={formData.fotoUrl ? "Cambiar foto" : "Subir foto"}
             >
               <Camera size={18} className="text-white" />
             </button>
