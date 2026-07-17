@@ -1,12 +1,8 @@
 # syntax=docker/dockerfile:1.4
-# Demo image: extends the production Dockerfile with a seed step that runs on
-# every container start. The seed is idempotent, so re-running against an
-# existing demo database is safe.
+# Demo image: multi-stage build with seed on every container start.
 
 FROM node:20-slim AS base
-
 RUN apt-get update && apt-get install -y openssl curl gnupg ca-certificates && rm -rf /var/lib/apt/lists/*
-
 RUN curl -o- -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y yarn && rm -rf /var/lib/apt/lists/*
@@ -14,7 +10,6 @@ RUN curl -o- -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
 # ----- deps -----
 FROM base AS deps
 WORKDIR /app
-
 COPY package.json yarn.lock* ./
 COPY turbo.json ./
 COPY packages ./packages
@@ -27,7 +22,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json yarn.lock* ./
 COPY turbo.json ./
 COPY packages ./packages
-COPY .env* ./
 RUN npx prisma generate --schema=packages/db/schema.prisma
 
 # ----- build -----
@@ -41,13 +35,11 @@ COPY tsconfig.json ./
 COPY next.config.ts ./
 COPY tailwind.config.ts ./
 COPY postcss.config.mjs ./
-COPY .env* ./
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
 COPY packages ./packages
 COPY scripts ./scripts
-
 ENV NEXT_TURBOPACK=0
 ENV NEXT_USE_WEBPACK=1
 RUN yarn build
@@ -55,13 +47,11 @@ RUN yarn build
 # ----- runtime -----
 FROM base AS runner
 WORKDIR /app
-
 ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# App artefacts
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
@@ -69,26 +59,38 @@ COPY --from=builder --chown=nextjs:nodejs /app/packages ./packages
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
 
-# Demo env (mounted by compose, but also baked in as fallback)
-COPY .env.demo ./.env
-
-# Entrypoint that runs db push + seed before starting the server
+# Entrypoint: db push + seed + start
 COPY --chown=nextjs:nodejs <<'EOF' /app/entrypoint.sh
 #!/bin/sh
 set -e
-echo "[demo] copying env to packages/db..."
+
+echo "[demo] generating .env from environment..."
+cat > /app/.env <<ENVEOF
+DATABASE_URL=${DATABASE_URL}
+S3_ENDPOINT=${S3_ENDPOINT}
+S3_ACCESS_KEY=${S3_ACCESS_KEY}
+S3_SECRET_KEY=${S3_SECRET_KEY}
+S3_BUCKET=${S3_BUCKET:-club-files}
+S3_REGION=${S3_REGION:-us-east-1}
+NEXT_PUBLIC_IS_DEMO=${NEXT_PUBLIC_IS_DEMO:-true}
+IS_DEMO=${IS_DEMO:-true}
+BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:3000}
+BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENVEOF
 cp /app/.env /app/packages/db/.env
+
 echo "[demo] pushing schema..."
 cd /app/packages/db && npx prisma db push && npx prisma generate
+
 echo "[demo] seeding..."
-cd /app && DATABASE_URL="postgresql://demo:demo@postgres:5432/victorianos_demo" S3_ENDPOINT="http://minio:9000" S3_ACCESS_KEY="demo" S3_SECRET_KEY="demo123456" S3_BUCKET="club-files" npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
+cd /app && npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
+
 echo "[demo] starting app..."
 exec node node_modules/next/dist/bin/next start
 EOF
 RUN chmod +x /app/entrypoint.sh
 
 USER nextjs
-
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
