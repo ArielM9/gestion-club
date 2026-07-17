@@ -71,10 +71,6 @@ services:
         condition: service_completed_successfully
     ports:
       - "3007:3000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`demo-dash.arielmarchegiani.com`)"
-      - "traefik.http.services.app.loadbalancer.server.port=3000"
 
 volumes:
   demo_pg_data:
