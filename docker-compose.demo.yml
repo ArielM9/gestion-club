@@ -67,7 +67,7 @@ services:
       S3_SECRET_KEY: demo123456
       S3_BUCKET: club-files
       NEXT_PUBLIC_IS_DEMO: "true"
-      BETTER_AUTH_URL: http://localhost:3000
+      BETTER_AUTH_URL: http://localhost:3007
     depends_on:
       postgres:
         condition: service_healthy
@@ -76,7 +76,7 @@ services:
       minio-init:
         condition: service_completed_successfully
     ports:
-      - "3000:3000"
+      - "3007:3000"
     networks:
       - demo_net
 
