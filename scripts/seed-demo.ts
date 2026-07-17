@@ -286,14 +286,15 @@ const PRECIOS: Record<Cat, { cuota: number; ficha: number }> = {
 // ---------------------------------------------------------------------------
 
 async function ensureDemoAdmin() {
-  // Use Better Auth's signUpEmail to create the user with proper password hashing
+  // Delete existing admin account to ensure fresh password hash
   const existing = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
   if (existing) {
-    console.log(`✅ Admin demo ya existe: ${DEMO_EMAIL}`);
-    return existing;
+    await prisma.account.deleteMany({ where: { userId: existing.id } });
+    await prisma.user.delete({ where: { email: DEMO_EMAIL } });
   }
 
-  const result = await auth.api.signUpEmail({
+  // Create fresh with Better Auth's proper hashing
+  await auth.api.signUpEmail({
     body: {
       email: DEMO_EMAIL,
       password: DEMO_PASSWORD,
@@ -308,7 +309,7 @@ async function ensureDemoAdmin() {
   });
 
   const user = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
-  console.log(`✅ Admin demo creado: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
+  console.log(`✅ Admin demo: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
   return user!;
 }
 
