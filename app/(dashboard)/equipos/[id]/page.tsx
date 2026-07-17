@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import EquipoDetalle from "./EquipoDetalle";
+import { getSociosInscritosEnTemporadaActiva } from "@/lib/actions/socios";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -46,11 +47,7 @@ export default async function EquipoPage({ params }: Props) {
     notFound();
   }
 
-  const todosLosSocios = await prisma.socio.findMany({
-    where: { activo: true },
-    include: { categoria: true },
-    orderBy: { nombre: "asc" },
-  });
+  const todosLosSocios = await getSociosInscritosEnTemporadaActiva();
 
   return (
     <div className="max-w-4xl mx-auto p-8">

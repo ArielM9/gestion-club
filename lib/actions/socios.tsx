@@ -137,8 +137,43 @@ export async function actualizarSocioAction(id: string, data: any) {
   }
 }
 
-export async function getTodosLosSocios() {
+export async function getSociosInscritosEnTemporadaActiva() {
   try {
+    const temporadaActiva = await prisma.temporada.findFirst({
+      where: { activa: true }
+    });
+
+    if (!temporadaActiva) return [];
+
+    const inscripciones = await prisma.inscripcion.findMany({
+      where: { temporadaId: temporadaActiva.id },
+      select: { socioId: true }
+    });
+
+    const socioIds = [...new Set(inscripciones.map((i) => i.socioId))];
+
+    if (socioIds.length === 0) return [];
+
+    const socios = await prisma.socio.findMany({
+      where: { id: { in: socioIds } },
+      include: { categoria: true },
+      orderBy: [{ apellidos: "asc" }, { nombre: "asc" }]
+    });
+
+    return socios;
+  } catch (error) {
+    console.error("ERROR_GET_SOCIOS_INSCRITOS:", error);
+    return [];
+  }
+}
+
+export async function getTodosLosSocios(temporadaActiva?: boolean) {
+  try {
+    if (temporadaActiva) {
+      return await getSociosInscritosEnTemporadaActiva();
+    }
+
+    // Original behavior - all active socios
     const socios = await prisma.socio.findMany({
       where: { activo: true },
       select: {

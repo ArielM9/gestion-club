@@ -3,8 +3,9 @@ import SocioTable from "@/components/jugadores/SocioTable";
 import SearchJugadores from "@/components/jugadores/SearchJugadores";
 import CategoryFilter from "@/components/jugadores/CategoryFilter";
 import { PageContainer } from "@/components/ui/PageContainer";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import Link from "next/link";
+import { getSociosInscritosEnTemporadaActiva } from "@/lib/actions/socios";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,12 +22,10 @@ export default async function JugadoresPage({
   const currentPage = Number(page) || 1;
   const categoriaId = categoria || undefined;
 
-  const [todosLosSocios, categorias] = await Promise.all([
-    prisma.socio.findMany({
-      include: { categoria: true },
-      orderBy: { apellidos: "asc" },
-    }),
-    prisma.categoria.findMany({ orderBy: { nombre: "asc" } })
+  const [todosLosSocios, categorias, temporadaActiva] = await Promise.all([
+    getSociosInscritosEnTemporadaActiva(),
+    prisma.categoria.findMany({ orderBy: { nombre: "asc" } }),
+    prisma.temporada.findFirst({ where: { activa: true } }),
   ]);
 
   const queryNormalizada = normalizeString(query);
@@ -74,11 +73,23 @@ export default async function JugadoresPage({
       </div>
 
       <div className="bg-white rounded-[2rem] shadow-sm border border-white overflow-hidden">
-        <SocioTable
-          socios={sociosPaginados}
-          totalPages={totalPages}
-          currentPage={currentPage}
-        />
+        {todosLosSocios.length === 0 ? (
+          <div className="p-12 text-center text-slate-500">
+            <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <p className="font-bold">No hay jugadores inscritos</p>
+            <p className="text-sm mt-1">
+              {temporadaActiva
+                ? "Inscribe jugadores desde su ficha de perfil"
+                : "Crea una temporada activa primero"}
+            </p>
+          </div>
+        ) : (
+          <SocioTable
+            socios={sociosPaginados}
+            totalPages={totalPages}
+            currentPage={currentPage}
+          />
+        )}
       </div>
     </PageContainer>
   );
