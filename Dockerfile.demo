@@ -76,9 +76,10 @@ COPY --chown=nextjs:nodejs <<'EOF' /app/entrypoint.sh
 #!/bin/sh
 set -e
 echo "[demo] pushing schema..."
-yarn db:push
+export $(grep -v '^#' .env | xargs)
+npx prisma db push --schema=packages/db/schema.prisma
 echo "[demo] seeding..."
-yarn seed:demo || echo "[demo] seed failed (continuing)"
+npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
 echo "[demo] starting app..."
 exec node node_modules/next/dist/bin/next start
 EOF
