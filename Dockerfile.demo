@@ -75,10 +75,12 @@ COPY .env.demo ./.env
 COPY --chown=nextjs:nodejs <<'EOF' /app/entrypoint.sh
 #!/bin/sh
 set -e
+echo "[demo] copying env to packages/db..."
+cp /app/.env /app/packages/db/.env
 echo "[demo] pushing schema..."
-DATABASE_URL="postgresql://demo:demo@postgres:5432/victorianos_demo" npx prisma db push --schema=packages/db/schema.prisma
+cd /app/packages/db && npx prisma db push
 echo "[demo] seeding..."
-DATABASE_URL="postgresql://demo:demo@postgres:5432/victorianos_demo" S3_ENDPOINT="http://minio:9000" S3_ACCESS_KEY="demo" S3_SECRET_KEY="demo123456" S3_BUCKET="club-files" npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
+cd /app && DATABASE_URL="postgresql://demo:demo@postgres:5432/victorianos_demo" S3_ENDPOINT="http://minio:9000" S3_ACCESS_KEY="demo" S3_SECRET_KEY="demo123456" S3_BUCKET="club-files" npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
 echo "[demo] starting app..."
 exec node node_modules/next/dist/bin/next start
 EOF
