@@ -14,8 +14,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    networks:
-      - demo_net
 
   minio:
     image: minio/minio:latest
@@ -32,8 +30,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    networks:
-      - demo_net
 
   minio-init:
     image: minio/mc:latest
@@ -48,8 +44,6 @@ services:
       mc anonymous set download local/club-files &&
       echo '✅ MinIO bucket club-files ready'
       "
-    networks:
-      - demo_net
     restart: "no"
 
   app:
@@ -77,16 +71,11 @@ services:
         condition: service_completed_successfully
     ports:
       - "3007:3000"
-    networks:
-      - demo_net
-      - coolify-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`demo-dash.arielmarchegiani.com`)"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
 
 volumes:
   demo_pg_data:
   demo_minio_data:
-
-networks:
-  demo_net:
-    driver: bridge
-  coolify-proxy:
-    external: true
