@@ -83,8 +83,11 @@ cp /app/.env /app/packages/db/.env
 echo "[demo] pushing schema..."
 cd /app/packages/db && npx prisma db push && rm -rf /app/packages/generated/prisma && npx prisma generate
 
+echo "[demo] rebuilding Next.js with fresh Prisma client..."
+cd /app && rm -rf .next && NODE_ENV=production npx next build
+
 echo "[demo] seeding..."
-cd /app && npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
+npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
 
 echo "[demo] starting app..."
 exec node node_modules/next/dist/bin/next start
