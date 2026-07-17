@@ -5,7 +5,6 @@ import CategoryFilter from "@/components/jugadores/CategoryFilter";
 import JugadoresPageActions from "@/components/jugadores/JugadoresPageActions";
 import { PageContainer } from "@/components/ui/PageContainer";
 import { Users } from "lucide-react";
-import { getSociosInscritosEnTemporadaActiva } from "@/lib/actions/socios";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,7 +22,11 @@ export default async function JugadoresPage({
   const categoriaId = categoria || undefined;
 
   const [todosLosSocios, categorias, temporadaActiva] = await Promise.all([
-    getSociosInscritosEnTemporadaActiva(),
+    prisma.socio.findMany({
+      where: { activo: true },
+      include: { categoria: true },
+      orderBy: [{ apellidos: "asc" }, { nombre: "asc" }],
+    }),
     prisma.categoria.findMany({ orderBy: { nombre: "asc" } }),
     prisma.temporada.findFirst({ where: { activa: true } }),
   ]);
@@ -55,7 +58,7 @@ export default async function JugadoresPage({
   return (
     <PageContainer
       title="Socios y Jugadores"
-      subtitle="Lista general del club"
+      subtitle={`${todosLosSocios.length} socios registrados`}
       actions={<JugadoresPageActions />}
     >
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center">
@@ -69,11 +72,9 @@ export default async function JugadoresPage({
         {todosLosSocios.length === 0 ? (
           <div className="p-12 text-center text-slate-500">
             <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <p className="font-bold">No hay jugadores inscritos</p>
+            <p className="font-bold">No hay socios registrados</p>
             <p className="text-sm mt-1">
-              {temporadaActiva
-                ? "Inscribe jugadores desde su ficha de perfil"
-                : "Crea una temporada activa primero"}
+              Crea un nuevo socio desde el botón de arriba
             </p>
           </div>
         ) : (
