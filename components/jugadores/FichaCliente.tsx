@@ -1,7 +1,7 @@
 "use client";
 
 import { actualizarSocioAction, togglearFederadoAction } from "@/lib/actions/socios";
-import { inscribirJugadorEnTemporadaAction } from "@/lib/actions/temporadas";
+import { inscribirJugadorEnTemporadaAction, desinscribirJugadorAction } from "@/lib/actions/temporadas";
 import { useState } from "react";
 import type { SocioData, CategoriaBasic, JugadorPageProps, InscripcionData } from "@/lib/types/jugador";
 import {
@@ -88,6 +88,23 @@ export default function FichaCliente({
         }
     };
 
+    const inscripcionActiva = socio.inscripciones?.find((i: InscripcionData) => i.temporada?.activa);
+
+    const handleDesinscribir = async () => {
+        if (!inscripcionActiva) return;
+        
+        const confirmar = confirm("¿Estás seguro de que quieres desinscribir a este jugador de la temporada actual?");
+        if (!confirmar) return;
+
+        const res = await desinscribirJugadorAction(inscripcionActiva.id);
+        if (res.success) {
+            toast.success("Jugador desinscrito");
+            window.location.reload();
+        } else {
+            toast.error(res.error || "Error al desinscribir");
+        }
+    };
+
     const handleSave = async () => {
         const promise = actualizarSocioAction(socio.id, formData);
 
@@ -167,6 +184,7 @@ export default function FichaCliente({
                 onTogglarFederado={handleTogglarFederado}
                 federando={federando}
                 onPhotoUpload={() => setShowFotoModal(true)}
+                onDesinscribir={handleDesinscribir}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
