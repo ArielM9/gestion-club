@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Trophy, Users2, CalendarDays } from "lucide-react";
+import { Trophy, Users2, CalendarDays, ChevronRight } from "lucide-react";
 import { Clock, MapPin } from "lucide-react";
 
 interface EventItemProps {
@@ -27,7 +27,7 @@ export default function EventItem({
     : titulo;
 
   return (
-    <div className="group flex items-center gap-8 py-6 px-4 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-all">
+    <div className="group flex items-center gap-8 py-6 px-4 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-all">
       {/* Columna 1: Fecha vertical */}
       <div className="flex flex-col items-center min-w-[50px]">
         <span className="text-2xl font-black text-slate-700 leading-none">{format(fecha, "dd")}</span>
@@ -64,6 +64,9 @@ export default function EventItem({
       <div className="text-[10px] font-black uppercase tracking-tighter px-3 py-1 bg-slate-100 text-slate-500 rounded-lg">
         {categoriaNombre || "Club"}
       </div>
+
+      {/* Columna 5: Chevron affordance */}
+      <ChevronRight size={18} className="text-slate-300 group-hover:text-slate-500 group-hover:translate-x-1 transition-all shrink-0" />
     </div>
   );
 }

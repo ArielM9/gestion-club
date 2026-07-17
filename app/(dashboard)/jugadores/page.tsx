@@ -2,9 +2,9 @@ import prisma from "@/lib/prisma";
 import SocioTable from "@/components/jugadores/SocioTable";
 import SearchJugadores from "@/components/jugadores/SearchJugadores";
 import CategoryFilter from "@/components/jugadores/CategoryFilter";
+import JugadoresPageActions from "@/components/jugadores/JugadoresPageActions";
 import { PageContainer } from "@/components/ui/PageContainer";
-import { Plus } from "lucide-react";
-import Link from "next/link";
+import { Users } from "lucide-react";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,12 +21,14 @@ export default async function JugadoresPage({
   const currentPage = Number(page) || 1;
   const categoriaId = categoria || undefined;
 
-  const [todosLosSocios, categorias] = await Promise.all([
+  const [todosLosSocios, categorias, temporadaActiva] = await Promise.all([
     prisma.socio.findMany({
+      where: { activo: true },
       include: { categoria: true },
-      orderBy: { apellidos: "asc" },
+      orderBy: [{ apellidos: "asc" }, { nombre: "asc" }],
     }),
-    prisma.categoria.findMany({ orderBy: { nombre: "asc" } })
+    prisma.categoria.findMany({ orderBy: { nombre: "asc" } }),
+    prisma.temporada.findFirst({ where: { activa: true } }),
   ]);
 
   const queryNormalizada = normalizeString(query);
@@ -56,15 +58,8 @@ export default async function JugadoresPage({
   return (
     <PageContainer
       title="Socios y Jugadores"
-      subtitle="Lista general del club"
-      actions={
-        <Link
-          href="/jugadores/nuevo"
-          className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
-        >
-          <Plus size={18} /> Nuevo Socio
-        </Link>
-      }
+      subtitle={`${todosLosSocios.length} socios registrados`}
+      actions={<JugadoresPageActions />}
     >
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center">
         <div className="flex-1">
@@ -74,11 +69,21 @@ export default async function JugadoresPage({
       </div>
 
       <div className="bg-white rounded-[2rem] shadow-sm border border-white overflow-hidden">
-        <SocioTable
-          socios={sociosPaginados}
-          totalPages={totalPages}
-          currentPage={currentPage}
-        />
+        {todosLosSocios.length === 0 ? (
+          <div className="p-12 text-center text-slate-500">
+            <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <p className="font-bold">No hay socios registrados</p>
+            <p className="text-sm mt-1">
+              Crea un nuevo socio desde el botón de arriba
+            </p>
+          </div>
+        ) : (
+          <SocioTable
+            socios={sociosPaginados}
+            totalPages={totalPages}
+            currentPage={currentPage}
+          />
+        )}
       </div>
     </PageContainer>
   );

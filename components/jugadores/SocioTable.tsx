@@ -7,7 +7,7 @@ import Pagination from "./Pagination";
 export default function SocioTable({ socios, totalPages, currentPage }: { socios: any[], totalPages: number, currentPage: number }) {
   return (
     <div className="flex flex-col h-full">
-      <div className="overflow-x-auto">
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-separate border-spacing-0">
           <thead>
             <tr className="bg-slate-50/80 text-[10px] font-black uppercase text-slate-400 tracking-widest">
@@ -112,7 +112,7 @@ export default function SocioTable({ socios, totalPages, currentPage }: { socios
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/jugadores/${socio.id}`}
-                      className="p-2 inline-flex items-center justify-center bg-slate-100 text-slate-400 rounded-xl hover:bg-[#1e293b] hover:text-white transition-all shadow-sm group/btn cursor-pointer "
+                      className="p-2.5 inline-flex items-center justify-center bg-slate-100 text-slate-400 rounded-xl hover:bg-[#1e293b] hover:text-white transition-all shadow-sm group/btn cursor-pointer "
                     >
                       <span className="text-xs font-bold">Ver Ficha</span>
                       <ChevronRight size={20} className="group-hover/btn:translate-x-0.5 transition-transform" />
@@ -123,6 +123,38 @@ export default function SocioTable({ socios, totalPages, currentPage }: { socios
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* Vista móvil: cards apiladas, sin scroll horizontal */}
+      <div className="md:hidden flex flex-col gap-3">
+        {socios.map((socio) => {
+          const esMenor = socio.nombreTutor && socio.telefonoTutor;
+          return (
+            <Link
+              key={socio.id}
+              href={`/jugadores/${socio.id}`}
+              className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:border-blue-200 transition-colors min-h-[44px]"
+            >
+              <div className="h-11 w-11 shrink-0 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden">
+                {socio.fotoUrl ? (
+                  <img src={socio.fotoUrl} alt={socio.nombre} className="h-full w-full object-cover" />
+                ) : (
+                  <UserCircle2 size={22} strokeWidth={1.5} />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-slate-800 text-sm truncate">
+                  {socio.nombre} {socio.apellidos}
+                </p>
+                <p className="text-[11px] font-bold text-slate-500 mt-0.5 truncate">
+                  {socio.categoria?.nombre || "Sin categoría"}
+                  {esMenor && <span className="ml-2 text-amber-600">· Tutor</span>}
+                </p>
+              </div>
+              <ChevronRight size={20} className="text-slate-400 shrink-0" />
+            </Link>
+          );
+        })}
       </div>
 
       <Pagination totalPages={totalPages} currentPage={currentPage} />

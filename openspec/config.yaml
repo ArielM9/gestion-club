@@ -1,0 +1,43 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Next.js 16.1.6 (App Router, Turbopack/Webpack), React 19.2.3, TypeScript 5.9.3
+  Architecture: Monorepo with `packages/*` workspaces (Bun), Server Components default, Server Actions for business logic
+  ORM: Prisma 7.4.2 with PostgreSQL (`@prisma/adapter-pg`, `pg`) — schema at `packages/db/schema.prisma`, client at `packages/db/src/client.ts`
+  Auth: Better Auth 1.4.18 (email/password) with role-based access (ADMIN, CONTABILIDAD, COLABORADOR)
+  Storage: S3-compatible (MinIO) via AWS SDK v3 — presigned URLs only from `/api/` (no public buckets)
+  Validation: Zod 4.3.6 in `lib/validations/`
+  UI: TailwindCSS v4, shadcn/ui, lucide-react, sonner toasts
+  Forms: React Hook Form 7.71.1 + `@hookform/resolvers`
+  Charts: Recharts; Client state: Zustand (sparingly)
+  Style: Server-first; Spanish UI strings, English code identifiers
+  Testing: Not configured (no test runner in dependencies)
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes (DB schema, auth, storage)
+    - Reference AGENTS.md conventions (Server Components default, Server Actions, role checks)
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Domain-folder layout: changes/{name}/specs/{domain}/spec.md
+  design:
+    - Document server vs client component split explicitly
+    - Show Prisma query shapes and Server Action signatures
+    - Note S3/MinIO flows when storage is involved
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Each task completable in one session
+    - Always finish with `bun run build` to catch TypeScript errors
+  apply:
+    - Follow existing code patterns from AGENTS.md
+    - Prefer Server Components; only add `"use client"` when needed
+    - Spanish UI strings, English code identifiers
+    - tdd: false
+    - test_command: ""
+  verify:
+    - test_command: ""
+    - build_command: "bun run build"
+    - coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas (schema, role, storage)

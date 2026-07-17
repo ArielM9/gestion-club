@@ -53,6 +53,7 @@ export async function crearSocioAction(data: any) {
         dni: result.data.dni,
         fechaNacimiento: new Date(result.data.fechaNacimiento),
         nacionalidad: result.data.nacionalidad,
+        fotoUrl: result.data.fotoUrl || null,
         email: result.data.email || null,
         telefono: result.data.telefono || null,
         direccion: result.data.direccion || null,
@@ -103,6 +104,7 @@ export async function actualizarSocioAction(id: string, data: any) {
           dni: data.dni.trim().toUpperCase(),
           fechaNacimiento: data.fechaNacimiento ? new Date(data.fechaNacimiento) : undefined,
           nacionalidad: data.nacionalidad,
+          fotoUrl: data.fotoUrl !== undefined ? (data.fotoUrl || null) : undefined,
           email: data.email || null,
           telefono: data.telefono || null,
           direccion: data.direccion || null,
@@ -135,8 +137,43 @@ export async function actualizarSocioAction(id: string, data: any) {
   }
 }
 
-export async function getTodosLosSocios() {
+export async function getSociosInscritosEnTemporadaActiva() {
   try {
+    const temporadaActiva = await prisma.temporada.findFirst({
+      where: { activa: true }
+    });
+
+    if (!temporadaActiva) return [];
+
+    const inscripciones = await prisma.inscripcion.findMany({
+      where: { temporadaId: temporadaActiva.id },
+      select: { socioId: true }
+    });
+
+    const socioIds = [...new Set(inscripciones.map((i) => i.socioId))];
+
+    if (socioIds.length === 0) return [];
+
+    const socios = await prisma.socio.findMany({
+      where: { id: { in: socioIds } },
+      include: { categoria: true },
+      orderBy: [{ apellidos: "asc" }, { nombre: "asc" }]
+    });
+
+    return socios;
+  } catch (error) {
+    console.error("ERROR_GET_SOCIOS_INSCRITOS:", error);
+    return [];
+  }
+}
+
+export async function getTodosLosSocios(temporadaActiva?: boolean) {
+  try {
+    if (temporadaActiva) {
+      return await getSociosInscritosEnTemporadaActiva();
+    }
+
+    // Original behavior - all active socios
     const socios = await prisma.socio.findMany({
       where: { activo: true },
       select: {
@@ -272,5 +309,65 @@ export async function eliminarAbonoAction(abonoId: string, motivo: string) {
   } catch (error: any) {
     console.error("ERROR_ELIMINAR_ABONO:", error);
     return { error: "Error al eliminar el abono" };
+  }
+}
+
+// Busca TODOS los socios (incluyendo inactivos/archivados) para el flujo de renovación.
+// Devuelve un flag `inscrito` que indica si el socio ya está inscrito en la temporada activa,
+// para que la UI pueda mostrar el botón "Renovar" solo en los que corresponda.
+export async function buscarTodosLosSocios(query: string) {
+  try {
+    if (!query || query.length < 2) {
+      return { success: true, data: [] as Array<{
+        id: string;
+        nombre: string;
+        dni: string;
+        inscrito: boolean;
+      }> };
+    }
+
+    const socios = await prisma.socio.findMany({
+      where: {
+        OR: [
+          { nombre: { contains: query, mode: "insensitive" } },
+          { apellidos: { contains: query, mode: "insensitive" } },
+          { dni: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      select: {
+        id: true,
+        nombre: true,
+        apellidos: true,
+        dni: true,
+      },
+      take: 20,
+      orderBy: [{ apellidos: "asc" }, { nombre: "asc" }],
+    });
+
+    const temporadaActiva = await prisma.temporada.findFirst({
+      where: { activa: true },
+      select: { id: true },
+    });
+
+    let inscritoIds: Set<string> = new Set();
+    if (temporadaActiva) {
+      const inscripciones = await prisma.inscripcion.findMany({
+        where: { temporadaId: temporadaActiva.id },
+        select: { socioId: true },
+      });
+      inscritoIds = new Set(inscripciones.map((i) => i.socioId));
+    }
+
+    const data = socios.map((s) => ({
+      id: s.id,
+      nombre: `${s.nombre} ${s.apellidos}`,
+      dni: s.dni,
+      inscrito: inscritoIds.has(s.id),
+    }));
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("ERROR_BUSCAR_TODOS_SOCIOS:", error);
+    return { error: "Error al buscar socios" };
   }
 }

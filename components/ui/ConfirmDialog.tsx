@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface ConfirmDialogProps {
@@ -81,7 +81,7 @@ export function ConfirmDialog({
             className={`flex-1 ${styles.button} py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2`}
           >
             {isLoading ? (
-              <span className="animate-spin">⏳</span>
+              <Loader2 size={16} className="animate-spin" />
             ) : null}
             {confirmLabel}
           </button>

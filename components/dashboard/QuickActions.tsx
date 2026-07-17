@@ -4,16 +4,20 @@ import { useState } from "react";
 import { UserPlus, HandCoins, Shirt } from "lucide-react";
 import ActionButton from "@/components/ui/ActionButton";
 import ModalGlobalIngresos from "@/components/dashboard/ModalGlobalIngresos";
+import InscripcionModal from "@/components/dashboard/InscripcionModal";
+import RenovarSocioModal from "@/components/jugadores/RenovarSocioModal";
 
 export default function QuickActions({ userRole = "COLABORADOR" }: { userRole?: string }) {
   const [showIngreso, setShowIngreso] = useState(false);
+  const [showInscripcion, setShowInscripcion] = useState(false);
+  const [showRenovar, setShowRenovar] = useState(false);
 
   const actions = [
     {
-      label: "Nuevo Jugador",
-      description: "Alta de socio y ficha técnica",
+      label: "Inscripción",
+      description: "Nuevo socio o renovar jugador",
       icon: UserPlus,
-      href: "/jugadores/nuevo",
+      onClick: () => setShowInscripcion(true),
       variant: "primary" as const,
     },
     {
@@ -45,6 +49,17 @@ export default function QuickActions({ userRole = "COLABORADOR" }: { userRole?: 
         isOpen={showIngreso}
         onClose={() => setShowIngreso(false)}
         userRole={userRole}
+      />
+
+      <InscripcionModal
+        isOpen={showInscripcion}
+        onClose={() => setShowInscripcion(false)}
+        onOpenRenovar={() => setShowRenovar(true)}
+      />
+
+      <RenovarSocioModal
+        isOpen={showRenovar}
+        onClose={() => setShowRenovar(false)}
       />
     </section>
   );

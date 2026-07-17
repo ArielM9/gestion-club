@@ -475,7 +475,7 @@ export default function AdminTemporadas({ temporadas, temporadaActiva, categoria
               </p>
               <ul className="text-sm text-slate-500 space-y-2">
                 <li>• Se generará un PDF con el balance</li>
-                <li>• Las deudas pendientes se transferirán a la nueva temporada</li>
+                <li>• Las deudas pendientes quedan registradas en cada socio y se migrarán automáticamente al reinscribir</li>
                 <li>• Los equipos quedan marcados como cerrados</li>
                 <li>• No podrá deshacer esta acción</li>
               </ul>

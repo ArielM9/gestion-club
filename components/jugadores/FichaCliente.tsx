@@ -1,8 +1,9 @@
 "use client";
 
 import { actualizarSocioAction, togglearFederadoAction } from "@/lib/actions/socios";
-import { inscribirJugadorEnTemporadaAction } from "@/lib/actions/temporadas";
+import { inscribirJugadorEnTemporadaAction, desinscribirJugadorAction } from "@/lib/actions/temporadas";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { SocioData, CategoriaBasic, JugadorPageProps, InscripcionData } from "@/lib/types/jugador";
 import {
     Pencil,
@@ -14,6 +15,7 @@ import {
     ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import ModalPago from "./ModalPago";
 import ModalCargo from "./ModalCargo";
 import DocumentosSocio from "./DocumentosSocio";
@@ -25,6 +27,7 @@ import BalanceCard from "./BalanceCard";
 import HistorialMovimientos from "./HistorialMovimientos";
 import { FichaHeader } from "./FichaHeader";
 import EntregaRopaModal from "@/components/tienda/EntregaRopaModal";
+import SubirFotoModal from "./SubirFotoModal";
 
 export default function FichaCliente({
     socio,
@@ -40,6 +43,12 @@ export default function FichaCliente({
     const [inscribiendo, setInscribiendo] = useState(false);
     const [showFederadoModal, setShowFederadoModal] = useState(false);
     const [federando, setFederando] = useState(false);
+    const [pendingConfirm, setPendingConfirm] = useState<
+        | { type: "debt"; deuda: number }
+        | { type: "desinscribir" }
+        | { type: "entregaRopa" }
+        | null
+    >(null);
 
     const tieneInscripcionActiva = socio.inscripciones?.some((i: InscripcionData) => i.temporada?.activa);
 
@@ -50,27 +59,27 @@ export default function FichaCliente({
         }
 
         const resultado = await inscribirJugadorEnTemporadaAction(socio.id, false);
-        
+
         if (resultado.tieneDeuda && resultado.deuda) {
-            const confirmar = confirm(
-                `El jugador tiene ${resultado.deuda}€ de deuda. ¿Quieres migrarla a la temporada actual y continuar con la inscripción?`
-            );
-            if (confirmar) {
-                setInscribiendo(true);
-                const resultado2 = await inscribirJugadorEnTemporadaAction(socio.id, true);
-                setInscribiendo(false);
-                if (resultado2.success) {
-                    toast.success("Jugador inscrito correctamente");
-                    window.location.reload();
-                } else {
-                    toast.error(resultado2.error);
-                }
-            }
+            setPendingConfirm({ type: "debt", deuda: resultado.deuda });
         } else if (resultado.error) {
             toast.error(resultado.error);
         } else if (resultado.success) {
             toast.success("Jugador inscrito correctamente");
-            window.location.reload();
+            router.refresh();
+        }
+    };
+
+    const handleConfirmDebt = async () => {
+        setPendingConfirm(null);
+        setInscribiendo(true);
+        const resultado = await inscribirJugadorEnTemporadaAction(socio.id, true);
+        setInscribiendo(false);
+        if (resultado.success) {
+            toast.success("Jugador inscrito correctamente");
+            router.refresh();
+        } else {
+            toast.error(resultado.error || "Error al inscribir");
         }
     };
 
@@ -81,9 +90,28 @@ export default function FichaCliente({
 
         if (res.success) {
             toast.success(res.federado ? "Jugador federado" : "Federación retirada");
-            window.location.reload();
+            router.refresh();
         } else {
             toast.error(res.error);
+        }
+    };
+
+    const inscripcionActiva = socio.inscripciones?.find((i: InscripcionData) => i.temporada?.activa);
+
+    const handleDesinscribir = () => {
+        if (!inscripcionActiva) return;
+        setPendingConfirm({ type: "desinscribir" });
+    };
+
+    const handleConfirmDesinscribir = async () => {
+        if (!inscripcionActiva) return;
+        setPendingConfirm(null);
+        const res = await desinscribirJugadorAction(inscripcionActiva.id);
+        if (res.success) {
+            toast.success("Jugador desinscrito");
+            router.refresh();
+        } else {
+            toast.error(res.error || "Error al desinscribir");
         }
     };
 
@@ -103,16 +131,14 @@ export default function FichaCliente({
         });
     };
 
-    const handleEntregaRopa = async () => {
-        if (confirm("¿Confirmas la entrega del pack?")) {
-            setRopaEntregada(true);
-
-            toast.promise(actualizarSocioAction(socio.id, { ...formData, ropaEntregada: true }), {
-                loading: 'Registrando entrega...',
-                success: 'Entrega registrada con éxito',
-                error: 'Error al registrar la entrega',
-            });
-        }
+    const handleConfirmEntregaRopa = async () => {
+        setRopaEntregada(true);
+        setPendingConfirm(null);
+        toast.promise(actualizarSocioAction(socio.id, { ...formData, ropaEntregada: true }), {
+            loading: 'Registrando entrega...',
+            success: 'Entrega registrada con éxito',
+            error: 'Error al registrar la entrega',
+        });
     };
 
     const handleChange = (
@@ -127,12 +153,29 @@ export default function FichaCliente({
     const [showModalPago, setShowModalPago] = useState(false);
     const [showModalCargo, setShowModalCargo] = useState(false);
     const [showEntregaRopa, setShowEntregaRopa] = useState(false);
+    const [showFotoModal, setShowFotoModal] = useState(false);
 
     const getDocumentoPorTipo = (tipo: string) => {
         return (socio.documentos || []).find((d: any) => d.tipo === tipo);
     };
     const [docVer, setDocVer] = useState<any>(null);
     const [docSubir, setDocSubir] = useState<{ tipo: string; label: string } | null>(null);
+
+    const router = useRouter();
+
+    const handlePhotoUploaded = async (url: string) => {
+        const nextData = { ...formData, fotoUrl: url };
+        setFormData(nextData);
+        const promise = actualizarSocioAction(socio.id, nextData);
+        toast.promise(promise, {
+            loading: 'Guardando foto...',
+            success: (data) => {
+                if (data?.error) throw new Error(data.error);
+                return '¡Foto actualizada correctamente!';
+            },
+            error: (err) => `Error: ${err.message || 'No se pudo guardar la foto'}`,
+        });
+    };
 
     return (
         <div className="space-y-6">
@@ -150,6 +193,8 @@ export default function FichaCliente({
                 onSave={handleSave}
                 onTogglarFederado={handleTogglarFederado}
                 federando={federando}
+                onPhotoUpload={() => setShowFotoModal(true)}
+                onDesinscribir={handleDesinscribir}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -181,9 +226,9 @@ export default function FichaCliente({
                             <h2 className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">
                                 <Shirt size={14} /> Equipación y Tallas
                             </h2>
-                            <button 
+                            <button
                                 onClick={() => setShowEntregaRopa(true)}
-                                className="flex items-center gap-1.5 text-[10px] font-black uppercase bg-green-50 text-green-600 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-all"
+                                className="flex items-center gap-1.5 text-[10px] font-black uppercase bg-green-50 text-green-600 px-3 py-2 rounded-lg hover:bg-green-100 transition-all"
                             >
                                 <Plus size={12} /> Entregar Ropa
                             </button>
@@ -191,7 +236,7 @@ export default function FichaCliente({
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                             <div className="space-y-1">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase ml-1">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase ml-1">
                                     Talla Registrada
                                 </p>
                                 {isEditing ? (
@@ -199,7 +244,7 @@ export default function FichaCliente({
                                         name="tallaRopa"
                                         value={formData.tallaRopa || ""}
                                         onChange={handleChange}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all cursor-pointer"
+                                        className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all cursor-pointer"
                                     >
                                         <option value="">Seleccionar talla...</option>
                                         <optgroup label="Infantil">
@@ -224,7 +269,7 @@ export default function FichaCliente({
                             </div>
 
                             <div className="space-y-2">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase ml-1">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase ml-1">
                                     Estado de Entrega (Pack Inicial)
                                 </p>
                                 <div
@@ -240,12 +285,8 @@ export default function FichaCliente({
                                             checked={ropaEntregada}
                                             disabled={ropaEntregada}
                                             onChange={() => {
-                                                if (
-                                                    confirm(
-                                                        "¿Confirmas que se ha entregado el pack de ropa inicial?",
-                                                    )
-                                                ) {
-                                                    setRopaEntregada(true);
+                                                if (!ropaEntregada) {
+                                                    setPendingConfirm({ type: "entregaRopa" });
                                                 }
                                             }}
                                             className="h-5 w-5 rounded-md border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:cursor-not-allowed accent-green-600"
@@ -291,7 +332,7 @@ export default function FichaCliente({
                                 value={formData.observaciones || ""}
                                 onChange={handleChange}
                                 placeholder="Alergias, lesiones previas, disponibilidad..."
-                                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium focus:border-blue-500 outline-none h-32 transition-all"
+                                className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium focus:border-blue-500 outline-none h-32 transition-all"
                             />
                         ) : (
                             <div className="bg-slate-50/50 p-6 rounded-2xl border border-dashed border-slate-200">
@@ -341,6 +382,44 @@ export default function FichaCliente({
                     temporadaActiva={temporadaActiva}
                 />
             )}
+            <SubirFotoModal
+                isOpen={showFotoModal}
+                onClose={() => setShowFotoModal(false)}
+                socioId={socio.id}
+                onPhotoUploaded={handlePhotoUploaded}
+            />
+            <ConfirmDialog
+                isOpen={pendingConfirm !== null}
+                onClose={() => setPendingConfirm(null)}
+                onConfirm={() => {
+                    if (pendingConfirm?.type === "debt") handleConfirmDebt();
+                    else if (pendingConfirm?.type === "desinscribir") handleConfirmDesinscribir();
+                    else if (pendingConfirm?.type === "entregaRopa") handleConfirmEntregaRopa();
+                }}
+                title={
+                    pendingConfirm?.type === "debt"
+                        ? "Migrar deuda pendiente"
+                        : pendingConfirm?.type === "desinscribir"
+                            ? "Desinscribir jugador"
+                            : "Confirmar entrega de ropa"
+                }
+                message={
+                    pendingConfirm?.type === "debt"
+                        ? `El jugador tiene ${pendingConfirm.deuda}€ de deuda. ¿Quieres migrarla a la temporada actual y continuar con la inscripción?`
+                        : pendingConfirm?.type === "desinscribir"
+                            ? "¿Estás seguro de que quieres desinscribir a este jugador de la temporada actual?"
+                            : "¿Confirmas que se ha entregado el pack de ropa inicial?"
+                }
+                variant={pendingConfirm?.type === "entregaRopa" ? "info" : "warning"}
+                confirmLabel={
+                    pendingConfirm?.type === "debt"
+                        ? "Migrar e inscribir"
+                        : pendingConfirm?.type === "desinscribir"
+                            ? "Desinscribir"
+                            : "Confirmar"
+                }
+                isLoading={inscribiendo && pendingConfirm?.type === "debt"}
+            />
         </div>
     );
 }

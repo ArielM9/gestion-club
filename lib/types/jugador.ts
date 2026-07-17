@@ -39,6 +39,7 @@ export interface SocioData {
   fechaNacimiento: Date | null;
   sexo: string | null;
   nacionalidad: string | null;
+  fotoUrl?: string | null;
   direccion: string | null;
   codigoPostal: string | null;
   localidad: string | null;

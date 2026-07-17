@@ -92,7 +92,7 @@ export default function ContabilidadTabs({
     return (
         <div className="space-y-8">
             {/* NAVEGACIÓN DE PESTAÑAS */}
-            <div className="flex gap-2 bg-slate-100 p-1.5 rounded-2xl w-fit">
+            <div className="flex gap-2 bg-slate-100 p-1.5 rounded-2xl w-fit max-w-full overflow-x-auto">
                 <TabButton
                     active={activeTab === "dashboard"}
                     onClick={() => setActiveTab("dashboard")}
@@ -165,7 +165,7 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
     return (
         <button
             onClick={onClick}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${active
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all whitespace-nowrap ${active
                 ? "bg-white text-blue-600 shadow-sm"
                 : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
                 }`}

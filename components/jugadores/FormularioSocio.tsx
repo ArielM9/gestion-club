@@ -12,6 +12,8 @@ import { toast } from "sonner";
 export default function FormularioSocio({ categorias }: { categorias: any[] }) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null);
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
 
   const nacionalidades = [
     "Española", "Afgana", "Albana", "Alemana", "Andorrana", "Angoleña", "Argelina", "Argentina", "Armenia", "Australiana", "Austriaca", "Azerbaiyana", "Bahameña", "Bangladesí", "Barbadense", "Bareiní", "Belga", "Beliceña", "Beninesa", "Bielorrusa", "Birmana", "Boliviana", "Bosnia", "Botsuanesa", "Brasileña", "Británica", "Bruneana", "Búlgara", "Burkinesa", "Burundesa", "Butanesa", "Caboverdiana", "Camboyana", "Camerunesa", "Canadiense", "Cantonesa", "Catuniana", "Centroafricana", "Chadiana", "Checa", "Chilena", "China", "Chipriota", "Colombiana", "Comorense", "Congoleña", "Costarricense", "Croata", "Cubana", "Danesa", "Dominiquesa", "Dominicana", "Ecuatoriana", "Egipcia", "Eslovaca", "Eslovena", "Española", "Estadounidense", "Estonia", "Etíope", "Filipina", "Finlandesa", "Fiyiana", "Francesa", "Gabonesa", "Gambiana", "Georgiana", "Ghanaian", "Granadina", "Griega", "Guatemalteca", "Guineana", "Guineana Ecuatorial", "Guyanesa", "Haitiana", "Hondureña", "Húngara", "India", "Indonesia", "Iraquí", "Iraní", "Irlandesa", "Islandesa", "Israelí", "Italiana", "Jamaicana", "Japonesa", "Jordana", "Kazaja", "Keniata", "Kirguisa", "Kuwaití", "Laosiana", "Lesothense", "Letona", "Libanesa", "Liberiana", "Libia", "Liechtensteiniana", "Lituana", "Luxemburguesa", "Macedonia", "Madagascarense", "Malasia", "Malauí", "Maldiva", "MaliEnse", "Maltesa", "Marfileña", "Marroquí", "Mauriciana", "Mauritana", "Mexicana", "Micronesia", "Moldava", "Monegasca", "Mongola", "Montenegrina", "Mozambiqueña", "Namibia", "Nauruana", "Nepalesa", "Nicaragüense", "Nigeriana", "Nigerina", "Norcoreana", "Noruega", "NeoZelandesa", "Omaní", "Paquistaní", "Palauana", "Panameña", "Papú", "Paraguaya", "Peruana", "Polaca", "Portuguesa", "Puertorriqueña", "Qatarí", "Ruandesa", "Rumana", "Rusa", "Samoana", "Sanmarinesa", "Santaluciense", "Sanvicentina", "Salvadoreña", "Saudí", "Senegalesa", "Serbia", "Seychellense", "Sierraleonesa", "Singapurense", "Siria", "Somalí", "SriLankesa", "Suazi", "Sudafricana", "Sudanesa", "Sueca", "Suiza", "Surinamesa", "Tailandesa", "Tanzana", "Tayika", "Togolesa", "Tongana", "Trinitense", "Tunecina", "Turca", "Turcomana", "Tuvaluana", "Ucraniana", "Ugandesa", "Uruguaya", "Uzbeka", "Vanuatuense", "Venezolana", "Vietnamita", "Yemení", "Yibutiana", "Zambiana", "Zimbabuense"
@@ -64,9 +66,52 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
   const categoriaCalculada = calcularCategoria(fechaNacimiento, watch("sexo"));
   const sexoValue = watch("sexo");
 
+  const handleFotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input para permitir re-subir el mismo archivo
+    e.target.value = "";
+
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      toast.error("Solo se permiten archivos JPG o PNG");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("La imagen no debe superar 2MB");
+      return;
+    }
+
+    setSubiendoFoto(true);
+    try {
+      // 1. Obtener presigned URL (scope=temp porque aún no existe socioId)
+      const presignedRes = await fetch(
+        `/api/socios/foto/presigned?scope=temp&contentType=${encodeURIComponent(file.type)}`,
+        { credentials: 'include' }
+      );
+      if (!presignedRes.ok) throw new Error("Error al obtener URL de subida");
+      const { url, displayUrl } = await presignedRes.json();
+
+      // 2. Subir a MinIO
+      const uploadRes = await fetch(url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      });
+      if (!uploadRes.ok) throw new Error("Error al subir la imagen");
+
+      setFotoUrl(displayUrl);
+      toast.success("Foto lista para guardar");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al subir la foto");
+    } finally {
+      setSubiendoFoto(false);
+    }
+  };
+
   const onSubmit = async (data: SocioFormValues) => {
     setIsPending(true);
-    const res = await crearSocioAction(data);
+    const res = await crearSocioAction({ ...data, fotoUrl: fotoUrl || undefined });
     setIsPending(false);
 
     if (res.success) {
@@ -81,7 +126,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
       {/* SECCIÓN 1: DATOS PERSONALES */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><User size={20} /></div>
           <h2 className="font-bold text-slate-800">Información Personal</h2>
@@ -90,19 +135,19 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Nombre y Apellidos (como ya tenías) */}
           <div className="space-y-2">
-            <label htmlFor="nombre" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nombre</label>
-            <input id="nombre" {...register("nombre")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <label htmlFor="nombre" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Nombre</label>
+            <input id="nombre" {...register("nombre")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.nombre && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.nombre.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="apellidos" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Apellidos</label>
-            <input id="apellidos" {...register("apellidos")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <label htmlFor="apellidos" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Apellidos</label>
+            <input id="apellidos" {...register("apellidos")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="nacionalidad" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nacionalidad</label>
-            <select id="nacionalidad" {...register("nacionalidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+            <label htmlFor="nacionalidad" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Nacionalidad</label>
+            <select id="nacionalidad" {...register("nacionalidad")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
               {nacionalidades.map(nac => (
                 <option key={nac} value={nac}>{nac}</option>
               ))}
@@ -111,20 +156,20 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="dni" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">{esEspañol ? "DNI" : "NIE"}</label>
-            <input id="dni" {...register("dni")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all uppercase" placeholder={esEspañol ? "12345678Z" : "X1234567Z"} />
+            <label htmlFor="dni" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">{esEspañol ? "DNI" : "NIE"}</label>
+            <input id="dni" {...register("dni")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all uppercase" placeholder={esEspañol ? "12345678Z" : "X1234567Z"} />
             {errors.dni && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.dni.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="fechaNacimiento" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Fecha Nacimiento</label>
-            <input id="fechaNacimiento" {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <label htmlFor="fechaNacimiento" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Fecha Nacimiento</label>
+            <input id="fechaNacimiento" {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.fechaNacimiento && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.fechaNacimiento.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="sexo" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Sexo</label>
-            <select id="sexo" {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+            <label htmlFor="sexo" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Sexo</label>
+            <select id="sexo" {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
               <option value="">Seleccionar...</option>
               <option value="M">Masculino</option>
               <option value="F">Femenino</option>
@@ -134,7 +179,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         </div>
 
         {mostrarSeccionTutor && (
-          <section className="bg-amber-50/50 rounded-[2.5rem] p-8 border border-amber-100 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+          <section className="bg-amber-50/50 rounded-[2rem] p-8 border border-amber-100 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
             <div className="flex items-center gap-3 mb-2 border-b border-amber-100 pb-4">
               <div className="p-2 bg-amber-100 text-amber-700 rounded-lg"><Users2 size={20} /></div>
               <div>
@@ -149,7 +194,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
                 <input
                   id="nombreTutor"
                   {...register("nombreTutor")}
-                  className={`w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all ${errors.nombreTutor ? 'ring-2 ring-red-500' : ''}`}
+                  className={`w-full px-5 py-3 bg-white hover:bg-amber-50 border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all ${errors.nombreTutor ? 'ring-2 ring-red-500' : ''}`}
                 />
                 {errors.nombreTutor && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.nombreTutor.message}</p>}
               </div>
@@ -159,7 +204,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
                 <input
                   id="dniTutor"
                   {...register("dniTutor")}
-                  className="w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all uppercase"
+                  className="w-full px-5 py-3 bg-white hover:bg-amber-50 border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all uppercase"
                 />
               </div>
 
@@ -168,7 +213,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
                 <input
                   id="telefonoTutor"
                   {...register("telefonoTutor")}
-                  className="w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all"
+                  className="w-full px-5 py-3 bg-white hover:bg-amber-50 border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all"
                 />
               </div>
             </div>
@@ -178,25 +223,48 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         {/* BOTONES FOTOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
           <div>
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest block mb-2">Foto del Jugador</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest block mb-2">Foto del Jugador</label>
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border-2 border-dashed border-slate-200">
-                <Camera size={24} />
+              <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 overflow-hidden">
+                {fotoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={fotoUrl} alt="Preview" className="h-full w-full object-cover" />
+                ) : (
+                  <Camera size={24} />
+                )}
               </div>
-              <button type="button" className="text-xs font-bold bg-slate-100 text-slate-600 px-4 py-2 rounded-xl hover:bg-slate-200 transition-colors">
-                Subir Imagen
-              </button>
-              <p className="text-[10px] text-slate-400 font-medium">JPG, PNG. Máx 2MB.</p>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold bg-slate-100 text-slate-600 px-4 py-2 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer inline-flex items-center gap-2 min-h-[44px]">
+                  {subiendoFoto ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Camera size={14} />
+                  )}
+                  {fotoUrl ? "Cambiar Imagen" : "Subir Imagen"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    className="hidden"
+                    onChange={handleFotoUpload}
+                    disabled={subiendoFoto}
+                  />
+                </label>
+                <p className="text-[10px] text-slate-400 font-medium">JPG, PNG. Máx 2MB.</p>
+              </div>
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest block mb-2">Foto {esEspañol ? "DNI" : "NIE"} (Frontal)</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest block mb-2">Foto {esEspañol ? "DNI" : "NIE"} (Frontal)</label>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-400 border-2 border-dashed border-indigo-100">
                 <IdCard size={24} />
               </div>
-              <button type="button" className="text-xs font-bold bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-100 transition-colors">
+              <button
+                type="button"
+                onClick={() => toast.info("Próximamente")}
+                className="text-xs font-bold bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-100 transition-colors min-h-[44px]"
+              >
                 Subir {esEspañol ? "DNI" : "NIE"}
               </button>
               <p className="text-[10px] text-slate-400 font-medium">Opcional. Requerido para ficha.</p>
@@ -206,10 +274,10 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
       </section>
 
       {/* SECCIÓN 2: CATEGORÍA Y CONTACTO */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Categoría</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Categoría</label>
             <div className={`px-5 py-3 rounded-2xl font-bold flex items-center gap-2 ${
               fechaNacimiento && sexoValue 
                 ? "bg-blue-50 text-blue-700 border-2 border-blue-200" 
@@ -222,32 +290,32 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="email" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Email</label>
-            <input id="email" {...register("email")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="ejemplo@correo.com" />
+            <label htmlFor="email" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Email</label>
+            <input id="email" {...register("email")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="ejemplo@correo.com" />
             {errors.email && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="telefono" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Teléfono</label>
-            <input id="telefono" {...register("telefono")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="600 000 000" />
+            <label htmlFor="telefono" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Teléfono</label>
+            <input id="telefono" {...register("telefono")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="600 000 000" />
             {errors.telefono && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.telefono.message}</p>}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-2 space-y-2">
-            <label htmlFor="direccion" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Dirección Completa</label>
-            <input id="direccion" {...register("direccion")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Calle, número, piso..." />
+            <label htmlFor="direccion" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Dirección Completa</label>
+            <input id="direccion" {...register("direccion")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Calle, número, piso..." />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="codigoPostal" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Código Postal</label>
-            <input id="codigoPostal" {...register("codigoPostal")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" placeholder="00000" />
+            <label htmlFor="codigoPostal" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Código Postal</label>
+            <input id="codigoPostal" {...register("codigoPostal")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" placeholder="00000" />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="localidad" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Localidad</label>
-            <input id="localidad" {...register("localidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Ciudad o Pueblo" />
+            <label htmlFor="localidad" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Localidad</label>
+            <input id="localidad" {...register("localidad")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Ciudad o Pueblo" />
           </div>
         </div>
       </section>
@@ -255,7 +323,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
 
       {/* SECCIÓN 4: TALLA Y DOCUMENTACIÓN */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><Shirt size={20} /></div>
           <h2 className="font-bold text-slate-800">Talla y Documentación</h2>
@@ -263,11 +331,11 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label htmlFor="tallaRopa" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Talla de Ropa</label>
+            <label htmlFor="tallaRopa" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Talla de Ropa</label>
             <select
               id="tallaRopa"
               {...register("tallaRopa")}
-              className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700"
+              className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700"
             >
               <option value="">Seleccionar...</option>
               <option value="6">6</option>
@@ -286,32 +354,32 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
       </section>
 
       {/* SECCIÓN 5: OBSERVACIONES */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-purple-50 text-purple-600 rounded-lg"><MessageSquare size={20} /></div>
           <h2 className="font-bold text-slate-800">Observaciones</h2>
         </div>
         <div className="space-y-2">
-          <label htmlFor="observaciones" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Notas Internas</label>
+          <label htmlFor="observaciones" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Notas Internas</label>
           <textarea
             id="observaciones"
             {...register("observaciones")}
             rows={3}
-            className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+            className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all resize-none"
             placeholder="Alergias, notas médicas, información relevante..."
           />
         </div>
       </section>
 
       {/* SECCIÓN 3: PAGO (IBAN) */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><CreditCard size={20} /></div>
           <h2 className="font-bold text-slate-800">Datos de Facturación</h2>
         </div>
         <div className="max-w-md space-y-2">
-          <label htmlFor="cuentaBancaria" className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">IBAN (Cuenta Bancaria)</label>
-          <input id="cuentaBancaria" {...register("cuentaBancaria")} placeholder="ES00 0000..." className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" />
+          <label htmlFor="cuentaBancaria" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">IBAN (Cuenta Bancaria)</label>
+          <input id="cuentaBancaria" {...register("cuentaBancaria")} placeholder="ES00 0000..." className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" />
         </div>
       </section>
 

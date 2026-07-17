@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Package, X, Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Package, X, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import type { ProductoConStock } from "@/lib/types/tienda";
 
@@ -18,6 +19,7 @@ export default function EntregaRopaModal({
   socioId,
   tallaJugador
 }: EntregaRopaModalProps) {
+  const router = useRouter();
   const [productos, setProductos] = useState<ProductoConStock[]>([]);
   const [loading, setLoading] = useState(true);
   const [seleccionados, setSeleccionados] = useState<{productoId: string; producto: string; talla: string; cantidad: number}[]>([]);
@@ -75,7 +77,7 @@ export default function EntregaRopaModal({
         toast.success("Entrega registrada correctamente");
         setSeleccionados([]);
         onClose();
-        window.location.reload();
+        router.refresh();
       } else {
         const data = await res.json();
         toast.error(data.error || "Error al registrar entrega");
@@ -92,7 +94,7 @@ export default function EntregaRopaModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="p-8 border-b border-slate-50 flex justify-between items-center">
           <div>
             <h3 className="text-xl font-black text-slate-900">Entregar Ropa</h3>
@@ -105,10 +107,10 @@ export default function EntregaRopaModal({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
           {loading ? (
-            <div className="text-center py-8">
-              <span className="animate-spin">⏳</span>
+            <div className="text-center py-8 flex flex-col items-center gap-2">
+              <Loader2 size={20} className="animate-spin text-slate-500" />
               <p className="text-slate-500 mt-2">Cargando productos...</p>
             </div>
           ) : (
@@ -150,7 +152,7 @@ export default function EntregaRopaModal({
           )}
         </div>
 
-        <div className="p-8 border-t border-slate-50">
+        <div className="p-4 sm:p-6 md:p-8 border-t border-slate-50">
           <div className="flex justify-between items-center mb-4">
             <p className="text-sm text-slate-500">
               {seleccionados.length} producto(s) seleccionado(s)
@@ -169,7 +171,7 @@ export default function EntregaRopaModal({
               className="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-green-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {guardando ? (
-                <span className="animate-spin">⏳</span>
+                <Loader2 size={16} className="animate-spin" />
               ) : (
                 <>
                   <Package size={16} />

@@ -12,6 +12,7 @@ export const SocioSchema = z.object({
   dni: z.string().toUpperCase().regex(dniNieRegex, "DNI/NIE inválido"),
   fechaNacimiento: z.string().min(1, "Obligatorio"),
   nacionalidad: z.string().min(1, "Obligatorio"),
+  fotoUrl: z.string().optional().or(z.literal("")),
   email: z.string().email("Email inválido"),
   telefono: z.string().min(9, "Teléfono inválido"),
   direccion: z.string().optional(),
