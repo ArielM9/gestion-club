@@ -631,13 +631,18 @@ async function ensureDocumentos(currentId: string, created: Array<{ id: string; 
       console.warn(`  ⚠️  No se pudo subir ${storagePath}: ${(err as Error).message}`);
       continue;
     }
-    await prisma.documento.create({
-      data: {
+    await prisma.documento.upsert({
+      where: { storagePath },
+      create: {
         tipo,
         filename,
         storagePath,
         socioId: id,
         temporadaId: currentId,
+        estado,
+        concepto: tipo === TipoDocumento.COMPROBANTE_PAGO ? "Pago cuota" : null,
+      },
+      update: {
         estado,
         concepto: tipo === TipoDocumento.COMPROBANTE_PAGO ? "Pago cuota" : null,
       },
