@@ -38,9 +38,9 @@ export async function GET(req: NextRequest) {
 
         const url = await getSignedUrl(s3, command, { expiresIn: 900 });
 
-        // URL directa de MinIO (sin firma) para usar en <img src>
-        // Funciona en red local. Si el bucket no es público, añadir policy de lectura.
-        const displayUrl = `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/${s3Key}`;
+        // URL del proxy interno que sirve la imagen desde el servidor
+        // Evita problemas de CORS y mixed content con MinIO
+        const displayUrl = `/api/socios/foto/serve?key=${encodeURIComponent(s3Key)}`;
 
         return NextResponse.json({
             url,
