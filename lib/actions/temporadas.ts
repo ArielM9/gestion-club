@@ -2,6 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import { 
   getYear, 
   getYearTemporada, 
@@ -986,89 +988,109 @@ export async function crearEquipoAction(temporadaId: string, categoriaId: string
   }
 }
 
-export async function cerrarTemporadaAction(temporadaId: string, nuevaTemporadaId?: string) {
+export async function cerrarTemporadaAction(temporadaId: string) {
   try {
-    const temporada = await prisma.temporada.findUnique({
-      where: { id: temporadaId },
-      include: {
-        precios: true,
-        equipos: true,
-        inscripciones: { include: { socio: true } },
-        cargos: true,
-        abonos: { where: { estado: "APROBADO" } },
-      },
-    });
+    // Auth check: solo ADMIN o DIRECTIVA pueden cerrar temporadas
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userRole = session?.user?.role;
 
-    if (!temporada) return { error: "Temporada no encontrada" };
-
-    // Calcular deudas por socio
-    const deudasPorSocio: Record<string, number> = {};
-    
-    for (const inscripcion of temporada.inscripciones) {
-      const socioId = inscripcion.socioId;
-      const cargosSocio = temporada.cargos.filter((c) => c.socioId === socioId);
-      const abonosSocio = temporada.abonos.filter((a) => a.socioId === socioId);
-      
-      const totalCargos = cargosSocio.reduce((acc, c) => acc + c.monto, 0);
-      const totalAbonos = abonosSocio.reduce((acc, a) => acc + a.monto, 0);
-      const deuda = totalCargos - totalAbonos;
-      
-      if (deuda > 0) {
-        deudasPorSocio[socioId] = deuda;
-      }
+    if (userRole !== "ADMIN" && userRole !== "DIRECTIVA") {
+      return { error: "No tienes permisos para cerrar temporadas" };
     }
 
-    // Cerrar temporada actual
-    await prisma.temporada.update({
-      where: { id: temporadaId },
-      data: {
-        activa: false,
-        fechaCierre: new Date(),
-      },
-    });
-
-    // Cerrar equipos
-    await prisma.equipo.updateMany({
-      where: { temporadaId },
-      data: { cerrado: true },
-    });
-
-    // Marcar todos los socios inscritos como inactivos y borrar su categoría
-    const socioIds = [...new Set(temporada.inscripciones.map(i => i.socioId))];
-    if (socioIds.length > 0) {
-      await prisma.socio.updateMany({
-        where: { id: { in: socioIds } },
-        data: { 
-          activo: false,
-          categoriaId: null, // Se borrará para forzar recalcular al reinscribir
+    // Toda la operación es atómica: si algo falla, se hace rollback
+    const result = await prisma.$transaction(async (tx) => {
+      const temporada = await tx.temporada.findUnique({
+        where: { id: temporadaId },
+        include: {
+          precios: true,
+          equipos: true,
+          inscripciones: { include: { socio: true } },
+          cargos: true,
+          abonos: { where: { estado: "APROBADO" } },
         },
       });
-    }
 
-    // Si hay nueva temporada, crear balance de apertura
-    if (nuevaTemporadaId) {
-      for (const [socioId, deuda] of Object.entries(deudasPorSocio)) {
-        await prisma.cargo.create({
+      if (!temporada) {
+        throw new Error("TEMP_NOT_FOUND");
+      }
+
+      // Calcular deudas por socio inscrito (cargos - abonos aprobados)
+      const deudasPorSocio: Record<string, number> = {};
+
+      for (const inscripcion of temporada.inscripciones) {
+        const socioId = inscripcion.socioId;
+        const cargosSocio = temporada.cargos.filter((c) => c.socioId === socioId);
+        const abonosSocio = temporada.abonos.filter((a) => a.socioId === socioId);
+
+        const totalCargos = cargosSocio.reduce((acc, c) => acc + c.monto, 0);
+        const totalAbonos = abonosSocio.reduce((acc, a) => acc + a.monto, 0);
+        const deuda = totalCargos - totalAbonos;
+
+        if (deuda > 0) {
+          // Redondeo a 2 decimales para evitar problemas de coma flotante
+          deudasPorSocio[socioId] = Math.round(deuda * 100) / 100;
+        }
+      }
+
+      // Cerrar temporada actual
+      await tx.temporada.update({
+        where: { id: temporadaId },
+        data: {
+          activa: false,
+          fechaCierre: new Date(),
+        },
+      });
+
+      // Cerrar equipos
+      await tx.equipo.updateMany({
+        where: { temporadaId },
+        data: { cerrado: true },
+      });
+
+      // Marcar todos los socios inscritos como inactivos y borrar su categoría
+      // (se recalculará automáticamente al reinscribir en la siguiente temporada)
+      const socioIds = [...new Set(temporada.inscripciones.map(i => i.socioId))];
+      if (socioIds.length > 0) {
+        await tx.socio.updateMany({
+          where: { id: { in: socioIds } },
           data: {
-            monto: deuda,
-            concepto: `Saldo temporada anterior: ${temporada.nombre}`,
-            socioId,
-            temporadaId: nuevaTemporadaId,
+            activo: false,
+            categoriaId: null,
           },
         });
       }
-    }
+
+      // KEY FIX: persistir deudas en Socio.deudaPendiente
+      // Sin esto, inscribirJugadorEnTemporadaAction no detecta la deuda previa
+      // y la reinscripción pierde el arrastre de deuda.
+      for (const [socioId, deuda] of Object.entries(deudasPorSocio)) {
+        await tx.socio.update({
+          where: { id: socioId },
+          data: { deudaPendiente: deuda },
+        });
+      }
+
+      return {
+        socioIdsCount: socioIds.length,
+        deudasCount: Object.keys(deudasPorSocio).length,
+      };
+    });
 
     revalidatePath("/admin/temporadas");
     revalidatePath("/historico");
     revalidatePath("/jugadores");
-    return { 
-      success: true, 
-      message: `Temporada cerrada. ${socioIds.length} socios marcados como inactivos. ${Object.keys(deudasPorSocio).length} socios con deuda transferida.`,
-      deudasCount: Object.keys(deudasPorSocio).length,
+
+    return {
+      success: true,
+      message: `Temporada cerrada. ${result.socioIdsCount} socios marcados como inactivos. ${result.deudasCount} socios con deuda persistida.`,
+      deudasCount: result.deudasCount,
     };
   } catch (error) {
     console.error("ERROR_CERRAR_TEMPORADA:", error);
+    if (error instanceof Error && error.message === "TEMP_NOT_FOUND") {
+      return { error: "Temporada no encontrada" };
+    }
     return { error: "Error al cerrar la temporada" };
   }
 }
