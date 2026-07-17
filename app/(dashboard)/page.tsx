@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import EventList from "@/components/dashboard/EventList";
 import QuickActions from "@/components/dashboard/QuickActions";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
-import MetricsCards from "@/components/dashboard/MetricsCards";
+import AlertCards from "@/components/dashboard/AlertCards";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -31,7 +31,7 @@ export default async function HomePage() {
           <div className="h-32 bg-slate-100 animate-pulse rounded-[2rem]" />
         }
       >
-        <MetricsCards />
+        <AlertCards />
       </Suspense>
 
       <Suspense

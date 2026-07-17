@@ -32,25 +32,6 @@ export async function getTemporadaActiva() {
   });
 }
 
-export async function getDashboardMetrics() {
-  const [totalSocios, deudores] = await Promise.all([
-    prisma.socio.count({
-      where: { activo: true },
-    }),
-    prisma.socio.aggregate({
-      where: { deudaPendiente: { gt: 0 } },
-      _sum: { deudaPendiente: true },
-      _count: true,
-    }),
-  ]);
-
-  return {
-    totalSocios,
-    deudaTotal: deudores._sum.deudaPendiente ?? 0,
-    sociosConDeuda: deudores._count,
-  };
-}
-
 export type ActividadItem = {
   id: string;
   tipo: "pago" | "inscripcion" | "documento";
