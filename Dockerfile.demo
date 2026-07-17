@@ -58,6 +58,13 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/packages ./packages
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
+# Source files needed for runtime rebuild
+COPY --from=builder --chown=nextjs:nodejs /app/app ./app
+COPY --from=builder --chown=nextjs:nodejs /app/components ./components
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/tailwind.config.ts ./
+COPY --from=builder --chown=nextjs:nodejs /app/postcss.config.mjs ./
 
 # Entrypoint: db push + seed + start
 COPY --chown=nextjs:nodejs <<'EOF' /app/entrypoint.sh
