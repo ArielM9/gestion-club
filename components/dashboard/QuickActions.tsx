@@ -27,7 +27,7 @@ export default function QuickActions({ userRole = "COLABORADOR" }: { userRole?: 
       label: "Entrega de Ropa",
       description: "Gestión de stock e inventario",
       icon: Shirt,
-      href: "/tienda/entrega",
+      href: "/tienda/entregas",
       variant: "primary" as const,
     },
   ];

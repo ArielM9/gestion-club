@@ -27,13 +27,6 @@ export default async function AdminPage() {
       color: "bg-blue-50 text-blue-600",
     },
     {
-      title: "Categorías",
-      description: "Gestionar categorías (M6, M8, Senior...)",
-      href: "/admin/categorias",
-      icon: Trophy,
-      color: "bg-emerald-50 text-emerald-600",
-    },
-    {
       title: "Temporadas",
       description: "Gestionar temporadas y precios",
       href: "/admin/temporadas",

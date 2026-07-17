@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Package, X, Check } from "lucide-react";
+import { toast } from "sonner";
 import type { ProductoConStock } from "@/lib/types/tienda";
 
 interface EntregaRopaModalProps {
@@ -71,17 +72,17 @@ export default function EntregaRopaModal({
       });
       
       if (res.ok) {
-        alert('Entrega registrada correctamente');
+        toast.success("Entrega registrada correctamente");
         setSeleccionados([]);
         onClose();
         window.location.reload();
       } else {
         const data = await res.json();
-        alert(data.error || 'Error al registrar entrega');
+        toast.error(data.error || "Error al registrar entrega");
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al registrar entrega');
+      toast.error("Error al registrar entrega");
     } finally {
       setGuardando(false);
     }
