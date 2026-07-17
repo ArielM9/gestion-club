@@ -10,7 +10,7 @@ import { S3Client, PutObjectCommand, CreateBucketCommand, HeadBucketCommand } fr
 import * as dotenv from "dotenv";
 import { deflateSync } from "zlib";
 import { createHash, randomInt } from "crypto";
-import bcrypt from "bcryptjs";
+import { auth } from "../lib/auth";
 
 dotenv.config();
 
@@ -286,55 +286,30 @@ const PRECIOS: Record<Cat, { cuota: number; ficha: number }> = {
 // ---------------------------------------------------------------------------
 
 async function ensureDemoAdmin() {
-  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
-  const now = new Date();
-  const user = await prisma.user.upsert({
-    where: { email: DEMO_EMAIL },
-    update: { role: Role.ADMIN, status: UserStatus.ACTIVE, mustChangePassword: false, emailVerified: true },
-    create: {
+  // Use Better Auth's signUpEmail to create the user with proper password hashing
+  const existing = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
+  if (existing) {
+    console.log(`✅ Admin demo ya existe: ${DEMO_EMAIL}`);
+    return existing;
+  }
+
+  const result = await auth.api.signUpEmail({
+    body: {
       email: DEMO_EMAIL,
+      password: DEMO_PASSWORD,
       name: "Demo Admin",
-      username: "demo",
-      role: Role.ADMIN,
-      status: UserStatus.ACTIVE,
-      mustChangePassword: false,
-      emailVerified: true,
-      accounts: {
-        create: {
-          id: crypto.randomUUID(),
-          providerId: "credential",
-          accountId: DEMO_EMAIL,
-          password: passwordHash,
-          createdAt: now,
-          updatedAt: now,
-        },
-      },
     },
   });
-  // Ensure the credential account exists with a valid password even if the user pre-existed
-  const existingAccount = await prisma.account.findFirst({
-    where: { providerId: "credential", accountId: DEMO_EMAIL },
+
+  // Promote to admin
+  await prisma.user.update({
+    where: { email: DEMO_EMAIL },
+    data: { role: Role.ADMIN, status: UserStatus.ACTIVE, mustChangePassword: false, emailVerified: true },
   });
-  if (existingAccount) {
-    await prisma.account.update({
-      where: { id: existingAccount.id },
-      data: { password: passwordHash, userId: user.id },
-    });
-  } else {
-    await prisma.account.create({
-      data: {
-        id: crypto.randomUUID(),
-        providerId: "credential",
-        accountId: DEMO_EMAIL,
-        password: passwordHash,
-        userId: user.id,
-        createdAt: now,
-        updatedAt: now,
-      },
-    });
-  }
-  console.log(`✅ Admin demo: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
-  return user;
+
+  const user = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
+  console.log(`✅ Admin demo creado: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
+  return user!;
 }
 
 // ---------------------------------------------------------------------------
