@@ -12,6 +12,8 @@ import { toast } from "sonner";
 export default function FormularioSocio({ categorias }: { categorias: any[] }) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null);
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
 
   const nacionalidades = [
     "Española", "Afgana", "Albana", "Alemana", "Andorrana", "Angoleña", "Argelina", "Argentina", "Armenia", "Australiana", "Austriaca", "Azerbaiyana", "Bahameña", "Bangladesí", "Barbadense", "Bareiní", "Belga", "Beliceña", "Beninesa", "Bielorrusa", "Birmana", "Boliviana", "Bosnia", "Botsuanesa", "Brasileña", "Británica", "Bruneana", "Búlgara", "Burkinesa", "Burundesa", "Butanesa", "Caboverdiana", "Camboyana", "Camerunesa", "Canadiense", "Cantonesa", "Catuniana", "Centroafricana", "Chadiana", "Checa", "Chilena", "China", "Chipriota", "Colombiana", "Comorense", "Congoleña", "Costarricense", "Croata", "Cubana", "Danesa", "Dominiquesa", "Dominicana", "Ecuatoriana", "Egipcia", "Eslovaca", "Eslovena", "Española", "Estadounidense", "Estonia", "Etíope", "Filipina", "Finlandesa", "Fiyiana", "Francesa", "Gabonesa", "Gambiana", "Georgiana", "Ghanaian", "Granadina", "Griega", "Guatemalteca", "Guineana", "Guineana Ecuatorial", "Guyanesa", "Haitiana", "Hondureña", "Húngara", "India", "Indonesia", "Iraquí", "Iraní", "Irlandesa", "Islandesa", "Israelí", "Italiana", "Jamaicana", "Japonesa", "Jordana", "Kazaja", "Keniata", "Kirguisa", "Kuwaití", "Laosiana", "Lesothense", "Letona", "Libanesa", "Liberiana", "Libia", "Liechtensteiniana", "Lituana", "Luxemburguesa", "Macedonia", "Madagascarense", "Malasia", "Malauí", "Maldiva", "MaliEnse", "Maltesa", "Marfileña", "Marroquí", "Mauriciana", "Mauritana", "Mexicana", "Micronesia", "Moldava", "Monegasca", "Mongola", "Montenegrina", "Mozambiqueña", "Namibia", "Nauruana", "Nepalesa", "Nicaragüense", "Nigeriana", "Nigerina", "Norcoreana", "Noruega", "NeoZelandesa", "Omaní", "Paquistaní", "Palauana", "Panameña", "Papú", "Paraguaya", "Peruana", "Polaca", "Portuguesa", "Puertorriqueña", "Qatarí", "Ruandesa", "Rumana", "Rusa", "Samoana", "Sanmarinesa", "Santaluciense", "Sanvicentina", "Salvadoreña", "Saudí", "Senegalesa", "Serbia", "Seychellense", "Sierraleonesa", "Singapurense", "Siria", "Somalí", "SriLankesa", "Suazi", "Sudafricana", "Sudanesa", "Sueca", "Suiza", "Surinamesa", "Tailandesa", "Tanzana", "Tayika", "Togolesa", "Tongana", "Trinitense", "Tunecina", "Turca", "Turcomana", "Tuvaluana", "Ucraniana", "Ugandesa", "Uruguaya", "Uzbeka", "Vanuatuense", "Venezolana", "Vietnamita", "Yemení", "Yibutiana", "Zambiana", "Zimbabuense"
@@ -64,9 +66,52 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
   const categoriaCalculada = calcularCategoria(fechaNacimiento, watch("sexo"));
   const sexoValue = watch("sexo");
 
+  const handleFotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input para permitir re-subir el mismo archivo
+    e.target.value = "";
+
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      toast.error("Solo se permiten archivos JPG o PNG");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("La imagen no debe superar 2MB");
+      return;
+    }
+
+    setSubiendoFoto(true);
+    try {
+      // 1. Obtener presigned URL (scope=temp porque aún no existe socioId)
+      const presignedRes = await fetch(
+        `/api/socios/foto/presigned?scope=temp&contentType=${encodeURIComponent(file.type)}`,
+        { credentials: 'include' }
+      );
+      if (!presignedRes.ok) throw new Error("Error al obtener URL de subida");
+      const { url, displayUrl } = await presignedRes.json();
+
+      // 2. Subir a MinIO
+      const uploadRes = await fetch(url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      });
+      if (!uploadRes.ok) throw new Error("Error al subir la imagen");
+
+      setFotoUrl(displayUrl);
+      toast.success("Foto lista para guardar");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al subir la foto");
+    } finally {
+      setSubiendoFoto(false);
+    }
+  };
+
   const onSubmit = async (data: SocioFormValues) => {
     setIsPending(true);
-    const res = await crearSocioAction(data);
+    const res = await crearSocioAction({ ...data, fotoUrl: fotoUrl || undefined });
     setIsPending(false);
 
     if (res.success) {
@@ -180,13 +225,32 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           <div>
             <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest block mb-2">Foto del Jugador</label>
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border-2 border-dashed border-slate-200">
-                <Camera size={24} />
+              <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 overflow-hidden">
+                {fotoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={fotoUrl} alt="Preview" className="h-full w-full object-cover" />
+                ) : (
+                  <Camera size={24} />
+                )}
               </div>
-              <button type="button" className="text-xs font-bold bg-slate-100 text-slate-600 px-4 py-2 rounded-xl hover:bg-slate-200 transition-colors">
-                Subir Imagen
-              </button>
-              <p className="text-[10px] text-slate-400 font-medium">JPG, PNG. Máx 2MB.</p>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold bg-slate-100 text-slate-600 px-4 py-2 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer inline-flex items-center gap-2">
+                  {subiendoFoto ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Camera size={14} />
+                  )}
+                  {fotoUrl ? "Cambiar Imagen" : "Subir Imagen"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    className="hidden"
+                    onChange={handleFotoUpload}
+                    disabled={subiendoFoto}
+                  />
+                </label>
+                <p className="text-[10px] text-slate-400 font-medium">JPG, PNG. Máx 2MB.</p>
+              </div>
             </div>
           </div>
 

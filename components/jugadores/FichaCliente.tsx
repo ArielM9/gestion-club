@@ -25,6 +25,7 @@ import BalanceCard from "./BalanceCard";
 import HistorialMovimientos from "./HistorialMovimientos";
 import { FichaHeader } from "./FichaHeader";
 import EntregaRopaModal from "@/components/tienda/EntregaRopaModal";
+import SubirFotoModal from "./SubirFotoModal";
 
 export default function FichaCliente({
     socio,
@@ -127,12 +128,27 @@ export default function FichaCliente({
     const [showModalPago, setShowModalPago] = useState(false);
     const [showModalCargo, setShowModalCargo] = useState(false);
     const [showEntregaRopa, setShowEntregaRopa] = useState(false);
+    const [showFotoModal, setShowFotoModal] = useState(false);
 
     const getDocumentoPorTipo = (tipo: string) => {
         return (socio.documentos || []).find((d: any) => d.tipo === tipo);
     };
     const [docVer, setDocVer] = useState<any>(null);
     const [docSubir, setDocSubir] = useState<{ tipo: string; label: string } | null>(null);
+
+    const handlePhotoUploaded = async (url: string) => {
+        const nextData = { ...formData, fotoUrl: url };
+        setFormData(nextData);
+        const promise = actualizarSocioAction(socio.id, nextData);
+        toast.promise(promise, {
+            loading: 'Guardando foto...',
+            success: (data) => {
+                if (data?.error) throw new Error(data.error);
+                return '¡Foto actualizada correctamente!';
+            },
+            error: (err) => `Error: ${err.message || 'No se pudo guardar la foto'}`,
+        });
+    };
 
     return (
         <div className="space-y-6">
@@ -150,6 +166,7 @@ export default function FichaCliente({
                 onSave={handleSave}
                 onTogglarFederado={handleTogglarFederado}
                 federando={federando}
+                onPhotoUpload={() => setShowFotoModal(true)}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -341,6 +358,12 @@ export default function FichaCliente({
                     temporadaActiva={temporadaActiva}
                 />
             )}
+            <SubirFotoModal
+                isOpen={showFotoModal}
+                onClose={() => setShowFotoModal(false)}
+                socioId={socio.id}
+                onPhotoUploaded={handlePhotoUploaded}
+            />
         </div>
     );
 }

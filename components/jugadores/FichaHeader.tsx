@@ -1,4 +1,4 @@
-import { Pencil, Save, X, UserPlus, Shield, ShieldCheck, ShieldOff } from "lucide-react";
+import { Pencil, Save, X, UserPlus, Shield, ShieldCheck, ShieldOff, Camera } from "lucide-react";
 import type { SocioData } from "@/lib/types/jugador";
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
   onInscribir: () => void;
   onTogglarFederado: () => void;
   federando: boolean;
+  onPhotoUpload?: () => void;
 }
 
 export function FichaHeader({
@@ -31,12 +32,32 @@ export function FichaHeader({
   onInscribir,
   onTogglarFederado,
   federando,
+  onPhotoUpload,
 }: Props) {
   return (
     <div className="flex justify-between items-center bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
       <div className="flex items-center gap-4">
-        <div className="h-16 w-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 font-black text-2xl uppercase">
-          {formData.nombre[0]}
+        <div className="h-16 w-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 font-black text-2xl uppercase overflow-hidden relative group">
+          {formData.fotoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={formData.fotoUrl}
+              alt={formData.nombre}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            formData.nombre[0]
+          )}
+          {onPhotoUpload && !isEditing && (
+            <button
+              type="button"
+              onClick={onPhotoUpload}
+              className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+              aria-label="Cambiar foto"
+            >
+              <Camera size={18} className="text-white" />
+            </button>
+          )}
         </div>
         <div>
           <h1 className="text-2xl font-black text-slate-900">
