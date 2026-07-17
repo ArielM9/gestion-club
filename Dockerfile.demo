@@ -89,7 +89,7 @@ cd /app && npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)
 echo "[demo] starting app..."
 exec node node_modules/next/dist/bin/next start
 EOF
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh && chown -R nextjs:nodejs /app
 
 USER nextjs
 EXPOSE 3000
