@@ -2,9 +2,9 @@ import prisma from "@/lib/prisma";
 import SocioTable from "@/components/jugadores/SocioTable";
 import SearchJugadores from "@/components/jugadores/SearchJugadores";
 import CategoryFilter from "@/components/jugadores/CategoryFilter";
+import JugadoresPageActions from "@/components/jugadores/JugadoresPageActions";
 import { PageContainer } from "@/components/ui/PageContainer";
-import { Plus, Users } from "lucide-react";
-import Link from "next/link";
+import { Users } from "lucide-react";
 import { getSociosInscritosEnTemporadaActiva } from "@/lib/actions/socios";
 
 const ITEMS_PER_PAGE = 10;
@@ -56,14 +56,7 @@ export default async function JugadoresPage({
     <PageContainer
       title="Socios y Jugadores"
       subtitle="Lista general del club"
-      actions={
-        <Link
-          href="/jugadores/nuevo"
-          className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
-        >
-          <Plus size={18} /> Nuevo Socio
-        </Link>
-      }
+      actions={<JugadoresPageActions />}
     >
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center">
         <div className="flex-1">
