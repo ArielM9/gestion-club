@@ -7,6 +7,7 @@ import { X, Search, UserCheck, Loader2, CheckCircle2, Archive } from "lucide-rea
 import { toast } from "sonner";
 import { buscarTodosLosSocios } from "@/lib/actions/socios";
 import { inscribirJugadorEnTemporadaAction } from "@/lib/actions/temporadas";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 interface RenovarSocioModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export default function RenovarSocioModal({ isOpen, onClose }: RenovarSocioModal
   const [buscando, setBuscando] = useState(false);
   const [renovandoId, setRenovandoId] = useState<string | null>(null);
   const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+  const [confirmDeuda, setConfirmDeuda] = useState<{ socioId: string; socioNombre: string; deuda: number } | null>(null);
 
     const handleSearch = useDebouncedCallback(async (term: string) => {
       const trimmed = term.trim();
@@ -73,24 +75,9 @@ export default function RenovarSocioModal({ isOpen, onClose }: RenovarSocioModal
 
       if (result.tieneDeuda) {
         const deuda = result.deuda ?? 0;
-        const confirmar = window.confirm(
-          `${socioNombre} tiene ${deuda}€ de deuda de temporada anterior. ¿Migrar la deuda a la nueva temporada y continuar?`
-        );
-
-        if (confirmar) {
-          const result2 = await inscribirJugadorEnTemporadaAction(socioId, true);
-          if (result2.success) {
-            toast.success(`${socioNombre} renovado correctamente`);
-            handleClose();
-router.refresh();
-          } else {
-            toast.error(result2.error || "Error al renovar");
-            setRenovandoId(null);
-          }
-        } else {
-          // Usuario canceló la migración
-          setRenovandoId(null);
-        }
+        setConfirmDeuda({ socioId, socioNombre, deuda });
+        // No reseteamos renovandoId: se mantiene mientras el diálogo está abierto
+        return;
       } else if (result.success) {
         toast.success(`${socioNombre} renovado correctamente`);
         handleClose();
@@ -99,6 +86,27 @@ router.refresh();
         toast.error(result.error || "Error al renovar");
         setRenovandoId(null);
       }
+    };
+
+    const handleConfirmMigrarDeuda = async () => {
+      if (!confirmDeuda) return;
+      const { socioId, socioNombre } = confirmDeuda;
+      setConfirmDeuda(null);
+
+      const result = await inscribirJugadorEnTemporadaAction(socioId, true);
+      if (result.success) {
+        toast.success(`${socioNombre} renovado correctamente`);
+        handleClose();
+        router.refresh();
+      } else {
+        toast.error(result.error || "Error al renovar");
+        setRenovandoId(null);
+      }
+    };
+
+    const handleCancelMigrarDeuda = () => {
+      setConfirmDeuda(null);
+      setRenovandoId(null);
     };
 
     if (!isOpen) return null;
@@ -220,6 +228,21 @@ router.refresh();
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={confirmDeuda !== null}
+        onClose={handleCancelMigrarDeuda}
+        onConfirm={handleConfirmMigrarDeuda}
+        title="Migrar deuda pendiente"
+        message={
+          confirmDeuda
+            ? `${confirmDeuda.socioNombre} tiene ${confirmDeuda.deuda}€ de deuda de temporada anterior. ¿Migrar la deuda a la nueva temporada y continuar?`
+            : ""
+        }
+        confirmLabel="Migrar y renovar"
+        variant="warning"
+        isLoading={renovandoId !== null}
+      />
     </div>
   );
 }

@@ -126,7 +126,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
       {/* SECCIÓN 1: DATOS PERSONALES */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><User size={20} /></div>
           <h2 className="font-bold text-slate-800">Información Personal</h2>
@@ -136,18 +136,18 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
           {/* Nombre y Apellidos (como ya tenías) */}
           <div className="space-y-2">
             <label htmlFor="nombre" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Nombre</label>
-            <input id="nombre" {...register("nombre")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <input id="nombre" {...register("nombre")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.nombre && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.nombre.message}</p>}
           </div>
 
           <div className="space-y-2">
             <label htmlFor="apellidos" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Apellidos</label>
-            <input id="apellidos" {...register("apellidos")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <input id="apellidos" {...register("apellidos")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="nacionalidad" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Nacionalidad</label>
-            <select id="nacionalidad" {...register("nacionalidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+            <select id="nacionalidad" {...register("nacionalidad")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
               {nacionalidades.map(nac => (
                 <option key={nac} value={nac}>{nac}</option>
               ))}
@@ -157,19 +157,19 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
           <div className="space-y-2">
             <label htmlFor="dni" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">{esEspañol ? "DNI" : "NIE"}</label>
-            <input id="dni" {...register("dni")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all uppercase" placeholder={esEspañol ? "12345678Z" : "X1234567Z"} />
+            <input id="dni" {...register("dni")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all uppercase" placeholder={esEspañol ? "12345678Z" : "X1234567Z"} />
             {errors.dni && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.dni.message}</p>}
           </div>
 
           <div className="space-y-2">
             <label htmlFor="fechaNacimiento" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Fecha Nacimiento</label>
-            <input id="fechaNacimiento" {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
+            <input id="fechaNacimiento" {...register("fechaNacimiento")} type="date" className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" />
             {errors.fechaNacimiento && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.fechaNacimiento.message}</p>}
           </div>
 
           <div className="space-y-2">
             <label htmlFor="sexo" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Sexo</label>
-            <select id="sexo" {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
+            <select id="sexo" {...register("sexo")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700">
               <option value="">Seleccionar...</option>
               <option value="M">Masculino</option>
               <option value="F">Femenino</option>
@@ -179,7 +179,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         </div>
 
         {mostrarSeccionTutor && (
-          <section className="bg-amber-50/50 rounded-[2.5rem] p-8 border border-amber-100 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+          <section className="bg-amber-50/50 rounded-[2rem] p-8 border border-amber-100 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
             <div className="flex items-center gap-3 mb-2 border-b border-amber-100 pb-4">
               <div className="p-2 bg-amber-100 text-amber-700 rounded-lg"><Users2 size={20} /></div>
               <div>
@@ -194,7 +194,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
                 <input
                   id="nombreTutor"
                   {...register("nombreTutor")}
-                  className={`w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all ${errors.nombreTutor ? 'ring-2 ring-red-500' : ''}`}
+                  className={`w-full px-5 py-3 bg-white hover:bg-amber-50 border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all ${errors.nombreTutor ? 'ring-2 ring-red-500' : ''}`}
                 />
                 {errors.nombreTutor && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.nombreTutor.message}</p>}
               </div>
@@ -204,7 +204,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
                 <input
                   id="dniTutor"
                   {...register("dniTutor")}
-                  className="w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all uppercase"
+                  className="w-full px-5 py-3 bg-white hover:bg-amber-50 border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all uppercase"
                 />
               </div>
 
@@ -213,7 +213,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
                 <input
                   id="telefonoTutor"
                   {...register("telefonoTutor")}
-                  className="w-full px-5 py-3 bg-white border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all"
+                  className="w-full px-5 py-3 bg-white hover:bg-amber-50 border-none rounded-2xl focus:ring-2 focus:ring-amber-500 transition-all"
                 />
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
       </section>
 
       {/* SECCIÓN 2: CATEGORÍA Y CONTACTO */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Categoría</label>
@@ -291,13 +291,13 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
           <div className="space-y-2">
             <label htmlFor="email" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Email</label>
-            <input id="email" {...register("email")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="ejemplo@correo.com" />
+            <input id="email" {...register("email")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="ejemplo@correo.com" />
             {errors.email && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
             <label htmlFor="telefono" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Teléfono</label>
-            <input id="telefono" {...register("telefono")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="600 000 000" />
+            <input id="telefono" {...register("telefono")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="600 000 000" />
             {errors.telefono && <p className="text-[10px] text-red-500 font-bold ml-2">{errors.telefono.message}</p>}
           </div>
         </div>
@@ -305,17 +305,17 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-2 space-y-2">
             <label htmlFor="direccion" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Dirección Completa</label>
-            <input id="direccion" {...register("direccion")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Calle, número, piso..." />
+            <input id="direccion" {...register("direccion")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Calle, número, piso..." />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="codigoPostal" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Código Postal</label>
-            <input id="codigoPostal" {...register("codigoPostal")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" placeholder="00000" />
+            <input id="codigoPostal" {...register("codigoPostal")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" placeholder="00000" />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="localidad" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Localidad</label>
-            <input id="localidad" {...register("localidad")} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Ciudad o Pueblo" />
+            <input id="localidad" {...register("localidad")} className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Ciudad o Pueblo" />
           </div>
         </div>
       </section>
@@ -323,7 +323,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
 
 
       {/* SECCIÓN 4: TALLA Y DOCUMENTACIÓN */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><Shirt size={20} /></div>
           <h2 className="font-bold text-slate-800">Talla y Documentación</h2>
@@ -335,7 +335,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
             <select
               id="tallaRopa"
               {...register("tallaRopa")}
-              className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700"
+              className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-bold text-slate-700"
             >
               <option value="">Seleccionar...</option>
               <option value="6">6</option>
@@ -354,7 +354,7 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
       </section>
 
       {/* SECCIÓN 5: OBSERVACIONES */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-purple-50 text-purple-600 rounded-lg"><MessageSquare size={20} /></div>
           <h2 className="font-bold text-slate-800">Observaciones</h2>
@@ -365,21 +365,21 @@ export default function FormularioSocio({ categorias }: { categorias: any[] }) {
             id="observaciones"
             {...register("observaciones")}
             rows={3}
-            className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+            className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all resize-none"
             placeholder="Alergias, notas médicas, información relevante..."
           />
         </div>
       </section>
 
       {/* SECCIÓN 3: PAGO (IBAN) */}
-      <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+      <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6">
         <div className="flex items-center gap-3 mb-2 border-b border-slate-50 pb-4">
           <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><CreditCard size={20} /></div>
           <h2 className="font-bold text-slate-800">Datos de Facturación</h2>
         </div>
         <div className="max-w-md space-y-2">
           <label htmlFor="cuentaBancaria" className="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">IBAN (Cuenta Bancaria)</label>
-          <input id="cuentaBancaria" {...register("cuentaBancaria")} placeholder="ES00 0000..." className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" />
+          <input id="cuentaBancaria" {...register("cuentaBancaria")} placeholder="ES00 0000..." className="w-full px-5 py-3 bg-slate-50 hover:bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-mono" />
         </div>
       </section>
 

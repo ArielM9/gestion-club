@@ -59,7 +59,7 @@ export default function DatosBasicos({
               name="fechaNacimiento"
               value={formData.fechaNacimiento ? new Date(formData.fechaNacimiento).toISOString().split('T')[0] : ''}
               onChange={onChange}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all"
+              className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all"
             />
           ) : (
             <p className="px-1 text-sm font-black text-slate-700">
@@ -76,7 +76,7 @@ export default function DatosBasicos({
               name="dni"
               value={formData.dni}
               onChange={onChange}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all"
+              className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all"
             />
           ) : (
             <div
@@ -105,7 +105,7 @@ export default function DatosBasicos({
             name="categoriaId"
             value={formData.categoriaId || ""}
             onChange={onChange}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all cursor-pointer"
+            className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all cursor-pointer"
           >
             {categorias.map((cat) => (
               <option key={cat.id} value={cat.id}>

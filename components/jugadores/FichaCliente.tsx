@@ -244,7 +244,7 @@ export default function FichaCliente({
                                         name="tallaRopa"
                                         value={formData.tallaRopa || ""}
                                         onChange={handleChange}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all cursor-pointer"
+                                        className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:border-blue-500 outline-none transition-all cursor-pointer"
                                     >
                                         <option value="">Seleccionar talla...</option>
                                         <optgroup label="Infantil">
@@ -332,7 +332,7 @@ export default function FichaCliente({
                                 value={formData.observaciones || ""}
                                 onChange={handleChange}
                                 placeholder="Alergias, lesiones previas, disponibilidad..."
-                                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium focus:border-blue-500 outline-none h-32 transition-all"
+                                className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium focus:border-blue-500 outline-none h-32 transition-all"
                             />
                         ) : (
                             <div className="bg-slate-50/50 p-6 rounded-2xl border border-dashed border-slate-200">
