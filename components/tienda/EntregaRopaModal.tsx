@@ -107,7 +107,7 @@ export default function EntregaRopaModal({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
           {loading ? (
             <div className="text-center py-8 flex flex-col items-center gap-2">
               <Loader2 size={20} className="animate-spin text-slate-500" />
@@ -152,7 +152,7 @@ export default function EntregaRopaModal({
           )}
         </div>
 
-        <div className="p-8 border-t border-slate-50">
+        <div className="p-4 sm:p-6 md:p-8 border-t border-slate-50">
           <div className="flex justify-between items-center mb-4">
             <p className="text-sm text-slate-500">
               {seleccionados.length} producto(s) seleccionado(s)

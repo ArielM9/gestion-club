@@ -15,6 +15,7 @@ import {
     ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import ModalPago from "./ModalPago";
 import ModalCargo from "./ModalCargo";
 import DocumentosSocio from "./DocumentosSocio";
@@ -42,6 +43,12 @@ export default function FichaCliente({
     const [inscribiendo, setInscribiendo] = useState(false);
     const [showFederadoModal, setShowFederadoModal] = useState(false);
     const [federando, setFederando] = useState(false);
+    const [pendingConfirm, setPendingConfirm] = useState<
+        | { type: "debt"; deuda: number }
+        | { type: "desinscribir" }
+        | { type: "entregaRopa" }
+        | null
+    >(null);
 
     const tieneInscripcionActiva = socio.inscripciones?.some((i: InscripcionData) => i.temporada?.activa);
 
@@ -52,27 +59,27 @@ export default function FichaCliente({
         }
 
         const resultado = await inscribirJugadorEnTemporadaAction(socio.id, false);
-        
+
         if (resultado.tieneDeuda && resultado.deuda) {
-            const confirmar = confirm(
-                `El jugador tiene ${resultado.deuda}€ de deuda. ¿Quieres migrarla a la temporada actual y continuar con la inscripción?`
-            );
-            if (confirmar) {
-                setInscribiendo(true);
-                const resultado2 = await inscribirJugadorEnTemporadaAction(socio.id, true);
-                setInscribiendo(false);
-                if (resultado2.success) {
-                    toast.success("Jugador inscrito correctamente");
-                    router.refresh();
-                } else {
-                    toast.error(resultado2.error);
-                }
-            }
+            setPendingConfirm({ type: "debt", deuda: resultado.deuda });
         } else if (resultado.error) {
             toast.error(resultado.error);
         } else if (resultado.success) {
             toast.success("Jugador inscrito correctamente");
             router.refresh();
+        }
+    };
+
+    const handleConfirmDebt = async () => {
+        setPendingConfirm(null);
+        setInscribiendo(true);
+        const resultado = await inscribirJugadorEnTemporadaAction(socio.id, true);
+        setInscribiendo(false);
+        if (resultado.success) {
+            toast.success("Jugador inscrito correctamente");
+            router.refresh();
+        } else {
+            toast.error(resultado.error || "Error al inscribir");
         }
     };
 
@@ -91,12 +98,14 @@ export default function FichaCliente({
 
     const inscripcionActiva = socio.inscripciones?.find((i: InscripcionData) => i.temporada?.activa);
 
-    const handleDesinscribir = async () => {
+    const handleDesinscribir = () => {
         if (!inscripcionActiva) return;
-        
-        const confirmar = confirm("¿Estás seguro de que quieres desinscribir a este jugador de la temporada actual?");
-        if (!confirmar) return;
+        setPendingConfirm({ type: "desinscribir" });
+    };
 
+    const handleConfirmDesinscribir = async () => {
+        if (!inscripcionActiva) return;
+        setPendingConfirm(null);
         const res = await desinscribirJugadorAction(inscripcionActiva.id);
         if (res.success) {
             toast.success("Jugador desinscrito");
@@ -122,16 +131,14 @@ export default function FichaCliente({
         });
     };
 
-    const handleEntregaRopa = async () => {
-        if (confirm("¿Confirmas la entrega del pack?")) {
-            setRopaEntregada(true);
-
-            toast.promise(actualizarSocioAction(socio.id, { ...formData, ropaEntregada: true }), {
-                loading: 'Registrando entrega...',
-                success: 'Entrega registrada con éxito',
-                error: 'Error al registrar la entrega',
-            });
-        }
+    const handleConfirmEntregaRopa = async () => {
+        setRopaEntregada(true);
+        setPendingConfirm(null);
+        toast.promise(actualizarSocioAction(socio.id, { ...formData, ropaEntregada: true }), {
+            loading: 'Registrando entrega...',
+            success: 'Entrega registrada con éxito',
+            error: 'Error al registrar la entrega',
+        });
     };
 
     const handleChange = (
@@ -278,12 +285,8 @@ export default function FichaCliente({
                                             checked={ropaEntregada}
                                             disabled={ropaEntregada}
                                             onChange={() => {
-                                                if (
-                                                    confirm(
-                                                        "¿Confirmas que se ha entregado el pack de ropa inicial?",
-                                                    )
-                                                ) {
-                                                    setRopaEntregada(true);
+                                                if (!ropaEntregada) {
+                                                    setPendingConfirm({ type: "entregaRopa" });
                                                 }
                                             }}
                                             className="h-5 w-5 rounded-md border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:cursor-not-allowed accent-green-600"
@@ -384,6 +387,38 @@ export default function FichaCliente({
                 onClose={() => setShowFotoModal(false)}
                 socioId={socio.id}
                 onPhotoUploaded={handlePhotoUploaded}
+            />
+            <ConfirmDialog
+                isOpen={pendingConfirm !== null}
+                onClose={() => setPendingConfirm(null)}
+                onConfirm={() => {
+                    if (pendingConfirm?.type === "debt") handleConfirmDebt();
+                    else if (pendingConfirm?.type === "desinscribir") handleConfirmDesinscribir();
+                    else if (pendingConfirm?.type === "entregaRopa") handleConfirmEntregaRopa();
+                }}
+                title={
+                    pendingConfirm?.type === "debt"
+                        ? "Migrar deuda pendiente"
+                        : pendingConfirm?.type === "desinscribir"
+                            ? "Desinscribir jugador"
+                            : "Confirmar entrega de ropa"
+                }
+                message={
+                    pendingConfirm?.type === "debt"
+                        ? `El jugador tiene ${pendingConfirm.deuda}€ de deuda. ¿Quieres migrarla a la temporada actual y continuar con la inscripción?`
+                        : pendingConfirm?.type === "desinscribir"
+                            ? "¿Estás seguro de que quieres desinscribir a este jugador de la temporada actual?"
+                            : "¿Confirmas que se ha entregado el pack de ropa inicial?"
+                }
+                variant={pendingConfirm?.type === "entregaRopa" ? "info" : "warning"}
+                confirmLabel={
+                    pendingConfirm?.type === "debt"
+                        ? "Migrar e inscribir"
+                        : pendingConfirm?.type === "desinscribir"
+                            ? "Desinscribir"
+                            : "Confirmar"
+                }
+                isLoading={inscribiendo && pendingConfirm?.type === "debt"}
             />
         </div>
     );

@@ -27,7 +27,7 @@ export default function Sidebar({ session, className = "" }: { session: any; cla
         <div className="bg-yellow-500 text-slate-900 font-black p-2 rounded-lg text-xs">RC</div>
         <div>
           <h2 className="text-white font-bold text-sm leading-tight">CR Victorianos</h2>
-          <p className="text-[10px] text-slate-500">Panel Admin</p>
+          <p className="text-[10px] text-slate-400">Panel Admin</p>
         </div>
       </div>
 
@@ -41,6 +41,7 @@ export default function Sidebar({ session, className = "" }: { session: any; cla
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
                 ? "bg-blue-600/10 text-yellow-500 border border-blue-500/20 shadow-sm"
                 : "hover:bg-slate-800 hover:text-white"
@@ -68,7 +69,7 @@ export default function Sidebar({ session, className = "" }: { session: any; cla
             <p className="text-sm font-bold text-white truncate">
               {session.user.name}
             </p>
-            <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest">
+            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
               {userRole || "Usuario"}
             </p>
           </div>
