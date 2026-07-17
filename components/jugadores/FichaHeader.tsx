@@ -1,4 +1,4 @@
-import { Pencil, Save, X, UserPlus, Shield, ShieldCheck, ShieldOff, Camera } from "lucide-react";
+import { Pencil, Save, X, UserPlus, Shield, ShieldCheck, ShieldOff, Camera, Loader2 } from "lucide-react";
 import type { SocioData } from "@/lib/types/jugador";
 
 interface Props {
@@ -98,10 +98,10 @@ export function FichaHeader({
             <button
               onClick={onInscribir}
               disabled={inscribiendo}
-              className="bg-green-600 text-white px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-green-700 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="bg-green-600 text-white px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-green-700 transition-all flex items-center gap-2 disabled:opacity-50 min-h-[44px]"
             >
               {inscribiendo ? (
-                <span className="animate-spin">⏳</span>
+                <Loader2 size={16} className="animate-spin" />
               ) : (
                 <UserPlus size={16} />
               )}
@@ -112,14 +112,14 @@ export function FichaHeader({
             <button
               onClick={onTogglarFederado}
               disabled={federando}
-              className={`px-4 py-2.5 rounded-xl font-bold text-sm border flex items-center gap-2 transition-all ${
+              className={`px-4 py-2.5 rounded-xl font-bold text-sm border flex items-center gap-2 transition-all min-h-[44px] ${
                 federadoActual
                   ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
                   : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
               } disabled:opacity-50`}
             >
               {federando ? (
-                <span className="animate-spin">⏳</span>
+                <Loader2 size={16} className="animate-spin" />
               ) : federadoActual ? (
                 <ShieldCheck size={16} />
               ) : (
@@ -131,20 +131,20 @@ export function FichaHeader({
           {tieneInscripcionActiva && onDesinscribir && (
             <button
               onClick={onDesinscribir}
-              className="px-4 py-2.5 rounded-xl font-bold text-sm border border-red-200 text-red-600 hover:bg-red-50 transition-all flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl font-bold text-sm border border-red-200 text-red-600 hover:bg-red-50 transition-all flex items-center gap-2 min-h-[44px]"
             >
               <X size={16} /> Desinscribir
             </button>
           )}
           <button
             onClick={onCancelEdit}
-            className="bg-slate-100 text-slate-500 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-200 flex items-center gap-2"
+            className="bg-slate-100 text-slate-500 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-200 flex items-center gap-2 min-h-[44px]"
           >
             <X size={16} /> Cancelar
           </button>
           <button
             onClick={onSave}
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center gap-2"
+            className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center gap-2 min-h-[44px]"
           >
             <Save size={16} /> Guardar
           </button>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Package, X, Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Package, X, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import type { ProductoConStock } from "@/lib/types/tienda";
 
@@ -18,6 +19,7 @@ export default function EntregaRopaModal({
   socioId,
   tallaJugador
 }: EntregaRopaModalProps) {
+  const router = useRouter();
   const [productos, setProductos] = useState<ProductoConStock[]>([]);
   const [loading, setLoading] = useState(true);
   const [seleccionados, setSeleccionados] = useState<{productoId: string; producto: string; talla: string; cantidad: number}[]>([]);
@@ -75,7 +77,7 @@ export default function EntregaRopaModal({
         toast.success("Entrega registrada correctamente");
         setSeleccionados([]);
         onClose();
-        window.location.reload();
+        router.refresh();
       } else {
         const data = await res.json();
         toast.error(data.error || "Error al registrar entrega");
@@ -107,8 +109,8 @@ export default function EntregaRopaModal({
 
         <div className="flex-1 overflow-y-auto p-8">
           {loading ? (
-            <div className="text-center py-8">
-              <span className="animate-spin">⏳</span>
+            <div className="text-center py-8 flex flex-col items-center gap-2">
+              <Loader2 size={20} className="animate-spin text-slate-500" />
               <p className="text-slate-500 mt-2">Cargando productos...</p>
             </div>
           ) : (
@@ -169,7 +171,7 @@ export default function EntregaRopaModal({
               className="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-green-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {guardando ? (
-                <span className="animate-spin">⏳</span>
+                <Loader2 size={16} className="animate-spin" />
               ) : (
                 <>
                   <Package size={16} />

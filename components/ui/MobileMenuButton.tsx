@@ -6,6 +6,10 @@ import { Menu, X } from "lucide-react";
 export function MobileMenuButton() {
   const { isOpen, toggle } = useMobileMenu();
 
+  // Cuando el overlay está abierto, su propio botón X cierra el menú.
+  // El botón flotante se oculta para evitar el duplicado.
+  if (isOpen) return null;
+
   return (
     <button
       onClick={toggle}

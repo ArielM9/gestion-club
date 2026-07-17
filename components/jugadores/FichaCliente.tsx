@@ -3,6 +3,7 @@
 import { actualizarSocioAction, togglearFederadoAction } from "@/lib/actions/socios";
 import { inscribirJugadorEnTemporadaAction, desinscribirJugadorAction } from "@/lib/actions/temporadas";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { SocioData, CategoriaBasic, JugadorPageProps, InscripcionData } from "@/lib/types/jugador";
 import {
     Pencil,
@@ -62,7 +63,7 @@ export default function FichaCliente({
                 setInscribiendo(false);
                 if (resultado2.success) {
                     toast.success("Jugador inscrito correctamente");
-                    window.location.reload();
+                    router.refresh();
                 } else {
                     toast.error(resultado2.error);
                 }
@@ -71,7 +72,7 @@ export default function FichaCliente({
             toast.error(resultado.error);
         } else if (resultado.success) {
             toast.success("Jugador inscrito correctamente");
-            window.location.reload();
+            router.refresh();
         }
     };
 
@@ -82,7 +83,7 @@ export default function FichaCliente({
 
         if (res.success) {
             toast.success(res.federado ? "Jugador federado" : "Federación retirada");
-            window.location.reload();
+            router.refresh();
         } else {
             toast.error(res.error);
         }
@@ -99,7 +100,7 @@ export default function FichaCliente({
         const res = await desinscribirJugadorAction(inscripcionActiva.id);
         if (res.success) {
             toast.success("Jugador desinscrito");
-            window.location.reload();
+            router.refresh();
         } else {
             toast.error(res.error || "Error al desinscribir");
         }
@@ -152,6 +153,8 @@ export default function FichaCliente({
     };
     const [docVer, setDocVer] = useState<any>(null);
     const [docSubir, setDocSubir] = useState<{ tipo: string; label: string } | null>(null);
+
+    const router = useRouter();
 
     const handlePhotoUploaded = async (url: string) => {
         const nextData = { ...formData, fotoUrl: url };
@@ -216,9 +219,9 @@ export default function FichaCliente({
                             <h2 className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">
                                 <Shirt size={14} /> Equipación y Tallas
                             </h2>
-                            <button 
+                            <button
                                 onClick={() => setShowEntregaRopa(true)}
-                                className="flex items-center gap-1.5 text-[10px] font-black uppercase bg-green-50 text-green-600 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-all"
+                                className="flex items-center gap-1.5 text-[10px] font-black uppercase bg-green-50 text-green-600 px-3 py-2 rounded-lg hover:bg-green-100 transition-all"
                             >
                                 <Plus size={12} /> Entregar Ropa
                             </button>
@@ -226,7 +229,7 @@ export default function FichaCliente({
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                             <div className="space-y-1">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase ml-1">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase ml-1">
                                     Talla Registrada
                                 </p>
                                 {isEditing ? (
@@ -259,7 +262,7 @@ export default function FichaCliente({
                             </div>
 
                             <div className="space-y-2">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase ml-1">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase ml-1">
                                     Estado de Entrega (Pack Inicial)
                                 </p>
                                 <div

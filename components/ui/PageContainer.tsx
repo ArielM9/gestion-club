@@ -23,7 +23,7 @@ export function PageContainer({
 }: PageContainerProps) {
   return (
     <div className={`${maxWidthClasses[maxWidth]} mx-auto p-4 md:p-6 space-y-4 md:space-y-6`}>
-      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 pl-14 md:pl-0">
         <div className="pt-1">
           <h1 className="text-xl md:text-2xl font-black text-slate-900">{title}</h1>
           {subtitle && (

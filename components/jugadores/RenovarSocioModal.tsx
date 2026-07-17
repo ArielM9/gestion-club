@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { X, Search, UserCheck, Loader2, CheckCircle2, Archive } from "lucide-react";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ interface SocioResultado {
 }
 
 export default function RenovarSocioModal({ isOpen, onClose }: RenovarSocioModalProps) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [resultados, setResultados] = useState<SocioResultado[]>([]);
   const [buscando, setBuscando] = useState(false);
@@ -80,7 +82,7 @@ export default function RenovarSocioModal({ isOpen, onClose }: RenovarSocioModal
           if (result2.success) {
             toast.success(`${socioNombre} renovado correctamente`);
             handleClose();
-            window.location.reload();
+router.refresh();
           } else {
             toast.error(result2.error || "Error al renovar");
             setRenovandoId(null);
