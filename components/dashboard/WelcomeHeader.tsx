@@ -1,5 +1,4 @@
 import { Sparkles } from "lucide-react";
-import { getTemporadaActiva } from "@/lib/data-fetching";
 
 interface WelcomeHeaderProps {
   nombre: string;
@@ -12,10 +11,8 @@ const ROLE_LABELS: Record<string, string> = {
   COLABORADOR: "Colaborador",
 };
 
-export default async function WelcomeHeader({ nombre, role }: WelcomeHeaderProps) {
-  const temporada = await getTemporadaActiva();
+export default function WelcomeHeader({ nombre, role }: WelcomeHeaderProps) {
   const roleLabel = ROLE_LABELS[role] ?? role;
-  const temporadaLabel = temporada?.nombre ?? "Sin temporada activa";
 
   return (
     <section
@@ -40,10 +37,8 @@ export default async function WelcomeHeader({ nombre, role }: WelcomeHeaderProps
           >
             Bienvenido, <span className="text-red-600">{nombre}</span>
           </h1>
-          <p className="mt-1.5 text-sm md:text-base font-bold text-slate-500 uppercase tracking-wider">
-            <span className="text-slate-700">{roleLabel}</span>
-            <span className="mx-2 text-slate-300">·</span>
-            <span>{temporadaLabel}</span>
+          <p className="mt-1.5 text-sm font-bold text-slate-500 uppercase tracking-wider">
+            {roleLabel}
           </p>
         </div>
       </div>
