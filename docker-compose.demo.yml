@@ -79,6 +79,7 @@ services:
       - "3007:3000"
     networks:
       - demo_net
+      - coolify-proxy
 
 volumes:
   demo_pg_data:
@@ -87,3 +88,5 @@ volumes:
 networks:
   demo_net:
     driver: bridge
+  coolify-proxy:
+    external: true
