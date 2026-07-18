@@ -1,11 +1,14 @@
 import prisma from "./prisma";
 
 export async function getProximosEventos() {
-  const ahora = new Date();
+  // Absorber offset de zona horaria entre el servidor y el cliente: cualquier
+  // evento que en horario local sea "hoy" debe aparecer aunque su timestamp en
+  // UTC esté hasta 24h en el pasado.
+  const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
   return await prisma.evento.findMany({
     where: {
-      fecha: { gte: ahora },
+      fecha: { gte: hace24h },
     },
     include: {
       equipo: {
@@ -74,7 +77,7 @@ export async function getActividadReciente(): Promise<ActividadItem[]> {
       tipo: "pago" as const,
       fecha: a.fecha,
       descripcion: `${a.socio.nombre} ${a.socio.apellidos} — ${formatMonto(a.monto)}`,
-      href: `/contabilidad?tab=abonos&id=${a.id}`,
+      href: `/contabilidad?tab=pendientes&id=${a.id}`,
     })),
     ...ultimasInscripciones.map((i) => ({
       id: `inscripcion-${i.id}`,

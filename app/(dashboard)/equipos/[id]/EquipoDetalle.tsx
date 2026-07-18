@@ -49,6 +49,7 @@ interface Inscripcion {
   id: string;
   socio: Socio;
   federado: boolean;
+  categoria: Categoria | null;
 }
 
 interface Equipo {
@@ -214,7 +215,12 @@ export default function EquipoDetalle({ equipo, todosLosSocios }: EquipoDetalleP
                 className="flex items-center justify-between p-4 rounded-2xl bg-slate-50"
               >
                 <JugadorItem
-                  jugador={inscripcion.socio}
+                  jugador={{
+                    ...inscripcion.socio,
+                    categoria: inscripcion.categoria
+                      ? { nombre: inscripcion.categoria.nombre }
+                      : null,
+                  }}
                   showCategoria
                   showEdad
                   showMote

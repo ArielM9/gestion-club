@@ -14,14 +14,19 @@ interface EventItemProps {
   categoriaNombre?: string;
 }
 
-export default function EventItem({ 
-  tipo, fecha, ubicacion, titulo, rival, esLocal, equipoNombre = 'Victorianos', categoriaNombre 
+export default function EventItem({
+  tipo, fecha, ubicacion, titulo, rival, esLocal, equipoNombre = 'Victorianos', categoriaNombre
 }: EventItemProps) {
-  
+
+  // date-fns format() exige un Date real. Tras la serialización RSC y la
+  // rehidratación en cliente la fecha puede llegar como string; normalizamos
+  // para que format() no lance "Invalid time value" y la UI no quede en blanco.
+  const fechaObj = fecha instanceof Date ? fecha : new Date(fecha);
+
   const Icono = tipo === "PARTIDO" ? Trophy : (tipo === "SOCIAL" ? Users2 : CalendarDays);
-  
+
   const nombreDisplay = tipo === "PARTIDO"
-    ? esLocal 
+    ? esLocal
       ? `Victorianos ${categoriaNombre} vs ${rival}`
       : `${rival} vs Victorianos ${categoriaNombre}`
     : titulo;
@@ -30,8 +35,8 @@ export default function EventItem({
     <div className="group flex items-center gap-8 py-6 px-4 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-all">
       {/* Columna 1: Fecha vertical */}
       <div className="flex flex-col items-center min-w-[50px]">
-        <span className="text-2xl font-black text-slate-700 leading-none">{format(fecha, "dd")}</span>
-        <span className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">{format(fecha, "MMM", { locale: es })}</span>
+        <span className="text-2xl font-black text-slate-700 leading-none">{format(fechaObj, "dd")}</span>
+        <span className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">{format(fechaObj, "MMM", { locale: es })}</span>
       </div>
 
       {/* Columna 2: Icono suave */}
@@ -52,7 +57,7 @@ export default function EventItem({
         
         <div className="flex items-center gap-4 text-slate-400">
           <div className="flex items-center gap-1.5 text-xs font-medium">
-            <Clock size={13} className="text-blue-500/70" /> {format(fecha, "HH:mm")}
+            <Clock size={13} className="text-blue-500/70" /> {format(fechaObj, "HH:mm")}
           </div>
           <div className="flex items-center gap-1.5 text-xs font-medium">
             <MapPin size={13} className="text-red-500/70" /> {ubicacion}

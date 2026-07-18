@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getMovimientosGlobales, getSociosDeudores, getDatosGraficaMensual, getDatosGastosPorCategoria } from "@/lib/actions/contabilidad";
+import { getMovimientosGlobales, getSociosDeudores, getDatosGraficaMensual, getDatosGastosPorCategoria, getAbonosPendientes } from "@/lib/actions/contabilidad";
 import ContabilidadTabs from "@/components/contabilidad/ContabilidadTabs";
 import BotonesAccion from "@/components/contabilidad/BotonesAccion";
 import { auth } from "@/lib/auth";
@@ -18,11 +18,12 @@ export default async function ContabilidadPage({
   const session = await auth.api.getSession({ headers: await headers() });
   const userRole = session?.user?.role || "COLABORADOR";
 
-  const [dataGlobal, deudoresData, datosGrafica, datosCategorias] = await Promise.all([
+  const [dataGlobal, deudoresData, datosGrafica, datosCategorias, pendientesData] = await Promise.all([
     getMovimientosGlobales(query, currentPage, tipoFiltro),
     getSociosDeudores(query, currentPage, 10),
     getDatosGraficaMensual(),
-    getDatosGastosPorCategoria()
+    getDatosGastosPorCategoria(),
+    getAbonosPendientes(),
   ]);
 
   return (
@@ -54,6 +55,7 @@ export default async function ContabilidadPage({
             datosCategorias={datosCategorias}
             movimientosTotalPages={dataGlobal.totalPages}
             movimientosTotalItems={dataGlobal.totalItems}
+            pendientes={pendientesData.pendientes}
           />
         </Suspense>
       )}

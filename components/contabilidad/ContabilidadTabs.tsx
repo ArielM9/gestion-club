@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { LayoutDashboard, UsersRound, Link2 } from "lucide-react";
+import { LayoutDashboard, UsersRound, Link2, Clock } from "lucide-react";
 import CardKpi from "./CardKpi";
 import LibroDiario from "./LibroDiario";
 import ListaDeudores from "./ListaDeudores";
@@ -64,7 +64,8 @@ export default function ContabilidadTabs({
     datosGrafica,
     datosCategorias,
     movimientosTotalPages = 1,
-    movimientosTotalItems = 0
+    movimientosTotalItems = 0,
+    pendientes = [],
 }: {
     userRole?: string;
     resumen: Resumen | null;
@@ -76,6 +77,7 @@ export default function ContabilidadTabs({
     datosCategorias: DatosCategorias[];
     movimientosTotalPages?: number;
     movimientosTotalItems?: number;
+    pendientes?: Movimiento[];
 }) {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -98,6 +100,13 @@ export default function ContabilidadTabs({
                     onClick={() => setActiveTab("dashboard")}
                     icon={<LayoutDashboard size={16} />}
                     label="Dashboard"
+                />
+                <TabButton
+                    active={activeTab === "pendientes"}
+                    onClick={() => setActiveTab("pendientes")}
+                    icon={<Clock size={16} />}
+                    label="Pendientes"
+                    badge={pendientes.length}
                 />
                 <TabButton
                     active={activeTab === "deudores"}
@@ -141,6 +150,33 @@ export default function ContabilidadTabs({
                     </div>
                 )}
 
+                {activeTab === "pendientes" && (
+                    <div className="space-y-6 animate-in fade-in duration-300">
+                        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                            <h2 className="text-sm font-black text-amber-800 uppercase tracking-widest">
+                                Pagos pendientes de aprobación
+                            </h2>
+                            <p className="text-xs text-amber-700 mt-1">
+                                Revisa y aprueba los abonos registrados. Solo los abonos aprobados se contabilizan en los ingresos.
+                            </p>
+                        </div>
+
+                        {pendientes.length === 0 ? (
+                            <div className="bg-white rounded-[2rem] border border-slate-100 p-12 text-center">
+                                <p className="text-slate-400 font-bold">No hay pagos pendientes de aprobación.</p>
+                            </div>
+                        ) : (
+                            <LibroDiario
+                                userRole={userRole}
+                                movimientos={pendientes}
+                                showApprovalButtons
+                                totalItems={pendientes.length}
+                                totalPages={1}
+                            />
+                        )}
+                    </div>
+                )}
+
                 {activeTab === "deudores" && (
                     <div className="animate-in fade-in duration-300">
                         <ListaDeudores
@@ -161,7 +197,7 @@ export default function ContabilidadTabs({
     );
 }
 
-function TabButton({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
+function TabButton({ active, onClick, icon, label, badge }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string; badge?: number }) {
     return (
         <button
             onClick={onClick}
@@ -172,6 +208,11 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
         >
             {icon}
             {label}
+            {typeof badge === "number" && badge > 0 && (
+                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black ${active ? "bg-amber-100 text-amber-700" : "bg-amber-200 text-amber-800"}`}>
+                    {badge}
+                </span>
+            )}
         </button>
     );
 }

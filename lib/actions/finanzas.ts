@@ -19,13 +19,15 @@ export async function registrarAbonoAction(data: {
       return { error: "No hay una temporada configurada como 'Activa' en el sistema." };
     }
 
-    // 2. Creamos el abono con estado APROBADO (ya que lo registra un admin)
+    // 2. Creamos el abono en estado PENDIENTE.
+    // El pago debe ser revisado y aprobado por un usuario con rol adecuado
+    // (ADMIN | CONTABILIDAD | DIRECTIVA) desde la pestaña "Pendientes" de Contabilidad.
     await prisma.abono.create({
       data: {
         monto: data.monto,
         metodo: data.metodo,
         motivo: data.motivo,
-        estado: "APROBADO",
+        estado: "PENDIENTE",
         socioId: data.socioId,
         temporadaId: temporadaActual.id,
         fecha: new Date(),
@@ -34,6 +36,7 @@ export async function registrarAbonoAction(data: {
 
     // 3. Refrescamos los datos del jugador para que el balance se actualice al instante
     revalidatePath(`/jugadores/${data.socioId}`);
+    revalidatePath("/contabilidad");
     return { success: true };
 
   } catch (error: any) {

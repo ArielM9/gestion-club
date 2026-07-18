@@ -1,7 +1,12 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { normalizarTexto } from '@/lib/utils/normalizar';
+import { containsNormalized } from '@/lib/utils/normalizar';
+
+// Postgres ILIKE no ignora acentos (García != garcia), por eso el filtrado
+// accent-insensitive se hace en memoria sobre un pool acotado de socios activos.
+const SEARCH_POOL_SIZE = 500;
+const MAX_RESULTS = 25;
 
 export async function buscarSocios(query: string) {
     try {
@@ -9,38 +14,41 @@ export async function buscarSocios(query: string) {
             return { success: true, data: [] };
         }
 
-        const queryNormalizada = normalizarTexto(query);
-
-        const socios = await prisma.socio.findMany({
-            where: {
-                OR: [
-                    { nombre: { contains: queryNormalizada, mode: 'insensitive' } },
-                    { apellidos: { contains: queryNormalizada, mode: 'insensitive' } },
-                    { dni: { contains: queryNormalizada, mode: 'insensitive' } },
-                    { nombreTutor: { contains: queryNormalizada, mode: 'insensitive' } },
-                    { dniTutor: { contains: queryNormalizada, mode: 'insensitive' } },
-                ],
-                activo: true,
-            },
+        const pool = await prisma.socio.findMany({
+            where: { activo: true },
             select: {
                 id: true,
                 nombre: true,
                 apellidos: true,
                 dni: true,
                 nombreTutor: true,
+                dniTutor: true,
             },
-            take: 10,
+            orderBy: [
+                { nombre: 'asc' },
+                { apellidos: 'asc' },
+            ],
+            take: SEARCH_POOL_SIZE,
         });
 
-        const formatted = socios.map(s => {
-            const isTutorMatch = s.nombreTutor?.toLowerCase().includes(query.toLowerCase());
-            return {
-                id: s.id,
-                nombre: `${s.nombre} ${s.apellidos}`,
-                dni: s.dni,
-                subText: isTutorMatch ? `Tutor: ${s.nombreTutor}` : null
-            };
-        });
+        const formatted = pool
+            .filter(s =>
+                containsNormalized(s.nombre, query) ||
+                containsNormalized(s.apellidos, query) ||
+                containsNormalized(s.dni, query) ||
+                containsNormalized(s.nombreTutor, query) ||
+                containsNormalized(s.dniTutor, query)
+            )
+            .slice(0, MAX_RESULTS)
+            .map(s => {
+                const isTutorMatch = containsNormalized(s.nombreTutor, query);
+                return {
+                    id: s.id,
+                    nombre: `${s.nombre} ${s.apellidos}`,
+                    dni: s.dni,
+                    subText: isTutorMatch ? `Tutor: ${s.nombreTutor}` : null,
+                };
+            });
 
         return { success: true, data: formatted };
     } catch (error) {
