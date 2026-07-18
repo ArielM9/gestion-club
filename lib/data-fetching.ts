@@ -77,7 +77,7 @@ export async function getActividadReciente(): Promise<ActividadItem[]> {
       tipo: "pago" as const,
       fecha: a.fecha,
       descripcion: `${a.socio.nombre} ${a.socio.apellidos} — ${formatMonto(a.monto)}`,
-      href: `/contabilidad?tab=abonos&id=${a.id}`,
+      href: `/contabilidad?tab=pendientes&id=${a.id}`,
     })),
     ...ultimasInscripciones.map((i) => ({
       id: `inscripcion-${i.id}`,

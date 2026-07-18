@@ -1,6 +1,8 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function getMovimientosGlobales(search: string = "", page: number = 1, tipoFiltro: string = "todos") {
   const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
@@ -252,14 +254,69 @@ export async function getDatosGastosPorCategoria() {
 
 export async function eliminarGastoAction(gastoId: string, motivo: string) {
   try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userRole = session?.user?.role || "COLABORADOR";
+
+    if (userRole !== "ADMIN" && userRole !== "CONTABILIDAD") {
+      return { error: "Sin permisos para eliminar gastos" };
+    }
+
     await prisma.gasto.delete({
       where: { id: gastoId }
     });
-    
+
     revalidatePath("/contabilidad");
     return { success: true, message: `Gasto eliminado: ${motivo}` };
   } catch (error) {
     console.error("ERROR_ELIMINAR_GASTO:", error);
     return { error: "Error al eliminar el gasto" };
   }
+}
+
+export async function eliminarIngresoExternoAction(ingresoId: string, motivo: string) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userRole = session?.user?.role || "COLABORADOR";
+
+    if (userRole !== "ADMIN" && userRole !== "CONTABILIDAD") {
+      return { error: "Sin permisos para eliminar ingresos" };
+    }
+
+    await prisma.ingresoExterno.delete({
+      where: { id: ingresoId }
+    });
+
+    revalidatePath("/contabilidad");
+    return { success: true, message: `Ingreso eliminado: ${motivo}` };
+  } catch (error) {
+    console.error("ERROR_ELIMINAR_INGRESO_EXTERNO:", error);
+    return { error: "Error al eliminar el ingreso" };
+  }
+}
+
+export async function getAbonosPendientes() {
+  const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
+  if (!temporada) return { pendientes: [], count: 0 };
+
+  const pendientes = await prisma.abono.findMany({
+    where: { temporadaId: temporada.id, estado: "PENDIENTE" },
+    include: { socio: true },
+    orderBy: { fecha: 'desc' },
+  });
+
+  return {
+    pendientes: pendientes.map((a) => ({
+      id: a.id,
+      fecha: a.fecha,
+      entidad: `${a.socio.nombre} ${a.socio.apellidos}`,
+      socioId: a.socio.id,
+      concepto: a.motivo || "Cuota Socio",
+      monto: a.monto,
+      tipo: 'INGRESO',
+      metodo: a.metodo,
+      estado: a.estado,
+      esSocio: true,
+    })),
+    count: pendientes.length,
+  };
 }

@@ -284,6 +284,13 @@ export async function togglearFederadoAction(socioId: string) {
 
 export async function eliminarCargoAction(cargoId: string, motivo: string) {
   try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userRole = session?.user?.role || "COLABORADOR";
+
+    if (userRole !== "ADMIN" && userRole !== "CONTABILIDAD") {
+      return { error: "Sin permisos para eliminar cargos" };
+    }
+
     await prisma.cargo.delete({
       where: { id: cargoId }
     });
@@ -299,6 +306,13 @@ export async function eliminarCargoAction(cargoId: string, motivo: string) {
 
 export async function eliminarAbonoAction(abonoId: string, motivo: string) {
   try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userRole = session?.user?.role || "COLABORADOR";
+
+    if (userRole !== "ADMIN" && userRole !== "CONTABILIDAD") {
+      return { error: "Sin permisos para eliminar abonos" };
+    }
+
     await prisma.abono.delete({
       where: { id: abonoId }
     });

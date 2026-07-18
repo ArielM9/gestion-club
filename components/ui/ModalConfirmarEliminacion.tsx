@@ -7,7 +7,7 @@ interface ModalConfirmarEliminacionProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (motivo: string) => Promise<void>;
-  tipo: "cargo" | "abono" | "gasto";
+  tipo: "cargo" | "abono" | "gasto" | "ingreso";
   monto: number;
   concepto: string;
   fecha?: string;
@@ -31,6 +31,7 @@ export function ModalConfirmarEliminacion({
     cargo: "Cargo",
     abono: "Abono",
     gasto: "Gasto",
+    ingreso: "Ingreso",
   };
 
   const handleConfirm = async () => {
@@ -99,7 +100,7 @@ export function ModalConfirmarEliminacion({
             <div className="flex justify-between pt-2 border-t border-slate-200">
               <span className="text-[10px] font-black text-slate-400 uppercase">Importe</span>
               <span className="text-lg font-black text-red-600">
-                {tipo === "abono" ? "+" : "-"}{monto.toFixed(2)}€
+                {tipo === "abono" || tipo === "ingreso" ? "+" : "-"}{monto.toFixed(2)}€
               </span>
             </div>
           </div>
