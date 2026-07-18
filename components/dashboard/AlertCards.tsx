@@ -49,7 +49,7 @@ export default async function AlertCards() {
       label: "Pagos por aprobar",
       icon: Clock,
       color: "text-yellow-600 bg-yellow-50",
-      href: "/contabilidad",
+      href: "/contabilidad?tab=pendientes",
     },
     {
       count: stockBajo,
