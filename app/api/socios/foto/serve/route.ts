@@ -42,10 +42,21 @@ export async function GET(req: NextRequest) {
         // Determinar Content-Type
         const contentType = response.ContentType || (key.endsWith('.png') ? 'image/png' : 'image/jpeg');
 
+        // ETag basado en LastModified del objeto en S3: cuando se sube una foto
+        // nueva con el mismo nombre, el LastModified cambia, el ETag cambia, y el
+        // navegador vuelve a pedir la imagen en vez de servir la cacheada.
+        const lastModified = response.LastModified
+            ? new Date(response.LastModified).getTime().toString()
+            : Buffer.from(buffer).byteLength.toString();
+        const etag = `"${lastModified}"`;
+
         return new NextResponse(buffer, {
             headers: {
                 'Content-Type': contentType,
-                'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+                // Sin cache compartida, revalidar siempre: si la URL firmada cambia
+                // o se sube una foto con el mismo nombre, el cliente ve la nueva.
+                'Cache-Control': 'private, max-age=0, must-revalidate',
+                'ETag': etag,
             },
         });
     } catch (error: any) {

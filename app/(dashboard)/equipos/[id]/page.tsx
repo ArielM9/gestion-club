@@ -38,6 +38,9 @@ export default async function EquipoPage({ params }: Props) {
               categoria: true,
             },
           },
+          // La categoría de la inscripción (por temporada) puede diferir de la
+          // categoría persistente del socio. Es la que mostramos en el roster.
+          categoria: true,
         },
       },
     },

@@ -49,6 +49,7 @@ export function JugadorItem({
         <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden shrink-0">
           {jugador.fotoUrl ? (
             <img
+              key={jugador.fotoUrl}
               src={jugador.fotoUrl}
               alt={nombreCompleto}
               className="h-full w-full object-cover"
@@ -85,6 +86,7 @@ export function JugadorItem({
         <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden shrink-0">
           {jugador.fotoUrl ? (
             <img
+              key={jugador.fotoUrl}
               src={jugador.fotoUrl}
               alt={nombreCompleto}
               className="h-full w-full object-cover"
@@ -115,6 +117,7 @@ export function JugadorItem({
       <div className="w-11 h-11 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden shrink-0">
         {jugador.fotoUrl ? (
           <img
+            key={jugador.fotoUrl}
             src={jugador.fotoUrl}
             alt={nombreCompleto}
             className="h-full w-full object-cover"
