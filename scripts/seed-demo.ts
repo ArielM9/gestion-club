@@ -541,6 +541,9 @@ async function ensureCargosYAbonos(currentId: string, adminId: string, created: 
   let abonos = 0;
   let cargos = 0;
   for (const { id, seed } of created) {
+    // Regla de negocio: solo los Senior pagan cuota de club.
+    // M6-M18 (escuelita) se gestiona a través de Cluber, no genera cargos ni abonos acá.
+    if (!seed.cat.startsWith("Senior")) continue;
     const concepto = `Inscripción ${seed.cat}`;
     // Idempotencia: si ya existe un cargo con este concepto para este socio+temporada, lo salteamos
     const existing = await prisma.cargo.findFirst({
