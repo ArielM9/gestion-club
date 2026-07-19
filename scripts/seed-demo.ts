@@ -320,14 +320,17 @@ async function ensureDemoAdmin() {
 async function ensureTemporadas() {
   const prev = await prisma.temporada.upsert({
     where: { id: "temp-2024-2025" },
-    update: {},
+    update: {
+      fechaInicio: new Date("2024-03-01"),
+      fechaCierre: new Date("2025-12-15"),
+    },
     create: {
       id: "temp-2024-2025",
       nombre: "2024/2025",
-      fechaInicio: new Date("2024-09-01"),
+      fechaInicio: new Date("2024-03-01"),
       fechaFin: new Date("2025-06-30"),
       activa: false,
-      fechaCierre: new Date("2025-07-15"),
+      fechaCierre: new Date("2025-12-15"),
       balanceGenerado: true,
     },
   });
@@ -591,6 +594,160 @@ async function ensureCargosYAbonos(currentId: string, adminId: string, created: 
 }
 
 // ---------------------------------------------------------------------------
+// 10b. Temporada anterior 2024/2025: socios archivados, continuistas y
+//      cargos/abonos históricos para que se vean el módulo de historial
+//      y los socios archivados en la demo.
+// ---------------------------------------------------------------------------
+
+async function ensureTemporadaAnterior(
+  prevId: string,
+  categorias: Record<Cat, string>,
+  adminId: string,
+  currentSocios: Array<{ id: string; seed: SocioDemo }>,
+) {
+  // ----- 1. Socios "archivados": inscritos en 2024/2025 pero NO en 2025/2026 -----
+  // Usamos un rango de DNIs (9000-9009) distinto al de los socios actuales (1-45)
+  // para evitar colisiones en re-ejecuciones.
+  const catsArchivados: Cat[] = ["M14", "M16", "M18", "Senior Masculino", "Senior Femenino"];
+  const archivados: Array<{ id: string; cat: Cat; pagoEstado: "PAGADO" | "PARCIAL" | "PENDIENTE" }> = [];
+  for (let i = 0; i < 10; i++) {
+    const cat = catsArchivados[i % catsArchivados.length];
+    const idxDni = 9000 + i;
+    const dni = dniFalso(idxDni);
+    const existing = await prisma.socio.findUnique({ where: { dni } });
+    if (existing) {
+      archivados.push({ id: existing.id, cat, pagoEstado: "PAGADO" });
+      continue;
+    }
+    const sexo: "M" | "F" = cat === "Senior Femenino" ? "F" : "M";
+    const nombre = sexo === "M" ? pick(NOMBRES_M) : pick(NOMBRES_F);
+    const apellido = pick(sexo === "M" ? APELLIDOS_M : APELLIDOS_F);
+    const apellidos = `${apellido} ${pick(sexo === "M" ? APELLIDOS_M : APELLIDOS_F)}`;
+    const yearBase = 2025 - (cat.startsWith("Senior") ? randomInt(18, 35) : cat === "M14" ? 14 : cat === "M16" ? 16 : 18);
+    const fechaNacimiento = `${yearBase}-${String(randomInt(1, 12)).padStart(2, "0")}-${String(randomInt(1, 28)).padStart(2, "0")}`;
+    const pagoEstado: "PAGADO" | "PARCIAL" | "PENDIENTE" =
+      randomInt(0, 100) < 60 ? "PAGADO" : randomInt(0, 100) < 50 ? "PARCIAL" : "PENDIENTE";
+    const socio = await prisma.socio.create({
+      data: {
+        nombre,
+        apellidos,
+        dni,
+        sexo,
+        fechaNacimiento: new Date(fechaNacimiento),
+        nacionalidad: "Española",
+        categoriaId: categorias[cat],
+        activo: false,
+        observaciones: "Archivado tras temporada 2024/2025",
+        rgpdFirmado: true,
+        declaracionResponsable: true,
+      },
+    });
+    archivados.push({ id: socio.id, cat, pagoEstado });
+  }
+
+  // Inscripciones de los archivados en 2024/2025
+  for (const a of archivados) {
+    await prisma.inscripcion.upsert({
+      where: { socioId_temporadaId: { socioId: a.id, temporadaId: prevId } },
+      create: { socioId: a.id, temporadaId: prevId, categoriaId: categorias[a.cat] },
+      update: {},
+    });
+  }
+
+  // ----- 2. Cargos y abonos históricos en 2024/2025 -----
+  let cargosPrev = 0;
+  let abonosPrev = 0;
+  for (const a of archivados) {
+    if (!a.cat.startsWith("Senior")) continue; // Escuelita no paga cuota de club
+    const concepto = `Inscripción ${a.cat}`;
+    const existing = await prisma.cargo.findFirst({
+      where: { socioId: a.id, temporadaId: prevId, concepto },
+    });
+    if (existing) continue;
+    const p = PRECIOS[a.cat];
+    const total = p.cuota + p.ficha;
+    const cargo = await prisma.cargo.create({
+      data: { monto: total, concepto, socioId: a.id, temporadaId: prevId, fecha: new Date("2024-09-15") },
+    });
+    cargosPrev++;
+    if (a.pagoEstado === "PAGADO") {
+      await prisma.abono.create({
+        data: {
+          monto: total,
+          metodo: MetodoPago.TRANSFERENCIA,
+          estado: EstadoAbono.APROBADO,
+          motivo: "Pago completo",
+          socioId: a.id,
+          temporadaId: prevId,
+          cargoId: cargo.id,
+          aprobadoPorId: adminId,
+          fecha: new Date("2024-09-20"),
+        },
+      });
+      abonosPrev++;
+    } else if (a.pagoEstado === "PARCIAL") {
+      const parcial = Math.round(total * 0.5 * 100) / 100;
+      await prisma.abono.create({
+        data: {
+          monto: parcial,
+          metodo: MetodoPago.EFECTIVO,
+          estado: EstadoAbono.APROBADO,
+          motivo: "Pago parcial",
+          socioId: a.id,
+          temporadaId: prevId,
+          cargoId: cargo.id,
+          aprobadoPorId: adminId,
+          fecha: new Date("2024-10-10"),
+        },
+      });
+      abonosPrev++;
+    }
+  }
+
+  // ----- 3. Continuistas: ~60% de los socios actuales también inscritos en 2024/2025 -----
+  const continuistas = currentSocios.slice(0, Math.floor(currentSocios.length * 0.6));
+  for (const { id, seed } of continuistas) {
+    await prisma.inscripcion.upsert({
+      where: { socioId_temporadaId: { socioId: id, temporadaId: prevId } },
+      create: { socioId: id, temporadaId: prevId, categoriaId: categorias[seed.cat] },
+      update: {},
+    });
+    if (!seed.cat.startsWith("Senior")) continue; // Escuelita no paga cuota de club
+    const concepto = `Inscripción ${seed.cat}`;
+    const existing = await prisma.cargo.findFirst({
+      where: { socioId: id, temporadaId: prevId, concepto },
+    });
+    if (existing) continue;
+    const p = PRECIOS[seed.cat];
+    const total = p.cuota + p.ficha;
+    const cargo = await prisma.cargo.create({
+      data: { monto: total, concepto, socioId: id, temporadaId: prevId, fecha: new Date("2024-09-15") },
+    });
+    cargosPrev++;
+    if (seed.pagoEstado !== "PENDIENTE" && randomInt(0, 100) < 80) {
+      await prisma.abono.create({
+        data: {
+          monto: total,
+          metodo: MetodoPago.TRANSFERENCIA,
+          estado: EstadoAbono.APROBADO,
+          motivo: "Pago completo",
+          socioId: id,
+          temporadaId: prevId,
+          cargoId: cargo.id,
+          aprobadoPorId: adminId,
+          fecha: new Date("2024-09-20"),
+        },
+      });
+      abonosPrev++;
+    }
+  }
+
+  console.log(
+    `✅ Temporada 2024/2025: ${archivados.length} archivados, ${continuistas.length} continuistas, ${cargosPrev} cargos, ${abonosPrev} abonos`,
+  );
+}
+
+// ---------------------------------------------------------------------------
 // 11. Documentos (con upload a MinIO)
 // ---------------------------------------------------------------------------
 
@@ -737,6 +894,7 @@ async function main() {
   const categorias = await ensureCategorias();
   const created = await ensureSocios(categorias, temporadas.current.id);
   await ensureCargosYAbonos(temporadas.current.id, admin.id, created);
+  await ensureTemporadaAnterior(temporadas.prev.id, categorias, admin.id, created);
   const equipos = await ensureEquipos(categorias, temporadas.current.id);
   await ensureEventos(equipos);
   await ensureContabilidad(temporadas.current.id);
