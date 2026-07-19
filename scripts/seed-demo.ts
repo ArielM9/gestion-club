@@ -541,10 +541,16 @@ async function ensureCargosYAbonos(currentId: string, adminId: string, created: 
   let abonos = 0;
   let cargos = 0;
   for (const { id, seed } of created) {
+    const concepto = `Inscripción ${seed.cat}`;
+    // Idempotencia: si ya existe un cargo con este concepto para este socio+temporada, lo salteamos
+    const existing = await prisma.cargo.findFirst({
+      where: { socioId: id, temporadaId: currentId, concepto },
+    });
+    if (existing) continue;
     const p = PRECIOS[seed.cat];
     const total = p.cuota + p.ficha;
     const cargo = await prisma.cargo.create({
-      data: { monto: total, concepto: `Inscripción ${seed.cat}`, socioId: id, temporadaId: currentId },
+      data: { monto: total, concepto, socioId: id, temporadaId: currentId },
     });
     cargos++;
     if (seed.pagoEstado === "PAGADO") {
