@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
     'prisma',
     '@prisma/adapter-pg',
     'pg',
-    '@repo/db',
   ],
   // Security headers applied to every response.
   // CSP is intentionally omitted for now — it requires per-route tuning and
