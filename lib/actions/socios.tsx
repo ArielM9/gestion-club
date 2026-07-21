@@ -7,6 +7,7 @@ import { getCategoriaPorAnoNacimiento, getYearTemporada } from "@/lib/utils/cate
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { requireRole } from "@/lib/server/auth-guard";
+import { auditLog } from "@/lib/server/audit-log";
 
 const ROLES_PERMITIDOS = ["ADMIN", "CONTABILIDAD", "DIRECTIVA"];
 
@@ -85,7 +86,7 @@ export async function crearSocioAction(data: any) {
 }
 
 export async function actualizarSocioAction(id: string, data: unknown) {
-  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
+  const session = await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
 
   // Validación con Zod: SocioUpdateSchema es un allowlist de campos editables.
   // Zod strippea claves desconocidas (id, activo, createdAt, cargos, etc.),
@@ -100,6 +101,18 @@ export async function actualizarSocioAction(id: string, data: unknown) {
   const v = result.data;
 
   try {
+    // Cargamos estado previo de los flags de consentimiento para detectar
+    // cambios y registrar auditoría solo cuando efectivamente cambian.
+    const socioAnterior = await prisma.socio.findUnique({
+      where: { id },
+      select: {
+        rgpdFirmado: true,
+        declaracionResponsable: true,
+        exoneracionResponsabilidad: true,
+        declaracionExtranjera: true,
+      },
+    });
+
     // Payload PATCH: solo incluimos campos presentes y validados, con
     // transformaciones (uppercase DNI, parseo de fecha) y coerción a null
     // para strings opcionales vacíos. `any` está acotado por Zod arriba.
@@ -141,6 +154,27 @@ export async function actualizarSocioAction(id: string, data: unknown) {
       where: { id },
       data: updateData as Parameters<typeof prisma.socio.update>[0]["data"],
     });
+
+    // Auditoría: solo registramos si alguno de los flags de consentimiento cambió
+    // respecto al estado anterior. Coincide con la sensibilidad legal de estos
+    // campos (RGPD, declaración responsable, exoneración, declaración extranjera).
+    const consentKeys = [
+      "rgpdFirmado",
+      "declaracionResponsable",
+      "exoneracionResponsabilidad",
+      "declaracionExtranjera",
+    ] as const;
+    const consentimientoCambio =
+      socioAnterior !== null &&
+      consentKeys.some((key) => v[key] !== undefined && v[key] !== socioAnterior[key]);
+
+    if (consentimientoCambio) {
+      await auditLog(
+        session.user.id,
+        "ACTUALIZAR_SOCIO",
+        `Actualizó socio: ${id}`
+      );
+    }
 
     revalidatePath("/jugadores");
     revalidatePath(`/jugadores/${id}`);

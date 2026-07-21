@@ -2,11 +2,12 @@
 
 import prisma from "@/lib/prisma";
 import { requireRole } from "@/lib/server/auth-guard";
+import { auditLog } from "@/lib/server/audit-log";
 
 export type TipoExportacion = "socios" | "inscripciones" | "contabilidad";
 
 export async function exportarDatosAction(tipo: TipoExportacion, temporadaId?: string) {
-  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
+  const session = await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   try {
     let csvContent = "";
     let filename = "";
@@ -124,6 +125,7 @@ export async function exportarDatosAction(tipo: TipoExportacion, temporadaId?: s
         return { error: "Tipo de exportación no válido" };
     }
 
+    await auditLog(session.user.id, "EXPORTAR_DATOS", "Exportó CSV de socios");
     return { 
       success: true, 
       data: csvContent,

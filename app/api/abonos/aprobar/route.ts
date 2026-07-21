@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { auditLog } from "@/lib/server/audit-log";
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +53,8 @@ export async function PATCH(request: NextRequest) {
         motivo: accion === 'rechazar' && motivo ? motivo : abono.motivo,
       },
     });
+
+    await auditLog(session.user.id, "APROBAR_ABONO", `${accion} abono: ${abonoId}`);
 
     revalidatePath('/contabilidad');
     if (abono.socio?.id) {
