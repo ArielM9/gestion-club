@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getCategoriaPorAnoNacimiento, getYearTemporada } from "@/lib/utils/categorias";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { requireRole } from "@/lib/server/auth-guard";
 
 const ROLES_PERMITIDOS = ["ADMIN", "CONTABILIDAD", "DIRECTIVA"];
 
@@ -16,6 +17,7 @@ const validarDNI = (dni: string) => {
 };
 
 export async function crearSocioAction(data: any) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   // Validamos con el esquema original que ya te funcionaba
   const result = SocioSchema.safeParse(data);
 
@@ -83,6 +85,7 @@ export async function crearSocioAction(data: any) {
 }
 
 export async function actualizarSocioAction(id: string, data: any) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   // VALIDACIÓN MANUAL (Sin Zod para evitar el error de 'overwrite keys')
   if (data.dni) {
     const dniLimpio = data.dni.trim().toUpperCase();
@@ -330,6 +333,7 @@ export async function eliminarAbonoAction(abonoId: string, motivo: string) {
 // Devuelve un flag `inscrito` que indica si el socio ya está inscrito en la temporada activa,
 // para que la UI pueda mostrar el botón "Renovar" solo en los que corresponda.
 export async function buscarTodosLosSocios(query: string) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   try {
     if (!query || query.length < 2) {
       return { success: true, data: [] as Array<{

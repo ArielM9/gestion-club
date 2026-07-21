@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/server/auth-guard";
 import { 
   getYear, 
   getYearTemporada, 
@@ -772,6 +773,7 @@ export async function crearTemporadaAction(data: {
   fechaInicio: string;
   fechaFin: string;
 }) {
+  await requireRole(["ADMIN"]);
   try {
     // Verificar si ya hay temporada activa
     const temporadaActiva = await prisma.temporada.findFirst({
@@ -819,6 +821,7 @@ export async function actualizarPreciosTemporadaAction(
   temporadaId: string,
   precios: { categoriaId: string; costeCuota: number | null; costeFicha: number | null; incluyeRopa: boolean }[]
 ) {
+  await requireRole(["ADMIN"]);
   try {
     // Obtener precios actuales antes de actualizar
     const preciosActuales = await prisma.temporadaCategoria.findMany({
@@ -904,6 +907,7 @@ export async function corregirPrecioCategoriaAction(
   nuevoCoste: number,
   tipo: "cuota" | "ficha"
 ) {
+  await requireRole(["ADMIN"]);
   try {
     const precio = await prisma.temporadaCategoria.findFirst({
       where: { temporadaId, categoriaId },
@@ -948,6 +952,7 @@ export async function corregirPrecioCategoriaAction(
 }
 
 export async function actualizarEquipoAction(equipoId: string, data: { federado: boolean; nombre?: string }) {
+  await requireRole(["ADMIN"]);
   try {
     await prisma.equipo.update({
       where: { id: equipoId },
@@ -966,6 +971,7 @@ export async function actualizarEquipoAction(equipoId: string, data: { federado:
 }
 
 export async function crearEquipoAction(temporadaId: string, categoriaId: string, nombre: string, federado: boolean = true) {
+  await requireRole(["ADMIN"]);
   try {
     const equipo = await prisma.equipo.create({
       data: {
@@ -1122,6 +1128,7 @@ export async function getHistoricoTemporada(temporadaId: string) {
 }
 
 export async function generarCargosTemporadaAction(temporadaId: string) {
+  await requireRole(["ADMIN"]);
   try {
     const temporada = await prisma.temporada.findUnique({
       where: { id: temporadaId },

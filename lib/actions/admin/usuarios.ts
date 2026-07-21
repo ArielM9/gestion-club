@@ -3,11 +3,13 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "crypto";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export type Role = "ADMIN" | "CONTABILIDAD" | "DIRECTIVA" | "COLABORADOR";
 export type UserStatus = "ACTIVE" | "PENDING" | "DISABLED";
 
 export async function getUsuarios() {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const usuarios = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
@@ -33,6 +35,7 @@ export async function getUsuarios() {
 }
 
 export async function getUsuarioById(id: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const usuario = await prisma.user.findUnique({
       where: { id },
@@ -66,6 +69,7 @@ export async function crearUsuario(data: {
   username?: string;
   role: Role;
 }) {
+  await requireRole(["ADMIN"]);
   try {
     const tempPassword = randomBytes(4).toString("hex").toUpperCase();
     const passwordWithPrefix = `Temp${tempPassword}!`;
@@ -109,6 +113,7 @@ export async function actualizarUsuario(id: string, data: {
   role?: Role;
   status?: UserStatus;
 }) {
+  await requireRole(["ADMIN"]);
   try {
     await prisma.user.update({
       where: { id },
@@ -130,6 +135,7 @@ export async function actualizarUsuario(id: string, data: {
 }
 
 export async function resetPassword(id: string) {
+  await requireRole(["ADMIN"]);
   try {
     const tempPassword = randomBytes(4).toString("hex").toUpperCase();
     
@@ -152,6 +158,7 @@ export async function resetPassword(id: string) {
 }
 
 export async function toggleUsuarioStatus(id: string) {
+  await requireRole(["ADMIN"]);
   try {
     const usuario = await prisma.user.findUnique({
       where: { id },

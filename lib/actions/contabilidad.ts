@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export async function getMovimientosGlobales(search: string = "", page: number = 1, tipoFiltro: string = "todos") {
   const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
@@ -158,6 +159,7 @@ export async function crearGastoAction(data: {
   concepto: string;
   metodo: "EFECTIVO" | "TRANSFERENCIA" | "TARJETA";
 }) {
+  await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
     if (!temporada) return { error: "No hay temporada activa." };
@@ -185,6 +187,7 @@ export async function crearIngresoExternoAction(data: {
   fuente: string;
   concepto: string;
 }) {
+  await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
     if (!temporada) return { error: "No hay temporada activa." };

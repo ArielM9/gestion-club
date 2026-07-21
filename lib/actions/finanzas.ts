@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export async function registrarAbonoAction(data: {
   socioId: string;
@@ -9,6 +10,7 @@ export async function registrarAbonoAction(data: {
   metodo: "EFECTIVO" | "TRANSFERENCIA" | "COMPENSACION" | "CONDONACION";
   motivo: string;
 }) {
+  await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     // 1. Buscamos la temporada marcada como actual: true
     const temporadaActual = await prisma.temporada.findFirst({
@@ -50,6 +52,7 @@ export async function crearCargoAction(data: {
   monto: number;
   concepto: string;
 }) {
+  await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     const temporadaActual = await prisma.temporada.findFirst({
       where: { activa: true }
