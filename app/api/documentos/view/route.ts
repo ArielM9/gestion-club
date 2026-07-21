@@ -12,6 +12,10 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: "Key es requerido" }, { status: 400 });
         }
 
+        if (!key.startsWith('documentos/') && !key.startsWith('fotos/')) {
+            return NextResponse.json({ error: "Ruta no permitida" }, { status: 403 });
+        }
+
         const command = new GetObjectCommand({
             Bucket: process.env.S3_BUCKET,
             Key: key,
