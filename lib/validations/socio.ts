@@ -39,6 +39,58 @@ export const SocioSchema = z.object({
   path: ["nombreTutor"],
 });
 
+// Schema para actualización parcial (PATCH) de un socio.
+// Es un allowlist estricto: solo permite campos que un usuario legítimo
+// puede modificar desde la UI. Campos sensibles (id, activo, createdAt,
+// updatedAt, archivado, deudaPendiente) NO están aquí, por lo que Zod
+// los strippea y nunca llegan a Prisma aunque el cliente intente
+// forzarlos (mass assignment).
+// Los flags de consentimiento solo se actualizan si el cliente los envía
+// explícitamente; no se resetean en cada edición de perfil.
+export const SocioUpdateSchema = z.object({
+  // Datos personales
+  nombre: z.string().min(2, "Obligatorio").optional(),
+  apellidos: z.string().min(2, "Obligatorio").optional(),
+  mote: z.string().nullable().optional(),
+  dni: z.string().regex(dniNieRegex, "DNI/NIE inválido").optional(),
+  fechaNacimiento: z.union([z.string(), z.date()]).optional(),
+  sexo: z.enum(["M", "F"]).optional(),
+  nacionalidad: z.string().min(1, "Obligatorio").optional(),
+  // Contacto
+  email: z
+    .union([z.literal(""), z.string().email("Email inválido")])
+    .nullable()
+    .optional(),
+  telefono: z
+    .union([z.literal(""), z.string().min(9, "Teléfono inválido")])
+    .nullable()
+    .optional(),
+  direccion: z.string().nullable().optional(),
+  codigoPostal: z.string().nullable().optional(),
+  localidad: z.string().nullable().optional(),
+  fotoUrl: z.string().nullable().optional(),
+  urlDniFrontal: z.string().nullable().optional(),
+  cuentaBancaria: z.string().nullable().optional(),
+  // Tutor
+  nombreTutor: z.string().nullable().optional(),
+  dniTutor: z
+    .union([z.literal(""), z.string().regex(dniNieRegex, "DNI/NIE inválido")])
+    .nullable()
+    .optional(),
+  telefonoTutor: z.string().nullable().optional(),
+  // Otros
+  tallaRopa: z.string().nullable().optional(),
+  observaciones: z.string().nullable().optional(),
+  categoriaId: z.string().nullable().optional(),
+  // Flags de consentimiento (PATCH: solo se aplican si se envían)
+  rgpdFirmado: z.boolean().optional(),
+  declaracionResponsable: z.boolean().optional(),
+  exoneracionResponsabilidad: z.boolean().optional(),
+  declaracionExtranjera: z.boolean().optional(),
+});
+
+export type SocioUpdateValues = z.infer<typeof SocioUpdateSchema>;
+
 // Función auxiliar para reusar
 function calcularEdad(fecha: string) {
   const hoy = new Date();

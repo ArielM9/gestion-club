@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { containsNormalized } from '@/lib/utils/normalizar';
+import { requireRole } from '@/lib/server/auth-guard';
 
 // Postgres ILIKE no ignora acentos (García != garcia), por eso el filtrado
 // accent-insensitive se hace en memoria sobre un pool acotado de socios activos.
@@ -9,6 +10,7 @@ const SEARCH_POOL_SIZE = 500;
 const MAX_RESULTS = 25;
 
 export async function buscarSocios(query: string) {
+    await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
     try {
         if (!query || query.length < 2) {
             return { success: true, data: [] };

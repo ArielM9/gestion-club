@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export async function getAllCategorias() {
   return await prisma.categoria.findMany({
@@ -19,6 +20,7 @@ export async function getAllCategorias() {
 }
 
 export async function crearCategoriaAction(nombre: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const nombreNormalizado = nombre.trim();
     
@@ -44,6 +46,7 @@ export async function crearCategoriaAction(nombre: string) {
 }
 
 export async function actualizarCategoriaAction(id: string, nombre: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const nombreNormalizado = nombre.trim();
 
@@ -73,6 +76,7 @@ export async function actualizarCategoriaAction(id: string, nombre: string) {
 }
 
 export async function eliminarCategoriaAction(id: string) {
+  await requireRole(["ADMIN"]);
   try {
     const tieneSocios = await prisma.socio.count({
       where: { categoriaId: id },

@@ -1,10 +1,12 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export type TipoExportacion = "socios" | "inscripciones" | "contabilidad";
 
 export async function exportarDatosAction(tipo: TipoExportacion, temporadaId?: string) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   try {
     let csvContent = "";
     let filename = "";

@@ -2,8 +2,10 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export async function getEquipos(temporadaId?: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   const where = temporadaId ? { temporadaId } : {};
   
   return await prisma.equipo.findMany({
@@ -22,6 +24,7 @@ export async function getEquipos(temporadaId?: string) {
 }
 
 export async function getEquipoById(id: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   return await prisma.equipo.findUnique({
     where: { id },
     include: {
@@ -41,6 +44,7 @@ export async function getEquipoById(id: string) {
 }
 
 export async function getEquiposPorTemporada(temporadaId: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   return await prisma.equipo.findMany({
     where: { temporadaId },
     include: {
@@ -60,6 +64,7 @@ export async function crearEquipoAction(data: {
   categoriaId: string;
   temporadaId: string;
 }) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const existe = await prisma.equipo.findFirst({
       where: {
@@ -99,6 +104,7 @@ export async function actualizarEquipoAction(
     federado?: boolean;
   }
 ) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const equipo = await prisma.equipo.update({
       where: { id },
@@ -119,6 +125,7 @@ export async function actualizarEquipoAction(
 }
 
 export async function eliminarEquipoAction(id: string) {
+  await requireRole(["ADMIN"]);
   try {
     const tieneInscripciones = await prisma.inscripcion.count({
       where: { equipoId: id },
@@ -144,6 +151,7 @@ export async function agregarJugadorAEquipoAction(
   equipoId: string,
   socioId: string
 ) {
+  await requireRole(["ADMIN", "DIRECTIVA", "COLABORADOR"]);
   try {
     const equipo = await prisma.equipo.findUnique({
       where: { id: equipoId },
@@ -197,6 +205,7 @@ export async function quitarJugadorDeEquipoAction(
   equipoId: string,
   socioId: string
 ) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     const equipo = await prisma.equipo.findUnique({
       where: { id: equipoId },

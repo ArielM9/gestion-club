@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/server/auth-guard";
 
 export async function crearEventoAction(data: {
   tipo: "PARTIDO" | "TORNEO" | "SOCIAL" | "REUNION" | "OTRO";
@@ -13,6 +14,7 @@ export async function crearEventoAction(data: {
   rival: string | null;
   equipoId: string | null;
 }) {
+  await requireRole(["ADMIN", "DIRECTIVA", "COLABORADOR"]);
   try {
     await prisma.evento.create({
       data: {
@@ -45,6 +47,7 @@ export async function actualizarEventoAction(id: string, data: {
   rival?: string | null;
   equipoId?: string | null;
 }) {
+  await requireRole(["ADMIN", "DIRECTIVA", "COLABORADOR"]);
   try {
     await prisma.evento.update({
       where: { id },
@@ -70,6 +73,7 @@ export async function actualizarEventoAction(id: string, data: {
 }
 
 export async function eliminarEventoAction(id: string) {
+  await requireRole(["ADMIN", "DIRECTIVA"]);
   try {
     await prisma.evento.delete({
       where: { id },

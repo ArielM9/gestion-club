@@ -4,8 +4,10 @@ import prisma from '@/lib/prisma';
 import { procesarAnalisisPendiente, finalizarProcesamiento } from '@/lib/documentos/analysis';
 import { revalidatePath } from 'next/cache';
 import { normalizarTexto } from '@/lib/utils/normalizar';
+import { requireRole } from '@/lib/server/auth-guard';
 
 export async function getDocumentosPendientes() {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         const pendientes = await prisma.documentoPendiente.findMany({
             include: {
@@ -30,6 +32,7 @@ export async function confirmarDocumento(
         temporada?: string;
     }
 ) {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         const actualizado = await prisma.documentoPendiente.update({
             where: { id: documentoId },
@@ -56,6 +59,7 @@ export async function confirmarDocumento(
 }
 
 export async function analizarDocumento(documentoId: string) {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         const documento = await prisma.documentoPendiente.findUnique({
             where: { id: documentoId }
@@ -102,6 +106,7 @@ export async function crearDocumentoPendiente(data: { filename: string; key: str
 }
 
 export async function buscarDocumentos(query: string) {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         if (!query || query.length < 2) {
             return { success: true, data: [] };
@@ -160,6 +165,7 @@ export async function buscarDocumentos(query: string) {
 }
 
 export async function getComprobantesSinVincular() {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         const comprobantes = await prisma.documento.findMany({
             where: {
@@ -182,6 +188,7 @@ export async function getComprobantesSinVincular() {
 }
 
 export async function getCargosSinVincular(socioId: string) {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         const cargos = await prisma.cargo.findMany({
             where: {
@@ -205,6 +212,7 @@ export async function getCargosSinVincular(socioId: string) {
 }
 
 export async function vincularComprobanteCargo(documentoId: string, cargoId: string) {
+    await requireRole(["ADMIN", "CONTABILIDAD"]);
     try {
         await prisma.documento.update({
             where: { id: documentoId },

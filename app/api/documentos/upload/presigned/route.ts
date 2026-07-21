@@ -4,17 +4,28 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from 'uuid';
 
+const ALLOWED_CONTENT_TYPES = ['application/pdf', 'image/jpeg', 'image/png'] as const;
+type AllowedContentType = typeof ALLOWED_CONTENT_TYPES[number];
+
+const CONTENT_TYPE_TO_EXTENSION: Record<AllowedContentType, string> = {
+    'application/pdf': 'pdf',
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+};
+
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
-        const filename = searchParams.get('filename');
         const contentType = searchParams.get('contentType') || 'application/pdf';
 
-        if (!filename) {
-            return NextResponse.json({ error: "Nombre de archivo requerido" }, { status: 400 });
+        if (!ALLOWED_CONTENT_TYPES.includes(contentType as AllowedContentType)) {
+            return NextResponse.json(
+                { error: "Tipo de archivo no permitido" },
+                { status: 400 }
+            );
         }
 
-        const fileExtension = filename.split('.').pop();
+        const fileExtension = CONTENT_TYPE_TO_EXTENSION[contentType as AllowedContentType];
         const uniqueId = uuidv4();
         const s3Key = `temp/unassigned/${uniqueId}.${fileExtension}`;
 

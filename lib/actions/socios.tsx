@@ -1,11 +1,12 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { SocioSchema } from "@/lib/validations/socio";
+import { SocioSchema, SocioUpdateSchema } from "@/lib/validations/socio";
 import { revalidatePath } from "next/cache";
 import { getCategoriaPorAnoNacimiento, getYearTemporada } from "@/lib/utils/categorias";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { requireRole } from "@/lib/server/auth-guard";
 
 const ROLES_PERMITIDOS = ["ADMIN", "CONTABILIDAD", "DIRECTIVA"];
 
@@ -16,6 +17,7 @@ const validarDNI = (dni: string) => {
 };
 
 export async function crearSocioAction(data: any) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   // Validamos con el esquema original que ya te funcionaba
   const result = SocioSchema.safeParse(data);
 
@@ -82,58 +84,72 @@ export async function crearSocioAction(data: any) {
   }
 }
 
-export async function actualizarSocioAction(id: string, data: any) {
-  // VALIDACIÓN MANUAL (Sin Zod para evitar el error de 'overwrite keys')
-  if (data.dni) {
-    const dniLimpio = data.dni.trim().toUpperCase();
+export async function actualizarSocioAction(id: string, data: unknown) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
 
-    // Bloqueo por longitud (Prevenir errores de tecleo)
-    if (dniLimpio.length < 9 || dniLimpio.length > 10) {
-      return { error: "El DNI/NIE debe tener entre 9 y 10 caracteres" };
+  // Validación con Zod: SocioUpdateSchema es un allowlist de campos editables.
+  // Zod strippea claves desconocidas (id, activo, createdAt, cargos, etc.),
+  // por lo que NUNCA llegan a Prisma aunque el cliente intente forzarlas
+  // (mass assignment). Solo `result.data` se usa para construir el update.
+  const result = SocioUpdateSchema.safeParse(data);
+  if (!result.success) {
+    const firstIssue = result.error.issues[0];
+    return { error: firstIssue?.message ?? "Datos de formulario inválidos" };
+  }
+
+  const v = result.data;
+
+  try {
+    // Payload PATCH: solo incluimos campos presentes y validados, con
+    // transformaciones (uppercase DNI, parseo de fecha) y coerción a null
+    // para strings opcionales vacíos. `any` está acotado por Zod arriba.
+    const updateData: Record<string, unknown> = {};
+
+    if (v.nombre !== undefined) updateData.nombre = v.nombre;
+    if (v.apellidos !== undefined) updateData.apellidos = v.apellidos;
+    if (v.mote !== undefined) updateData.mote = v.mote || null;
+    if (v.dni !== undefined) updateData.dni = v.dni.trim().toUpperCase();
+    if (v.sexo !== undefined) updateData.sexo = v.sexo;
+    if (v.fechaNacimiento !== undefined) {
+      updateData.fechaNacimiento = v.fechaNacimiento
+        ? new Date(v.fechaNacimiento as string | Date)
+        : null;
     }
-
-    if (!data.nombre || !data.apellidos) return { error: "Nombre y apellidos son obligatorios" };
-
-    try {
-      await prisma.socio.update({
-        where: { id },
-        data: {
-          nombre: data.nombre,
-          apellidos: data.apellidos,
-          mote: data.mote || null,
-          dni: data.dni.trim().toUpperCase(),
-          fechaNacimiento: data.fechaNacimiento ? new Date(data.fechaNacimiento) : undefined,
-          nacionalidad: data.nacionalidad,
-          fotoUrl: data.fotoUrl !== undefined ? (data.fotoUrl || null) : undefined,
-          email: data.email || null,
-          telefono: data.telefono || null,
-          direccion: data.direccion || null,
-          codigoPostal: data.codigoPostal || null,
-          localidad: data.localidad || null,
-          urlDniFrontal: data.urlDniFrontal || null,
-          cuentaBancaria: data.cuentaBancaria || null,
-          nombreTutor: data.nombreTutor || null,
-          dniTutor: data.dniTutor || null,
-          telefonoTutor: data.telefonoTutor || null,
-          tallaRopa: data.tallaRopa || null,
-          observaciones: data.observaciones || null,
-          rgpdFirmado: data.rgpdFirmado ?? false,
-          declaracionResponsable: data.declaracionResponsable ?? false,
-          exoneracionResponsabilidad: data.exoneracionResponsabilidad ?? false,
-          declaracionExtranjera: data.declaracionExtranjera ?? false,
-          categoriaId: data.categoriaId,
-        },
-      });
-
-      revalidatePath("/jugadores");
-      revalidatePath(`/jugadores/${id}`);
-
-      return { success: true };
-    } catch (error: any) {
-      console.error("ERROR_ACTUALIZAR_SOCIO:", error);
-      if (error.code === 'P2002') return { error: "Ese DNI ya existe" };
-      return { error: "Error al actualizar" };
+    if (v.nacionalidad !== undefined) updateData.nacionalidad = v.nacionalidad;
+    if (v.email !== undefined) updateData.email = v.email || null;
+    if (v.telefono !== undefined) updateData.telefono = v.telefono || null;
+    if (v.direccion !== undefined) updateData.direccion = v.direccion || null;
+    if (v.codigoPostal !== undefined) updateData.codigoPostal = v.codigoPostal || null;
+    if (v.localidad !== undefined) updateData.localidad = v.localidad || null;
+    if (v.fotoUrl !== undefined) updateData.fotoUrl = v.fotoUrl || null;
+    if (v.urlDniFrontal !== undefined) updateData.urlDniFrontal = v.urlDniFrontal || null;
+    if (v.cuentaBancaria !== undefined) updateData.cuentaBancaria = v.cuentaBancaria || null;
+    if (v.nombreTutor !== undefined) updateData.nombreTutor = v.nombreTutor || null;
+    if (v.dniTutor !== undefined) {
+      updateData.dniTutor = v.dniTutor ? v.dniTutor.trim().toUpperCase() : null;
     }
+    if (v.telefonoTutor !== undefined) updateData.telefonoTutor = v.telefonoTutor || null;
+    if (v.tallaRopa !== undefined) updateData.tallaRopa = v.tallaRopa || null;
+    if (v.observaciones !== undefined) updateData.observaciones = v.observaciones || null;
+    if (v.categoriaId !== undefined) updateData.categoriaId = v.categoriaId || null;
+    if (v.rgpdFirmado !== undefined) updateData.rgpdFirmado = v.rgpdFirmado;
+    if (v.declaracionResponsable !== undefined) updateData.declaracionResponsable = v.declaracionResponsable;
+    if (v.exoneracionResponsabilidad !== undefined) updateData.exoneracionResponsabilidad = v.exoneracionResponsabilidad;
+    if (v.declaracionExtranjera !== undefined) updateData.declaracionExtranjera = v.declaracionExtranjera;
+
+    const socio = await prisma.socio.update({
+      where: { id },
+      data: updateData as Parameters<typeof prisma.socio.update>[0]["data"],
+    });
+
+    revalidatePath("/jugadores");
+    revalidatePath(`/jugadores/${id}`);
+
+    return { success: true, socio };
+  } catch (error: any) {
+    console.error("ERROR_ACTUALIZAR_SOCIO:", error);
+    if (error.code === 'P2002') return { error: "Ese DNI ya existe" };
+    return { error: "Error al actualizar" };
   }
 }
 
@@ -330,6 +346,7 @@ export async function eliminarAbonoAction(abonoId: string, motivo: string) {
 // Devuelve un flag `inscrito` que indica si el socio ya está inscrito en la temporada activa,
 // para que la UI pueda mostrar el botón "Renovar" solo en los que corresponda.
 export async function buscarTodosLosSocios(query: string) {
+  await requireRole(["ADMIN", "CONTABILIDAD", "DIRECTIVA"]);
   try {
     if (!query || query.length < 2) {
       return { success: true, data: [] as Array<{
