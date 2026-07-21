@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "crypto";
 import { requireRole } from "@/lib/server/auth-guard";
+import { auditLog } from "@/lib/server/audit-log";
 
 export type Role = "ADMIN" | "CONTABILIDAD" | "DIRECTIVA" | "COLABORADOR";
 export type UserStatus = "ACTIVE" | "PENDING" | "DISABLED";
@@ -69,7 +70,7 @@ export async function crearUsuario(data: {
   username?: string;
   role: Role;
 }) {
-  await requireRole(["ADMIN"]);
+  const session = await requireRole(["ADMIN"]);
   try {
     const tempPassword = randomBytes(4).toString("hex").toUpperCase();
     const passwordWithPrefix = `Temp${tempPassword}!`;
@@ -92,6 +93,7 @@ export async function crearUsuario(data: {
     });
 
     revalidatePath("/admin/usuarios");
+    await auditLog(session.user.id, "CREAR_USUARIO", `Creó usuario: ${data.email}`);
     return { 
       success: true, 
       data: usuario,
@@ -113,7 +115,7 @@ export async function actualizarUsuario(id: string, data: {
   role?: Role;
   status?: UserStatus;
 }) {
-  await requireRole(["ADMIN"]);
+  const session = await requireRole(["ADMIN"]);
   try {
     await prisma.user.update({
       where: { id },
@@ -127,6 +129,7 @@ export async function actualizarUsuario(id: string, data: {
     });
 
     revalidatePath("/admin/usuarios");
+    await auditLog(session.user.id, "ACTUALIZAR_USUARIO", `Actualizó usuario: ${id}`);
     return { success: true };
   } catch (error) {
     console.error("Error al actualizar usuario:", error);
@@ -135,7 +138,7 @@ export async function actualizarUsuario(id: string, data: {
 }
 
 export async function resetPassword(id: string) {
-  await requireRole(["ADMIN"]);
+  const session = await requireRole(["ADMIN"]);
   try {
     const tempPassword = randomBytes(4).toString("hex").toUpperCase();
     
@@ -147,6 +150,7 @@ export async function resetPassword(id: string) {
     });
 
     revalidatePath("/admin/usuarios");
+    await auditLog(session.user.id, "RESET_PASSWORD", `Reseteó password de: ${id}`);
     return { 
       success: true,
       tempPassword: `Temp${tempPassword}!`
@@ -158,7 +162,7 @@ export async function resetPassword(id: string) {
 }
 
 export async function toggleUsuarioStatus(id: string) {
-  await requireRole(["ADMIN"]);
+  const session = await requireRole(["ADMIN"]);
   try {
     const usuario = await prisma.user.findUnique({
       where: { id },
@@ -177,6 +181,7 @@ export async function toggleUsuarioStatus(id: string) {
     });
 
     revalidatePath("/admin/usuarios");
+    await auditLog(session.user.id, "TOGGLE_USUARIO_STATUS", `Cambió status de: ${id}`);
     return { success: true, nuevoEstado };
   } catch (error) {
     console.error("Error al cambiar estado:", error);

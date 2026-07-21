@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { requireRole } from "@/lib/server/auth-guard";
+import { auditLog } from "@/lib/server/audit-log";
 
 export async function getMovimientosGlobales(search: string = "", page: number = 1, tipoFiltro: string = "todos") {
   const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
@@ -159,7 +160,7 @@ export async function crearGastoAction(data: {
   concepto: string;
   metodo: "EFECTIVO" | "TRANSFERENCIA" | "TARJETA";
 }) {
-  await requireRole(["ADMIN", "CONTABILIDAD"]);
+  const session = await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
     if (!temporada) return { error: "No hay temporada activa." };
@@ -175,6 +176,7 @@ export async function crearGastoAction(data: {
     });
 
     revalidatePath("/contabilidad");
+    await auditLog(session.user.id, "CREAR_GASTO", `Creó gasto: ${data.concepto} $${data.monto}`);
     return { success: true };
   } catch (e) {
     console.log(e);
@@ -187,7 +189,7 @@ export async function crearIngresoExternoAction(data: {
   fuente: string;
   concepto: string;
 }) {
-  await requireRole(["ADMIN", "CONTABILIDAD"]);
+  const session = await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     const temporada = await prisma.temporada.findFirst({ where: { activa: true } });
     if (!temporada) return { error: "No hay temporada activa." };
@@ -202,6 +204,7 @@ export async function crearIngresoExternoAction(data: {
     });
 
     revalidatePath("/contabilidad");
+    await auditLog(session.user.id, "CREAR_INGRESO", `Creó ingreso: ${data.concepto} $${data.monto}`);
     return { success: true };
   } catch (e) {
     return { error: "Error al registrar el ingreso." };

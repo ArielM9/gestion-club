@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/server/auth-guard";
+import { auditLog } from "@/lib/server/audit-log";
 
 export async function registrarAbonoAction(data: {
   socioId: string;
@@ -10,7 +11,7 @@ export async function registrarAbonoAction(data: {
   metodo: "EFECTIVO" | "TRANSFERENCIA" | "COMPENSACION" | "CONDONACION";
   motivo: string;
 }) {
-  await requireRole(["ADMIN", "CONTABILIDAD"]);
+  const session = await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     // 1. Buscamos la temporada marcada como actual: true
     const temporadaActual = await prisma.temporada.findFirst({
@@ -39,6 +40,11 @@ export async function registrarAbonoAction(data: {
     // 3. Refrescamos los datos del jugador para que el balance se actualice al instante
     revalidatePath(`/jugadores/${data.socioId}`);
     revalidatePath("/contabilidad");
+    await auditLog(
+      session.user.id,
+      "REGISTRAR_ABONO",
+      `Registró abono: $${data.monto} para socio ${data.socioId}`
+    );
     return { success: true };
 
   } catch (error: any) {
@@ -52,7 +58,7 @@ export async function crearCargoAction(data: {
   monto: number;
   concepto: string;
 }) {
-  await requireRole(["ADMIN", "CONTABILIDAD"]);
+  const session = await requireRole(["ADMIN", "CONTABILIDAD"]);
   try {
     const temporadaActual = await prisma.temporada.findFirst({
       where: { activa: true }
@@ -73,6 +79,11 @@ export async function crearCargoAction(data: {
     });
 
     revalidatePath(`/jugadores/${data.socioId}`);
+    await auditLog(
+      session.user.id,
+      "CREAR_CARGO",
+      `Creó cargo: ${data.concepto} para socio ${data.socioId}`
+    );
     return { success: true };
   } catch (error: any) {
     console.error("ERROR_CREAR_CARGO:", error);
