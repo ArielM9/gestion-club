@@ -19,8 +19,10 @@ const AUTHENTICATED_ROUTES = ["/api/documentos", "/api/socios", "/api/storage", 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // A0. Bloquear registro si está habilitado
-    const blockRegister = process.env.BLOCK_REGISTER === 'true';
+    // A0. Bloquear registro. Por defecto está bloqueado (fail-closed): solo
+    // se permite si BLOCK_REGISTER se establece explícitamente a 'false'.
+    // Esto previene auto-registro accidental en producción.
+    const blockRegister = process.env.BLOCK_REGISTER !== 'false';
     if (blockRegister && pathname === '/register') {
         return NextResponse.redirect(new URL("/login", request.url));
     }
