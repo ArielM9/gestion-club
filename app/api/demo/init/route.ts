@@ -22,6 +22,17 @@ export async function GET(req: NextRequest) {
   const returnTo = req.nextUrl.searchParams.get("return") || "/";
   const safeReturn = returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
 
+  if (!DEMO_ADMIN_PASSWORD) {
+    console.error("[demo/init] DEMO_ADMIN_PASSWORD env var is not set");
+    return NextResponse.json(
+      {
+        error:
+          "DEMO_ADMIN_PASSWORD no está configurada. Añádela a .env y reinicia el servidor.",
+      },
+      { status: 500 }
+    );
+  }
+
   try {
     const result = await auth.api.signInEmail({
       body: { email: DEMO_ADMIN_EMAIL, password: DEMO_ADMIN_PASSWORD },

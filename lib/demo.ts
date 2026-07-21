@@ -17,5 +17,15 @@ export function isDemoMode(): boolean {
 // Demo admin credentials — only meaningful when IS_DEMO is true.
 // The seed script creates this user with a known password so the middleware
 // can sign them in automatically without going through /login.
+//
+// The password is sourced from DEMO_ADMIN_PASSWORD so it never ships in the
+// repository. A warning is logged at boot if the variable is missing so the
+// misconfiguration is visible during development.
 export const DEMO_ADMIN_EMAIL = "admin@demo.local";
-export const DEMO_ADMIN_PASSWORD = "demo123456";
+export const DEMO_ADMIN_PASSWORD = process.env.DEMO_ADMIN_PASSWORD;
+
+if (!DEMO_ADMIN_PASSWORD) {
+  console.warn(
+    "⚠️ DEMO_ADMIN_PASSWORD not set. Demo mode may not work correctly."
+  );
+}
