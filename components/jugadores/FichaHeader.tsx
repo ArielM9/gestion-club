@@ -43,7 +43,7 @@ export function FichaHeader({
           {formData.fotoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={formData.fotoUrl}
+              src={`/api/socios/foto/serve?key=${encodeURIComponent(formData.fotoUrl)}`}
               alt={formData.nombre}
               className="h-full w-full object-cover"
             />
