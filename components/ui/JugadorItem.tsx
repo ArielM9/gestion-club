@@ -50,7 +50,7 @@ export function JugadorItem({
           {jugador.fotoUrl ? (
             <img
               key={jugador.fotoUrl}
-              src={jugador.fotoUrl}
+              src={`/api/socios/foto/serve?key=${encodeURIComponent(jugador.fotoUrl)}`}
               alt={nombreCompleto}
               className="h-full w-full object-cover"
             />
@@ -87,7 +87,7 @@ export function JugadorItem({
           {jugador.fotoUrl ? (
             <img
               key={jugador.fotoUrl}
-              src={jugador.fotoUrl}
+              src={`/api/socios/foto/serve?key=${encodeURIComponent(jugador.fotoUrl)}`}
               alt={nombreCompleto}
               className="h-full w-full object-cover"
             />
@@ -117,8 +117,8 @@ export function JugadorItem({
       <div className="w-11 h-11 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden shrink-0">
         {jugador.fotoUrl ? (
           <img
-            key={jugador.fotoUrl}
-            src={jugador.fotoUrl}
+              key={jugador.fotoUrl}
+              src={`/api/socios/foto/serve?key=${encodeURIComponent(jugador.fotoUrl)}`}
             alt={nombreCompleto}
             className="h-full w-full object-cover"
           />

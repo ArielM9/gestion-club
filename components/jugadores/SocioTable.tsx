@@ -38,7 +38,7 @@ export default function SocioTable({ socios, totalPages, currentPage }: { socios
                     <div className="flex items-center gap-4">
                       <div className="h-11 w-11 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden shadow-sm group-hover:border-blue-200 transition-colors">
                         {socio.fotoUrl ? (
-                          <img key={socio.fotoUrl} src={socio.fotoUrl} alt={socio.nombre} className="h-full w-full object-cover" />
+                          <img key={socio.fotoUrl} src={`/api/socios/foto/serve?key=${encodeURIComponent(socio.fotoUrl)}`} alt={socio.nombre} className="h-full w-full object-cover" />
                         ) : (
                           <UserCircle2 size={24} strokeWidth={1.5} />
                         )}
@@ -137,7 +137,7 @@ export default function SocioTable({ socios, totalPages, currentPage }: { socios
             >
               <div className="h-11 w-11 shrink-0 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden">
                 {socio.fotoUrl ? (
-                  <img key={socio.fotoUrl} src={socio.fotoUrl} alt={socio.nombre} className="h-full w-full object-cover" />
+                  <img key={socio.fotoUrl} src={`/api/socios/foto/serve?key=${encodeURIComponent(socio.fotoUrl)}`} alt={socio.nombre} className="h-full w-full object-cover" />
                 ) : (
                   <UserCircle2 size={22} strokeWidth={1.5} />
                 )}

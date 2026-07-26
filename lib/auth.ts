@@ -62,4 +62,12 @@ export const auth = betterAuth({
             },
         },
     },
+
+    // Trust proxy headers (X-Forwarded-Host, X-Forwarded-Proto) so Better Auth
+    // derives the correct base URL when deployed behind Coolify/Traefik instead
+    // of defaulting to localhost. Without this, redirects and cookies break on
+    // subdomain deployments.
+    advanced: {
+        trustedProxyHeaders: true,
+    },
 });

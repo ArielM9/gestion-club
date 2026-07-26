@@ -1,0 +1,111 @@
+# syntax=docker/dockerfile:1.4
+# Demo image: multi-stage build with seed on every container start.
+
+FROM node:20-slim AS base
+RUN apt-get update && apt-get install -y openssl curl gnupg ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN curl -o- -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && apt-get install -y yarn && rm -rf /var/lib/apt/lists/*
+
+# ----- deps -----
+FROM base AS deps
+WORKDIR /app
+COPY package.json yarn.lock* ./
+COPY turbo.json ./
+COPY packages ./packages
+RUN yarn install --ignore-scripts --ignore-engines
+
+# ----- prisma generate -----
+FROM base AS prisma
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json yarn.lock* ./
+COPY turbo.json ./
+COPY packages ./packages
+RUN npx prisma generate --schema=packages/db/schema.prisma
+
+# ----- build -----
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=prisma /app/packages/generated/prisma ./packages/generated/prisma
+COPY turbo.json ./
+COPY package.json yarn.lock* ./
+COPY tsconfig.json ./
+COPY next.config.ts ./
+COPY tailwind.config.ts ./
+COPY postcss.config.mjs ./
+COPY app ./app
+COPY components ./components
+COPY lib ./lib
+COPY packages ./packages
+COPY scripts ./scripts
+ENV NEXT_TURBOPACK=0
+ENV NEXT_USE_WEBPACK=1
+RUN yarn build
+
+# ----- runtime -----
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/packages ./packages
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
+# Source files needed for runtime rebuild
+COPY --from=builder --chown=nextjs:nodejs /app/app ./app
+COPY --from=builder --chown=nextjs:nodejs /app/components ./components
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/tailwind.config.ts ./
+COPY --from=builder --chown=nextjs:nodejs /app/postcss.config.mjs ./
+
+# Entrypoint: db push + seed + start
+COPY --chown=nextjs:nodejs <<'EOF' /app/entrypoint.sh
+#!/bin/sh
+set -e
+
+echo "[demo] generating .env from environment..."
+cat > /app/.env <<ENVEOF
+DATABASE_URL=${DATABASE_URL}
+S3_ENDPOINT=${S3_ENDPOINT}
+S3_ACCESS_KEY=${S3_ACCESS_KEY_ID}
+S3_SECRET_KEY=${S3_SECRET_ACCESS_KEY}
+S3_BUCKET=${S3_BUCKET}
+S3_REGION=${S3_REGION:-garage}
+S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE:-true}
+NEXT_PUBLIC_IS_DEMO=${NEXT_PUBLIC_IS_DEMO:-true}
+IS_DEMO=${IS_DEMO:-true}
+BETTER_AUTH_URL=${BETTER_AUTH_URL}
+NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+DEMO_ADMIN_PASSWORD=${DEMO_ADMIN_PASSWORD}
+ENVEOF
+cp /app/.env /app/packages/db/.env
+
+echo "[demo] pushing schema..."
+cd /app/packages/db && npx prisma db push && rm -rf /app/packages/generated/prisma && npx prisma generate
+
+echo "[demo] rebuilding Next.js with fresh Prisma client..."
+cd /app && rm -rf .next && NODE_ENV=production npx next build
+
+echo "[demo] seeding..."
+npx tsx scripts/seed-demo.ts || echo "[demo] seed failed (continuing)"
+
+echo "[demo] starting app..."
+exec node node_modules/next/dist/bin/next start
+EOF
+RUN chmod +x /app/entrypoint.sh && chown -R nextjs:nodejs /app
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["/app/entrypoint.sh"]

@@ -1,0 +1,57 @@
+name: reset-demo
+
+on:
+  schedule:
+    # Every night at 02:00 UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: demo-reset
+  cancel-in-progress: true
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout demo branch
+        uses: actions/checkout@v4
+        with:
+          ref: demo
+          fetch-depth: 1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Stop and remove existing stack + volumes
+        run: |
+          docker compose -f docker-compose.demo.yml down -v --remove-orphans || true
+
+      - name: Build and start fresh stack
+        run: |
+          docker compose -f docker-compose.demo.yml up -d --build
+
+      - name: Wait for app health
+        run: |
+          echo "Waiting for app to become healthy..."
+          for i in {1..60}; do
+            if curl -fsS http://localhost:3000 >/dev/null 2>&1; then
+              echo "App is up after ${i} attempts"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "App failed to start in 5 minutes"
+          docker compose -f docker-compose.demo.yml logs --tail=200 app
+          exit 1
+
+      - name: Prune dangling images
+        run: docker image prune -f
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Demo reset failed — check workflow logs."
+          echo "Date: $(date -u)"

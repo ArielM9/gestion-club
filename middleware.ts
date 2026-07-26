@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
+import { isDemoMode } from "@/lib/demo";
 
 // 1. Definimos el "Libro de Permisos"
 // Esto es mucho más fácil de mantener que llenar el código de IFs
@@ -11,7 +12,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
 };
 
 // 2. Rutas que SIEMPRE son públicas (para evitar bucles infinitos)
-const PUBLIC_ROUTES = ["/login", "/register", "/api/auth"];
+const PUBLIC_ROUTES = ["/login", "/register", "/api/auth", "/api/demo"];
 
 // 3. Rutas que requieren sesión pero están permitidas para todos los roles autenticados
 const AUTHENTICATED_ROUTES = ["/api/documentos", "/api/socios", "/api/storage", "/api/tienda"];
@@ -29,6 +30,14 @@ export async function middleware(request: NextRequest) {
 
     // A. Si es una ruta pública (y no bloqueada arriba), no hacemos nada, que pase.
     if (PUBLIC_ROUTES.some(route => pathname.startsWith(route))) {
+        return NextResponse.next();
+    }
+
+    // DEMO MODE: skip the auth check entirely. The /api/demo/init route handler
+    // is responsible for setting up a real Better Auth session the first time
+    // a request hits a protected page. The dashboard layout will redirect
+    // unauthenticated demo users there.
+    if (isDemoMode()) {
         return NextResponse.next();
     }
 
