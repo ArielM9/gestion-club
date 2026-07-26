@@ -15,7 +15,12 @@ import { auth } from "../lib/auth";
 dotenv.config();
 
 const DEMO_EMAIL = "admin@demo.local";
-const DEMO_PASSWORD = "demo123456";
+const DEMO_PASSWORD = process.env.DEMO_ADMIN_PASSWORD;
+
+if (!DEMO_PASSWORD) {
+  console.error("❌ DEMO_ADMIN_PASSWORD no está configurada. Añádela a .env y vuelve a ejecutar el seed.");
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
 // 1. MinIO bootstrap
@@ -309,7 +314,7 @@ async function ensureDemoAdmin() {
   });
 
   const user = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
-  console.log(`✅ Admin demo: ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
+  console.log(`✅ Admin demo: ${DEMO_EMAIL}`);
   return user!;
 }
 
