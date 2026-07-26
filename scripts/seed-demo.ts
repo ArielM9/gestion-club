@@ -9,8 +9,8 @@ import { db as prisma, Role, UserStatus, MetodoPago, EstadoAbono, TipoEvento, Ti
 import { S3Client, PutObjectCommand, CreateBucketCommand, HeadBucketCommand } from "@aws-sdk/client-s3";
 import * as dotenv from "dotenv";
 import { deflateSync } from "zlib";
-import { createHash, randomInt } from "crypto";
-import { auth } from "../lib/auth";
+import { createHash, randomInt, randomUUID } from "crypto";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -291,31 +291,38 @@ const PRECIOS: Record<Cat, { cuota: number; ficha: number }> = {
 // ---------------------------------------------------------------------------
 
 async function ensureDemoAdmin() {
-  // Delete existing admin account to ensure fresh password hash
   const existing = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
   if (existing) {
     await prisma.account.deleteMany({ where: { userId: existing.id } });
     await prisma.user.delete({ where: { email: DEMO_EMAIL } });
   }
 
-  // Create fresh with Better Auth's proper hashing
-  await auth.api.signUpEmail({
-    body: {
+  const hash = await bcrypt.hash(DEMO_PASSWORD, 10);
+  const user = await prisma.user.create({
+    data: {
       email: DEMO_EMAIL,
-      password: DEMO_PASSWORD,
       name: "Demo Admin",
+      role: Role.ADMIN,
+      status: UserStatus.ACTIVE,
+      emailVerified: true,
+      mustChangePassword: false,
     },
   });
 
-  // Promote to admin
-  await prisma.user.update({
-    where: { email: DEMO_EMAIL },
-    data: { role: Role.ADMIN, status: UserStatus.ACTIVE, mustChangePassword: false, emailVerified: true },
+  await prisma.account.create({
+    data: {
+      id: randomUUID(),
+      user: { connect: { id: user.id } },
+      accountId: DEMO_EMAIL,
+      providerId: "email",
+      password: hash,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
   });
 
-  const user = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
   console.log(`✅ Admin demo: ${DEMO_EMAIL}`);
-  return user!;
+  return user;
 }
 
 // ---------------------------------------------------------------------------
